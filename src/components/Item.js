@@ -1,8 +1,12 @@
 import React, { PropTypes } from 'react';
 
-function Item({title, description, children}) {
+function Item({title, description, children, disabled}) {
+  const isDisabled = disabled ? 'disabled' : '';
   return (
-    <li className="mdl-list__item mdl-list__item--two-line" style={{overflow: 'visible'}}>
+    <li
+      className={`mdl-list__item mdl-list__item--two-line ${isDisabled}`}
+      style={{overflow: 'visible'}}
+      >
       <span className="mdl-list__item-primary-content">
         <span>{title}</span>
         <span className="mdl-list__item-sub-title">
@@ -19,7 +23,12 @@ function Item({title, description, children}) {
 Item.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
-  children: PropTypes.element.isRequired
+  children: PropTypes.element.isRequired,
+  disabled: PropTypes.bool,
+};
+
+Item.defaultPropTypes = {
+  disabled: false
 };
 
 export default Item;

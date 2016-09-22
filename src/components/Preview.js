@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import './Preview.css';
 
-function Preview({settings}) {
+function Preview({settings, defaults}) {
   return (
     <div className="mdl-card mdl-shadow--2dp preview-card">
       <div className="mdl-card__title">
@@ -10,7 +10,7 @@ function Preview({settings}) {
         </div>
       </div>
       <div className="mdl-card__actions mdl-card--border">
-        <textarea className="preview-editor" readOnly>{ toToml(settings) }</textarea>
+        <textarea className="preview-editor" readOnly value={ toToml(settings, defaults) }></textarea>
       </div>
       <div className="mdl-card__menu">
         <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-efect">
@@ -23,19 +23,33 @@ function Preview({settings}) {
 }
 
 Preview.propTypes = {
-  settings: PropTypes.object.isRequired
+  settings: PropTypes.object.isRequired,
+  defaults: PropTypes.object.isRequired
 };
 
-function toToml(settings) {
-  return Object.keys(settings).reduce((acc, section) => {
-    acc.push(`\n[${section}]`);
+function toToml(settings, defaults) {
+  const toml = Object.keys(settings).reduce((acc, section) => {
+    const vals = Object.keys(settings[section])
+      .filter(key => settings[section][key] !== defaults[section][key])
+      .map(key => {
+        const val = settings[section][key];
 
-    return acc.concat(Object.keys(settings[section]).map(key => {
-      const val = settings[section][key];
+        // TODO [ToDr] - display some comments
+        return `${key} = ${toVal(val)}`;
+      });
 
-      return `${key} = ${toVal(val)}`;
-    }));
-  }, []).join('\n').substr(1);
+    if (vals.length) {
+      acc.push(`\n[${section}]`);
+    }
+
+    return acc.concat(vals);
+  }, []);
+  
+  if (!toml.length) {
+    return '# All values you use are defaults. Config is not needed.';
+  }
+
+  return toml.join('\n').substr(1);
 }
 
 function toVal(val) {

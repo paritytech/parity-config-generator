@@ -5,8 +5,11 @@
     "mode": {
       "name": "Operating Mode",
       "description": {
-        "active": "Parity continously syncs the chain."
+        "active": "Parity continously syncs the chain.",
+        "passive": "Parity syncs initially, then sleeps and wakes regularly to resync",
+        "dark": "Parity syncs only when an external interface is active."
       },
+      "default": "active",
       "values": [
         "Active [active]",
         "Dark Mode [dark]",
@@ -15,15 +18,17 @@
     },
     "mode_timeout": {
       "name": "Mode Timeout",
-      "description": "Parity continously syncs the chain.",
+      "description": "Parity will move to inactive mode after {} seconds.",
+      "default": 300,
       "min": 0,
-      "max": 1300
+      "max": 10000
     },
     "mode_alarm": {
       "name": "Mode Alarm",
-      "description": "",
+      "description": "Parity will automatically wake-up every {} seconds.",
+      "default": 3600,
       "min": 0,
-      "max": 3600
+      "max": 600000
     },
     "chain": {
       "name": "Chain",
@@ -31,6 +36,7 @@
         "homestead": "Main Network",
         "morden": " Test Network"
       },
+      "default": "homestead",
       "values": ["homestead", "morden"]
     }
   } 
