@@ -1,0 +1,37 @@
+{
+  "parity": {
+    "section": "Parity",
+    "description": "Basic parameters regarding Parity operation.",
+    "mode": {
+      "name": "Operating Mode",
+      "description": {
+        "active": "Parity continously syncs the chain."
+      },
+      "values": [
+        "Active [active]",
+        "Dark Mode [dark]",
+        "Passive [passive]"
+      ]
+    },
+    "mode_timeout": {
+      "name": "Mode Timeout",
+      "description": "Parity continously syncs the chain.",
+      "min": 0,
+      "max": 1300
+    },
+    "mode_alarm": {
+      "name": "Mode Alarm",
+      "description": "",
+      "min": 0,
+      "max": 3600
+    },
+    "chain": {
+      "name": "Chain",
+      "description": {
+        "homestead": "Main Network",
+        "morden": " Test Network"
+      },
+      "values": ["homestead", "morden"]
+    }
+  } 
+}
