@@ -38,6 +38,21 @@
       },
       "default": "homestead",
       "values": ["homestead", "morden"]
+    },
+    "db_path": {
+      "name": "Database Path",
+      "description": "Parity database will be stored in {}.",
+      "default": "$HOME/.parity"
+    },
+    "keys_path": {
+      "name": "Keys Path",
+      "description": "Your encrypted private keys will be stored in {}.",
+      "default": "$HOME/.parity/keys"
+    },
+    "identity": {
+      "name": "Identity",
+      "description": "You will be identified as '{}' amongst other nodes..",
+      "default": ""
     }
   } 
 }

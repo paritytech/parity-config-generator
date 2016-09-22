@@ -25,6 +25,9 @@ class Editor extends Component {
           { this.select('parity', 'mode') }
           { this.number('parity', 'mode_timeout', settings.parity.mode !== 'active') }
           { this.number('parity', 'mode_alarm', settings.parity.mode === 'passive') }
+          { this.text('parity', 'db_path') }
+          { this.text('parity', 'keys_path') }
+          { this.text('parity', 'identity') }
         </Section>
       </div>
     );
@@ -63,7 +66,41 @@ class Editor extends Component {
         description={description}
         disabled={!isEnabled}
         >
-        <span>{value}</span>
+        <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input
+            className="mdl-textfield__input"
+            type="number"
+            value={value}
+            onChange={(ev) => this.change(settings[section], prop)(Number(ev.target.value))}
+            min={data[section][prop].min}
+            max={data[section][prop].max}
+            />
+          <span className="mdl-textfield__error">Please provide a valid number.</span>
+        </div>
+      </Item>
+    );
+  }
+
+  text(section, prop, isEnabled) {
+    const {settings} = this.props;
+    const value = settings[section][prop];
+    const description = fillDescription(data[section][prop].description, value);
+
+    return (
+      <Item
+        title={data[section][prop].name}
+        description={description}
+        disabled={!isEnabled}
+        >
+        <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input
+            className="mdl-textfield__input"
+            type="text"
+            value={value}
+            onChange={(ev) => this.change(settings[section], prop)(ev.target.value)}
+            />
+          <span className="mdl-textfield__error">Please provide a valid number.</span>
+        </div>
       </Item>
     );
   }
