@@ -34,7 +34,13 @@ class Editor extends Component {
           { this.text('account', 'password') }
           { this.number('account', 'keys_iterations') }
         </Section>
-
+        <Section title={data.signer.section} description={data.signer.description}>
+          { this.flag('signer', 'disable') }
+          { this.flag('signer', 'force', !settings.signer.disable) }
+          { this.number('signer', 'port', !settings.signer.disable) }
+          { this.text('signer', 'interface', !settings.signer.disable) }
+          { this.text('signer', 'path', !settings.signer.disable) }
+        </Section>
       </div>
     );
   }
@@ -108,6 +114,32 @@ class Editor extends Component {
             disabled={!isEnabled}
             />
         </div>
+      </Item>
+    );
+  }
+
+  flag(section, prop, isEnabled = true) {
+    const {settings} = this.props;
+    const value = settings[section][prop];
+    const description = fillDescription(data[section][prop].description, value);
+
+    return (
+      <Item
+        title={data[section][prop].name}
+        description={description}
+        disabled={!isEnabled}
+        >
+        <label className="mdl-switch mdl-js-switch mdl-js-ripple-effect" htmlFor={`${section}.${prop}`}>
+          <input
+            type="checkbox"
+            id={`${section}.${prop}`}
+            className="mdl-switch__input"
+            checked={value}
+            disabled={!isEnabled}
+            onChange={(ev) => this.change(settings[section], prop)(ev.target.checked)}
+            />
+          <span className="mdl-switch__label"></span>
+        </label>
       </Item>
     );
   }

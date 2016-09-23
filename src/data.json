@@ -75,5 +75,34 @@
       "min": 1000,
       "max": 1000000
     }
+  },
+  "signer": {
+    "section": "Trusted Signer",
+    "description": "Signer is used to confirm transactions and sign transactions.",
+    "disable": {
+      "name": "Disable Signer",
+      "description": "You will need to unlock manually if Signer is disabled.",
+      "default": false
+    },
+    "force": {
+      "name": "Force Enable Signer",
+      "description": "Enable Signer even when it would be disabled by other options.",
+      "default": false
+    },
+    "port": {
+      "name": "Port",
+      "description": "Signer will be accessible on port {}.",
+      "default": 8180
+    },
+    "interface": {
+      "name": "Interface",
+      "description":" Signer will listen for incoming connections on IP {}.",
+      "default": "local"
+    },
+    "path": {
+      "name": "Path",
+      "description": "Signer configuration will be stored at {}.",
+      "default": "$HOME/.parity/signer"
+    }
   }
 }

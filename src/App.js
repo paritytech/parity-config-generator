@@ -43,7 +43,7 @@ class App extends Component {
 function generateDefaults(settings) {
   return Object.keys(settings).reduce((data, section) => {
     data[section] = Object.keys(settings[section])
-    .filter(key => settings[section][key].default)
+    .filter(key => settings[section][key].default !== undefined)
     .reduce((d, key) => {
       d[key] = settings[section][key].default;
       return d;
