@@ -30,7 +30,7 @@ Preview.propTypes = {
 function toToml(settings, defaults) {
   const toml = Object.keys(settings).reduce((acc, section) => {
     const vals = Object.keys(settings[section])
-      .filter(key => settings[section][key] !== defaults[section][key])
+      .filter(key => !isEqual(settings[section][key], defaults[section][key]))
       .map(key => {
         const val = settings[section][key];
 
@@ -50,6 +50,11 @@ function toToml(settings, defaults) {
   }
 
   return toml.join('\n').substr(1);
+}
+
+function isEqual(a, b) {
+  // TODO [todr] optimize
+  return JSON.stringify(a) === JSON.stringify(b);
 }
 
 function toVal(val) {

@@ -54,5 +54,26 @@
       "description": "You will be identified as '{}' amongst other nodes..",
       "default": ""
     }
-  } 
+  },
+  "account": {
+    "section": "Account Options",
+    "description": "Unlocking accounts and private keys security parameters.",
+    "unlock": {
+      "name": "Accounts to unlock",
+      "description": "From: [{}] you'll be able to send tranasactions without password.",
+      "default": [""]
+    },
+    "password": {
+      "name": "Password File",
+      "description": "File at {} should contain passwords to unlock your accounts. One password per line.",
+      "default": ""
+    },
+    "keys_iterations": {
+      "name": "Keys deriving iterations",
+      "description": "Parity will do {} iterations to derive private keys from passphrase (higher=safer).",
+      "default": 10240,
+      "min": 1000,
+      "max": 1000000
+    }
+  }
 }

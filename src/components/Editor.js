@@ -29,6 +29,12 @@ class Editor extends Component {
           { this.text('parity', 'keys_path') }
           { this.text('parity', 'identity') }
         </Section>
+        <Section title={data.account.section} description={data.account.description}>
+          { this.list('account', 'unlock') }
+          { this.text('account', 'password') }
+          { this.number('account', 'keys_iterations') }
+        </Section>
+
       </div>
     );
   }
@@ -55,7 +61,7 @@ class Editor extends Component {
     );
   }
 
-  number(section, prop, isEnabled) {
+  number(section, prop, isEnabled = true) {
     const {settings} = this.props;
     const value = settings[section][prop];
     const description = fillDescription(data[section][prop].description, value);
@@ -70,18 +76,19 @@ class Editor extends Component {
           <input
             className="mdl-textfield__input"
             type="number"
-            value={value}
+            value={value || 0}
             onChange={(ev) => this.change(settings[section], prop)(Number(ev.target.value))}
             min={data[section][prop].min}
             max={data[section][prop].max}
+            disabled={!isEnabled}
             />
-          <span className="mdl-textfield__error">Please provide a valid number.</span>
+          <span className="mdl-textfield__error">Please provide a valid number (min: {data[section][prop].min}, max: {data[section][prop].max})</span>
         </div>
       </Item>
     );
   }
 
-  text(section, prop, isEnabled) {
+  text(section, prop, isEnabled = true) {
     const {settings} = this.props;
     const value = settings[section][prop];
     const description = fillDescription(data[section][prop].description, value);
@@ -96,10 +103,54 @@ class Editor extends Component {
           <input
             className="mdl-textfield__input"
             type="text"
-            value={value}
+            value={value || ''}
             onChange={(ev) => this.change(settings[section], prop)(ev.target.value)}
+            disabled={!isEnabled}
             />
-          <span className="mdl-textfield__error">Please provide a valid number.</span>
+        </div>
+      </Item>
+    );
+  }
+
+  list(section, prop, isEnabled = true) {
+    const {settings} = this.props;
+    const value = settings[section][prop];
+    const description = fillDescription(data[section][prop].description, value.toString());
+
+    return (
+      <Item
+        title={data[section][prop].name}
+        description={description}
+        disabled={!isEnabled}
+        >
+        <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          {value.map((v, idx) => (
+            <input
+              disabled={!isEnabled}
+              key={idx}
+              className="mdl-textfield__input"
+              type="text"
+              value={v || ''}
+              onChange={(ev) => {
+                const newValue = [...value];
+                if (ev.target.value !== '') {
+                  newValue[idx] = ev.target.value;
+                } else {
+                  delete newValue[idx];
+                }
+                this.change(settings[section], prop)(newValue);
+              }}
+              />
+          ))}
+          <br/>
+          <button
+            style={{bottom: 0, right: 0, zIndex: 10, transform: 'scale(0.5)'}}
+            className="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect"
+            onClick={() => this.change(settings[section], prop)(value.concat(['']))}
+            disabled={!isEnabled}
+            >
+            <i className="material-icons">add</i>
+          </button>
         </div>
       </Item>
     );
@@ -112,7 +163,7 @@ Editor.propTypes = {
 };
 
 function fillDescription(description, value) {
-  return description.replace(/{}/g, value);
+  return description.replace(/{}/g, value || '');
 }
 
 function val(data) {
