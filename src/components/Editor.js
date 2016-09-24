@@ -20,7 +20,7 @@ class Editor extends Component {
 
     return (
       <div>
-        <Section title={data.parity.section} description={data.parity.description}>
+        <Section title={data.parity.section} description={data.parity.description} collapsed={false}>
           { this.select('parity', 'chain') }
           { this.select('parity', 'mode') }
           { this.number('parity', 'mode_timeout', settings.parity.mode !== 'active') }
