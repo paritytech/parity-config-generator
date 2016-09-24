@@ -41,6 +41,18 @@ class Editor extends Component {
           { this.text('signer', 'interface', !settings.signer.disable) }
           { this.text('signer', 'path', !settings.signer.disable) }
         </Section>
+        <Section title={data.network.section} description={data.network.description}>
+          { this.flag('network', 'disable') }
+          { this.number('network', 'port', !settings.network.disable) }
+          { this.number('network', 'min_peers', !settings.network.disable) }
+          { this.number('network', 'max_peers', !settings.network.disable) }
+          { this.select('network', 'nat', !settings.network.disable) }
+          { this.text('network', 'id', !settings.network.disable) }
+          { this.list('network', 'bootnodes', !settings.network.disable) }
+          { this.flag('network', 'discovery', !settings.network.disable) }
+          { this.list('network', 'reserved_peers', !settings.network.disable) }
+          { this.flag('network', 'reserved_only', !settings.network.disable) }
+        </Section>
       </div>
     );
   }
@@ -129,7 +141,7 @@ class Editor extends Component {
         description={description}
         disabled={!isEnabled}
         >
-        <label className="mdl-switch mdl-js-switch mdl-js-ripple-effect" htmlFor={`${section}.${prop}`}>
+        <label className="mdl-switch mdl-js-switch" htmlFor={`${section}.${prop}`}>
           <input
             type="checkbox"
             id={`${section}.${prop}`}

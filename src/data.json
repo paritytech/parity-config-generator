@@ -104,5 +104,79 @@
       "description": "Signer configuration will be stored at {}.",
       "default": "$HOME/.parity/signer"
     }
+  },
+  "network": {
+    "section": "Networking Options",
+    "description": "Network and peer-related settings.",
+    "disable": {
+      "name": "Disable Network",
+      "description": "Parity will not attempt to connect to the network.",
+      "default": false
+    },
+    "port": {
+      "name": "Port",
+      "description": "Parity will listen for incoming connections on port {}.",
+      "default": 30303
+    },
+    "min_peers": {
+      "name": "Min Peers",
+      "description": "Parity will try to maintain connection to at least {} peers.",
+      "default": 25,
+      "min": 0,
+      "max": 100000
+    },
+    "max_peers": {
+      "name": "Max Peers",
+      "description": "Parity will maintain at most {} peers.",
+      "default": 50,
+      "min": 0,
+      "max": 100000
+    },
+    "nat": {
+      "name": "NAT settings",
+      "description": {
+        "any": "Parity will use all possible methods to determine public IP address.",
+        "none": "Parity won't attempt detect you public IP address",
+        "upnp": "Parity will use UPNP to detect your public IP address.",
+        "extip:": "Fill up the config manually and provide your public IP address."
+      },
+      "default": "any",
+      "values": [
+        "Any [any]",
+        "None [none]",
+        "UPNP [upnp]",
+        "External IP [extip:]"
+      ]
+    },
+    "id": {
+      "name": "Network ID",
+      "description": "Network ID of the chain will be overridden to: {}",
+      "default": ""
+    },
+    "bootnodes": {
+      "name": "Bootnodes",
+      "description": "Override the bootnodes from selected chain file.",
+      "default": [""]
+    },
+    "discovery": {
+      "name": "Peers Discovery",
+      "description": "Enable or disable new peers discovery.",
+      "default": true
+    },
+    "node_key": {
+      "name": "Node Key",
+      "description": "Specify node secret key (64-char hex or input to SHA3)",
+      "default": ""
+    },
+    "reserved_peers": {
+      "name": "Reserved Peers Path",
+      "description": "Specify a path to a file with peers' enodes to be always connected to.",
+      "default": [""]
+    },
+    "reserved_only": {
+      "name": "Reserved Only", 
+      "description": "Connect only to reserved nodes.",
+      "default": false
+    }
   }
 }
