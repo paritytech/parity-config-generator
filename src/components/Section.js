@@ -57,7 +57,7 @@ class Section extends Component {
     collapsed: PropTypes.bool,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    children: PropTypes.array.isRequired
+    children: PropTypes.oneOfType([PropTypes.element, PropTypes.array]).isRequired
   };
 
   static defaultProps = {

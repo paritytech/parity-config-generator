@@ -53,6 +53,19 @@ class Editor extends Component {
           { this.list('network', 'reserved_peers', !settings.network.disable) }
           { this.flag('network', 'reserved_only', !settings.network.disable) }
         </Section>
+        <Section title={data.rpc.section} description={data.rpc.description}>
+          { this.flag('rpc', 'disable') }
+          { this.number('rpc', 'port', !settings.rpc.disable) }
+          { this.text('rpc', 'interface', !settings.rpc.disable) }
+          { this.text('rpc', 'cors', !settings.rpc.disable) }
+          { this.list('rpc', 'hosts', !settings.rpc.disable) }
+          { this.multiselect('rpc', 'apis', !settings.rpc.disable) }
+        </Section>
+        <Section title={data.ipc.section} description={data.ipc.description}>
+          { this.flag('ipc', 'disable') }
+          { this.text('ipc', 'path', !settings.ipc.disable) }
+          { this.multiselect('ipc', 'apis', !settings.ipc.disable) }
+        </Section>
       </div>
     );
   }
@@ -75,6 +88,48 @@ class Editor extends Component {
           id={prop}
           disabled={!isEnabled}
         />
+      </Item>
+    );
+  }
+
+  multiselect(section, prop, isEnabled = true) {
+    const {settings} = this.props;
+    const current = settings[section][prop];
+    const description = fillDescription(data[section][prop].description, current);
+
+    const change = (val) => (ev) => {
+      const {checked} = ev.target;
+      const newValue = [...current];
+      const idx = newValue.indexOf(val);
+
+      if (checked) {
+        newValue.push(val);
+      } else if (idx !== -1){
+        newValue.splice(idx, 1);
+      }
+
+      this.change(settings[section], prop)(newValue);
+    };
+    
+    return (
+      <Item
+        title={data[section][prop].name}
+        description={description}
+        disabled={!isEnabled}
+        >
+        {data[section][prop].values.map(val).map(value => (
+          <label className="mdl-switch mdl-js-switch" htmlFor={`${section}.${prop}.${value.value}`} key={value.name}>
+            <input
+              type="checkbox"
+              id={`${section}.${prop}.${value.value}`}
+              className="mdl-switch__input"
+              checked={current.indexOf(value.value) !== -1}
+              disabled={!isEnabled}
+              onChange={change(value.value)}
+              />
+            <span className="mdl-switch__label">{value.name}</span>
+          </label>
+        ))}
       </Item>
     );
   }

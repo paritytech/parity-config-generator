@@ -23,7 +23,7 @@ function Item({title, description, children, disabled}) {
 Item.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.array]).isRequired,
   disabled: PropTypes.bool,
 };
 

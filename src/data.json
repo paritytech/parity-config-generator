@@ -96,7 +96,7 @@
     },
     "interface": {
       "name": "Interface",
-      "description":" Signer will listen for incoming connections on IP {}.",
+      "description":" Signer will listen for connections on IP {}.",
       "default": "local"
     },
     "path": {
@@ -115,7 +115,7 @@
     },
     "port": {
       "name": "Port",
-      "description": "Parity will listen for incoming connections on port {}.",
+      "description": "Parity will listen for connections on port {}.",
       "default": 30303
     },
     "min_peers": {
@@ -177,6 +177,77 @@
       "name": "Reserved Only", 
       "description": "Connect only to reserved nodes.",
       "default": false
+    }
+  },
+  "rpc": {
+    "section": "RPC Settings",
+    "description": "Expose JSON-RPC APIs over HTTP.",
+    "disable": {
+      "name": "Disable JSON-RPC",
+      "description": "You won't be able to interact with Parity using JSON-RPC over HTTP.",
+      "default": false
+    },
+    "port": {
+      "name": "Port",
+      "description": "JSON-RPC over HTTP will be accessible on port {}.",
+      "default": 8180
+    },
+    "interface": {
+      "name": "Interface",
+      "description":" JSON-RPC will be listening for connections on IP {}.",
+      "default": "local"
+    },
+    "cors": {
+      "name": "CORS",
+      "description": "Allows Cross-Origin Requests from domain '{}'.",
+      "default": "null"
+    },
+    "hosts": {
+      "name": "Allowed Hosts",
+      "description": "Allow connections only using specified address.",
+      "default": [""]
+    },
+    "apis": {
+      "name": "Exposed APIs",
+      "description": "Only selected APIs will be exposed over this interface.",
+      "default": ["web3", "eth", "net", "personal", "ethcore", "traces", "rpc"],
+      "values": [
+        "Web3 [web3]",
+        "Eth [eth]",
+        "Net [net]",
+        "Personal [personal]",
+        "Ethcore [ethcore]",
+        "Traces [traces]",
+        "RPC [rpc]"
+      ]
+    }
+  },
+  "ipc": {
+    "section": "IPC Settings",
+    "description": "Expose JSON-RPC APIs over IPC.",
+    "disable": {
+      "name": "Disable IPC",
+      "description": "You won't be able to use IPC to interact with Parity.",
+      "default": false
+    },
+    "path": {
+      "name": "Path",
+      "description": "Parity will create an IPC socket at {}.",
+      "default": "$HOME/.parity/jsonrpc.ipc"
+    },
+    "apis": {
+      "name": "Exposed APIs",
+      "description": "Only selected APIs will be exposed over this interface.",
+      "default": ["web3", "eth", "net", "personal", "ethcore", "traces", "rpc"],
+      "values": [
+        "Web3 [web3]",
+        "Eth [eth]",
+        "Net [net]",
+        "Personal [personal]",
+        "Ethcore [ethcore]",
+        "Traces [traces]",
+        "RPC [rpc]"
+      ]
     }
   }
 }
