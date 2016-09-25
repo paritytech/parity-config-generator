@@ -66,6 +66,15 @@ class Editor extends Component {
           { this.text('ipc', 'path', !settings.ipc.disable) }
           { this.multiselect('ipc', 'apis', !settings.ipc.disable) }
         </Section>
+        <Section title={data.dapps.section} description={data.dapps.description}>
+          { this.flag('dapps', 'disable') }
+          { this.number('dapps', 'port', !settings.dapps.disable) }
+          { this.text('dapps', 'interface', !settings.dapps.disable) }
+          { this.list('dapps', 'hosts', !settings.dapps.disable) }
+          { this.text('dapps', 'path', !settings.dapps.disable) }
+          { this.text('dapps', 'user', !settings.dapps.disable) }
+          { this.text('dapps', 'password', settings.dapps.user && !settings.dapps.disable) }
+        </Section>
       </div>
     );
   }

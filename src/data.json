@@ -204,7 +204,7 @@
     },
     "hosts": {
       "name": "Allowed Hosts",
-      "description": "Allow connections only using specified address.",
+      "description": "Allow connections only using specified addresses.",
       "default": [""]
     },
     "apis": {
@@ -248,6 +248,45 @@
         "Traces [traces]",
         "RPC [rpc]"
       ]
+    }
+  },
+  "dapps": {
+    "section": "Dapps Server",
+    "description": "Run and customize the web Dapps Server.",
+    "disable": {
+      "name": "Disable Dapps",
+      "description": "You won't be able to access any web Dapps.",
+      "default": false
+    },
+    "port": {
+      "name": "Port",
+      "description": "Dapps Server will be running on port {}.",
+      "default": 8080
+    },
+    "interface": {
+      "name": "Interface",
+      "description":" Dapps Server will listen for connections on IP {}.",
+      "default": "local"
+    },
+    "hosts": {
+      "name": "Allowed Hosts",
+      "description": "Allow connections only using specified addresses.",
+      "default": [""]
+    },
+    "path": {
+      "name": "Path",
+      "description": "Local Dapps will be served from {}.",
+      "default": "$HOME/.parity/dapps"
+    },
+    "user": {
+      "name": "Authentication User",
+      "description": "If specified, will require authorization to access dapps server.",
+      "default": ""
+    },
+    "password": {
+      "name": "Authentication Password",
+      "description": "Password for specified Dapps User.",
+      "default": ""
     }
   }
 }
