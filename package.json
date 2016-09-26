@@ -2,6 +2,7 @@
   "name": "parity-config-generator",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://ethcore.github.io/parity-config-generator",
   "devDependencies": {
     "react-scripts": "0.4.3"
   },
