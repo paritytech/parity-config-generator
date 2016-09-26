@@ -170,6 +170,7 @@ class Editor extends Component {
         title={data[section][prop].name}
         description={description}
         disabled={!isEnabled}
+        large
         >
         {data[section][prop].values.map(val).map(value => (
           <label className="mdl-switch mdl-js-switch" htmlFor={`${section}.${prop}.${value.value}`} key={value.name}>

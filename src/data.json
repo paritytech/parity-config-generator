@@ -218,6 +218,8 @@
         "Personal [personal]",
         "Ethcore [ethcore]",
         "Traces [traces]",
+        "Trusted Signer (unsafe) [signer]",
+        "Ethcore Set (unsafe) [ethcore_set]",
         "RPC [rpc]"
       ]
     }
@@ -246,6 +248,8 @@
         "Personal [personal]",
         "Ethcore [ethcore]",
         "Traces [traces]",
+        "Trusted Signer (unsafe) [signer]",
+        "Ethcore Set (unsafe) [ethcore_set]",
         "RPC [rpc]"
       ]
     }

@@ -1,11 +1,15 @@
 import React, { PropTypes } from 'react';
 
-function Item({title, description, children, disabled}) {
+
+const stylesNormal = {overflow: 'visible'};
+const stylesLarge = {overflow:'visible', height: 'auto'};
+
+function Item({title, description, children, disabled, large}) {
   const isDisabled = disabled ? 'disabled' : '';
   return (
     <li
       className={`mdl-list__item mdl-list__item--two-line ${isDisabled}`}
-      style={{overflow: 'visible'}}
+      style={large ? stylesLarge : stylesNormal}
       >
       <span className="mdl-list__item-primary-content">
         <span>{title}</span>
@@ -25,10 +29,12 @@ Item.propTypes = {
   description: PropTypes.string,
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.array]).isRequired,
   disabled: PropTypes.bool,
+  large: PropTypes.bool
 };
 
 Item.defaultPropTypes = {
-  disabled: false
+  disabled: false,
+  large: false
 };
 
 export default Item;
