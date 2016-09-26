@@ -1,6 +1,10 @@
 import React, { PropTypes } from 'react';
 import './Preview.css';
 
+import data from '../data.json';
+// TODO [ToDr] move to some common?
+import {fillDescription} from './Editor';
+
 function Preview({settings, defaults}) {
   return (
     <div className="mdl-card mdl-shadow--2dp preview-card">
@@ -32,10 +36,11 @@ function toToml(settings, defaults) {
     const vals = Object.keys(settings[section])
       .filter(key => !isEqual(settings[section][key], defaults[section][key]))
       .map(key => {
-        const val = settings[section][key];
 
-        // TODO [ToDr] - display some comments
-        return `${key} = ${toVal(val)}`;
+        const val = settings[section][key];
+        const comment = toComment(settings, section, key, val);
+        const setting = `${key} = ${toVal(val)}`;
+        return `# ${comment}\n${setting}`;
       });
 
     if (vals.length) {
@@ -55,6 +60,13 @@ function toToml(settings, defaults) {
 function isEqual(a, b) {
   // TODO [todr] optimize
   return JSON.stringify(a) === JSON.stringify(b);
+}
+
+function toComment(settings, section, key, value) {
+  if (typeof data[section][key].description === 'object') {
+    return fillDescription(data[section][key].description[value], value);
+  }
+  return fillDescription(data[section][key].description, value);
 }
 
 function toVal(val) {

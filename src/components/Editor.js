@@ -310,7 +310,7 @@ Editor.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-function fillDescription(description, value) {
+export function fillDescription(description, value) {
   return description.replace(/{}/g, value || '');
 }
 
