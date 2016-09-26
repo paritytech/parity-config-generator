@@ -1,5 +1,11 @@
 language: node_js
 node_js: "6"
 
+env:
+  global:
+    - secure: "FtIkCMBTYDYV+/RFh6o49E3BSoHK2RdbrWGvpWqF+NMNqUpxG0rRjT+8QcZM+H9yp70EQ0r6uzZSscrZLSenoLDZkT02P7Ur3eLYj3Ble3SEultBgCgEjCCN4negE3JiBBKA/acD0MhX6KMSEhXssqvgaD5NeBDqtpmjd5FuwnpqHSVyeILngVP4S/MXC8/3ZsMr+IUX/BelHjeqhhZPHohTCNMC3Vwso2jGBUCck/Q1vLObPBhOMV4oLNUQkp9hfalfB11ehUPv5FodyYFoeRR7xWGRcpjSmp6rEq/iwDfLTbrCbk5yNCjeZTFnlqnIrZ/ajf6RXclSrz/BYNsHSRQ2NfSrwetRRdPquCLRspdGAs/7hCPhoyjxRTBXe5q67qge5zdfakfU1oJbjYXClzoYmePvHcN5Az0U8avbPxuJiKsVh1uc8IncV72N/YD+TdMoD2Liy3PKnxAf7PP8ueh9iIIFgtTYfuZcG7EnQkBKOQdXCdWye5nskf1r1HviDFMQXfakM/J6buTR6pFOoqsIFWSjhjdXeQV2G6KBk1jIQL840L3NpLM6ddv7My3+GoecZQEDymcr2YX+60ktmUBppAc/wWpsmsX7dBgetgI8nMXy3+0yl2oY3kktLk34XuxaQVZImnepvCrJudQgxYWQm1YfjfsQ8gFYivQjSHk="
 script:
   - npm run build
+
+after_success:
+  - ./scripts/deploy-to-gh-pages.sh
