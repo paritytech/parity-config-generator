@@ -75,6 +75,25 @@ class Editor extends Component {
           { this.text('dapps', 'user', !settings.dapps.disable) }
           { this.text('dapps', 'password', settings.dapps.user && !settings.dapps.disable) }
         </Section>
+        <Section title={data.mining.section} description={data.mining.description}>
+          { this.text('mining', 'author') }
+          { this.text('mining', 'extra_data') }
+          { this.flag('mining', 'force_sealing') }
+          { this.select('mining', 'reseal_on_txs') }
+          { this.number('mining', 'reseal_min_period') }
+          { this.number('mining', 'work_queue_size') }
+          { this.flag('mining', 'remove_solved') }
+          { this.select('mining', 'relay_set') }
+          { this.number('mining', 'usd_per_tx') }
+          { this.text('mining', 'usd_per_eth') }
+          { this.text('mining', 'price_update_period') }
+          { this.number('mining', 'gas_floor_target') }
+          { this.number('mining', 'gas_cap') }
+          { this.number('mining', 'tx_gas_limit') }
+          { this.number('mining', 'tx_queue_size') }
+          { this.list('mining', 'notify_work') }
+        </Section>
+
       </div>
     );
   }

@@ -288,5 +288,118 @@
       "description": "Password for specified Dapps User.",
       "default": ""
     }
+  },
+  "mining": {
+    "section": "Mining Settings",
+    "description": "Options for mining nodes.",
+    "author": {
+      "name": "Author (Coinbase)",
+      "description": "Account address to receive reward when block is mined.",
+      "default": ""
+    },
+    "force_sealing": {
+      "name": "Force Sealing",
+      "description": "Prepare a block to seal even when there are no miners connected.",
+      "default": false
+    },
+    "reseal_on_txs": {
+      "name": "Reseal On Transactions",
+      "description": {
+        "none": "New transactions will not cause a new pending block to be created.",
+        "own": "New pending block will be created only on transactions sent using local RPC/IPC",
+        "ext": "New pending block will be created only on external transactions.",
+        "all": "New pending block will be created for all transactions (both local and external)."
+      },
+      "default": "own",
+      "values": [
+        "Never [none]",
+        "Local [own]",
+        "External [ext]",
+        "All [all]"
+      ]
+    },
+    "reseal_min_period": {
+      "name": "Reseal Period",
+      "description": "New pending block will be created only once per {} milliseconds.",
+      "default": 2000,
+      "min": 1,
+      "max": 30000
+    },
+    "work_queue_size": {
+      "name": "Work Queue Size",
+      "description": "Parity will produce at most {} distinct pending blocks for miners.",
+      "default": 20,
+      "min": 1,
+      "max": 100
+    },
+    "relay_set": {
+      "name": "Relay Set",
+      "description": {
+        "cheap": "Relay any transaction in the queue (may include invalid transactions).",
+        "strict": "Relay only executed transactions (will relay nothing if not mining).",
+        "lenient": "Same as strict when mining, and cheap when not."
+      },
+      "values": [
+        "Cheap [cheap]",
+        "Strict [strict]",
+        "Lenient [lenient]"
+      ],
+      "default": "cheap"
+    },
+    "usd_per_tx": {
+      "name": "USD per Transaction",
+      "description": "You will be paid ${} for a basic transaction - Minimum gas price will be set accordingly.",
+      "default": 0.005
+    },
+    "usd_per_eth": {
+      "name": "USD per Eth",
+      "description": "Specify source (URL) or current price of Eth.",
+      "default": "auto"
+    },
+    "price_update_period": {
+      "name": "Price Update Period",
+      "description": "Parity will update price per ETH every {}.",
+      "default": "1 hour"
+    },
+    "gas_floor_target": {
+      "name": "Gas Floor Target",
+      "description": "Targeting {} gas per block when sealing a new block.",
+      "default": 4700000
+    },
+    "gas_cap": {
+      "name": "Gas Cap",
+      "description": "Gas limit will be raised at most by {} gas.",
+      "default": 6283184
+    },
+    "tx_gas_limit": {
+      "name": "Gas Limit per Transaction",
+      "description": "Parity will reject transactions above {} gas.",
+      "default": 0,
+      "min": 0,
+      "max": 10000000
+    },
+    "tx_queue_size": {
+      "name": "Transaction Queue Size",
+      "description": "Parity will keep/relay at most {} transactions in queue.",
+      "default": 1024,
+      "min": 0,
+      "max": 1000000
+    },
+    "extra_data": {
+      "name": "Extra Data",
+      "description": "Blocks that you mine will have '{}' in extra data field.",
+      "default": ""
+    },
+    "remove_solved": {
+      "name": "Remove Solved Blocks",
+      "description": "Removes solved blocks - faster import speed, but extra solutions to the same work package will go unused.",
+
+      "default": false
+    },
+    "notify_work": {
+      "name": "Notify Work",
+      "description": "URLs to which work package notifications are pushed.",
+      "default": [""]
+    }
   }
 }
