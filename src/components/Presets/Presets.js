@@ -48,6 +48,13 @@ class Presets extends Component {
       return;
     }
 
+    if (this.props.preset === 'None') {
+      if (!confirm('Do you want to overwrite current config?')) {
+        this.forceUpdate();
+        return;
+      }
+    }
+
     const data = mix(clone(this.props.defaults), clone(presets[preset] || {}));
     this.props.onChange(preset, data);
   };
