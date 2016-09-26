@@ -4,5 +4,5 @@ import Preview from './Preview';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<Preview settings={{}} />, div);
+  ReactDOM.render(<Preview settings={{}} defaults={{}} />, div);
 });

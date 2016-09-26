@@ -8,6 +8,11 @@ import data from '../data.json';
 
 class Editor extends Component {
 
+  static propTypes = {
+    settings: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired,
+  };
+
   change = (data, name) => {
     return value => {
       data[name] = value;
@@ -304,11 +309,6 @@ class Editor extends Component {
     );
   }
 }
-
-Editor.propTypes = {
-  settings: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired,
-};
 
 export function fillDescription(description, value) {
   return description.replace(/{}/g, value || '');
