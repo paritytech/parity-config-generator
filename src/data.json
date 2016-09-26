@@ -56,7 +56,7 @@
     }
   },
   "account": {
-    "section": "Account Options",
+    "section": "Account",
     "description": "Unlocking accounts and private keys security parameters.",
     "unlock": {
       "name": "Accounts to unlock",
@@ -106,7 +106,7 @@
     }
   },
   "network": {
-    "section": "Networking Options",
+    "section": "Networking",
     "description": "Network and peer-related settings.",
     "disable": {
       "name": "Disable Network",
@@ -180,7 +180,7 @@
     }
   },
   "rpc": {
-    "section": "RPC Settings",
+    "section": "RPC",
     "description": "Expose JSON-RPC APIs over HTTP.",
     "disable": {
       "name": "Disable JSON-RPC",
@@ -223,7 +223,7 @@
     }
   },
   "ipc": {
-    "section": "IPC Settings",
+    "section": "IPC",
     "description": "Expose JSON-RPC APIs over IPC.",
     "disable": {
       "name": "Disable IPC",
@@ -290,7 +290,7 @@
     }
   },
   "mining": {
-    "section": "Mining Settings",
+    "section": "Mining",
     "description": "Options for mining nodes.",
     "author": {
       "name": "Author (Coinbase)",
@@ -400,6 +400,81 @@
       "name": "Notify Work",
       "description": "URLs to which work package notifications are pushed.",
       "default": [""]
+    }
+  },
+  "footprint": {
+    "section": "Footprint",
+    "description": "Tune Parity CPU, Memory and Disk usage.",
+    "tracing": {
+      "name": "Tracing",
+      "description": {
+        "on": "Compute and Store tracing data. (Enables trace_* APIs).",
+        "off": "Disable tracing.",
+        "auto": "Disable tracing unless it was enable previously for that DB."
+      },
+      "values": [
+        "on", "off", "auto"
+      ],
+      "default": "auto"
+    },
+    "pruning": {
+      "name": "Tracing",
+      "description": {
+        "fast": "Prune old state data. Maintains journal overlay - fast but extra 50MB of memory used.",
+        "archive": "Keep all state trie data. No pruning.",
+        "auto": "Prune data unless pruning was disable previously for that DB."
+      },
+      "values": [
+        "fast", "archive", "auto"
+      ],
+      "default": "auto"
+    },
+    "fat_db": {
+      "name": "Fat DB",
+      "description": "Enables Fat DB",
+      "default": false
+    },
+    "db_compaction": {
+      "name": "DB Compaction Profile",
+      "description": {
+        "hdd": "Increase performance on HDD.",
+        "ssd": "Increase performance on SSD."
+      },
+      "values": ["HDD [hdd]", "SSD [ssd]"],
+      "default": "ssd"
+    },
+    "cache_size_db": {
+      "name": "Database Cache",
+      "description": "Will keep up to {}MB data in Database cache.",
+      "default": 64,
+      "min": 0,
+      "max": 32000
+    },
+    "cache_size_blocks": {
+      "name": "Blockchain Cache",
+      "description": "Will keep up to {}MB data in Blockchain cache.",
+      "default": 8,
+      "min": 0,
+      "max": 32000
+    },
+    "cache_size_queue": {
+      "name": "Import Queue Cache",
+      "description": "Will keep up to {}MB of blocks in block import queue.",
+      "default": 50,
+      "min": 0,
+      "max": 32000
+    },
+    "cache_size": {
+      "name": "Total Cache Size", 
+      "description": "If defined will never use more then {}MB for all caches. (Overrides other cache settings).",
+      "default": 0,
+      "min": 0,
+      "max": 32000
+    },
+    "fast_and_loose": {
+      "name": "Fast And Loose", 
+      "description": "Significant speed up but unclean exit is unrecoverable (disables DB WAL).",
+      "default": false
     }
   }
 }

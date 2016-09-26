@@ -93,7 +93,17 @@ class Editor extends Component {
           { this.number('mining', 'tx_queue_size') }
           { this.list('mining', 'notify_work') }
         </Section>
-
+        <Section title={data.footprint.section} description={data.footprint.description}>
+          { this.select('footprint', 'tracing') }
+          { this.select('footprint', 'pruning') }
+          { this.flag('footprint', 'fat_db') }
+          { this.select('footprint', 'db_compaction') }
+          { this.number('footprint', 'cache_size') }
+          { this.number('footprint', 'cache_size_db', !settings.footprint.cache_size) }
+          { this.number('footprint', 'cache_size_blocks', !settings.footprint.cache_size) }
+          { this.number('footprint', 'cache_size_queue', !settings.footprint.cache_size) }
+          { this.flag('footprint', 'fast_and_loose') }
+        </Section>
       </div>
     );
   }
