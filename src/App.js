@@ -7,18 +7,38 @@ import Presets from './components/Presets';
 
 import data from './data.json';
 
-let settings = generateDefaults(data);
-settings.parity.chain = 'morden';
+
+function loadSettings() {
+  try {
+    const settings = JSON.parse(window.localStorage.getItem('last-config'));
+    if (settings && typeof settings === 'object') {
+      return settings;
+    }
+  } catch (e) {
+  }
+
+  const settings = generateDefaults(data);
+  settings.parity.chain = 'morden';
+  return settings;
+}
+
+function saveSettings(settings) {
+  try {
+    window.localStorage.setItem('last-config', JSON.stringify(settings));
+  } catch (e) {
+  }
+}
 
 class App extends Component {
 
   state = {
     preset: undefined,
-    settings: settings,
+    settings: loadSettings(),
     defaults: generateDefaults(data)
   };
 
   handleChange = (settings) => {
+    saveSettings(settings);
     this.setState({
       preset: undefined,
       settings
@@ -26,6 +46,7 @@ class App extends Component {
   };
 
   handlePreset = (preset, settings) => {
+    saveSettings(settings);
     this.setState({
       preset,
       settings
