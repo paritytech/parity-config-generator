@@ -1,0 +1,6 @@
+.presets {
+}
+.presets .mdl-list__item-primary-content {
+  flex-basis: 120px;
+  flex-shrink: 0;
+}

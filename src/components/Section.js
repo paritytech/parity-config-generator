@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
+import './Section.css';
+
 class Section extends Component {
 
   state = {
@@ -31,8 +33,7 @@ class Section extends Component {
     const {title, description, children} = this.props;
     const {collapsed} = this.state;
     return (
-      <div>
-        <hr />
+      <div className="section">
         <h5 onClick={this.toggleCollapsed} style={{cursor: 'pointer'}}>
           <button className="mdl-button mdl-js-button mdl-button--icon">
           {collapsed ? (
@@ -45,7 +46,7 @@ class Section extends Component {
         </h5>
         <p>{description}</p>
         {collapsed ? '' : (
-          <ul className="mdl-list" style={{marginTop: 0, paddingTop: 0}}>
+          <ul className="mdl-list section-list">
             {children}
           </ul>
         )}

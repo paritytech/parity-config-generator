@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import TopBar from './components/TopBar';
 import Editor from './components/Editor';
 import Preview from './components/Preview';
+import Presets from './components/Presets';
 
 import data from './data.json';
 
@@ -12,16 +13,27 @@ settings.parity.chain = 'morden';
 class App extends Component {
 
   state = {
+    preset: undefined,
     settings: settings,
     defaults: generateDefaults(data)
   };
 
   handleChange = (settings) => {
-    this.setState({settings});
-  }
+    this.setState({
+      preset: undefined,
+      settings
+    });
+  };
+
+  handlePreset = (preset, settings) => {
+    this.setState({
+      preset,
+      settings
+    });
+  };
 
   render() {
-    const {settings, defaults} = this.state;
+    const {settings, defaults, preset} = this.state;
     return (
       <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <TopBar />
@@ -31,6 +43,7 @@ class App extends Component {
               <Editor settings={settings} onChange={this.handleChange} />
             </div>
             <div className="mdl-cell mdl-cell--4-col mdl-cell--12-col-tablet">
+              <Presets preset={preset} defaults={defaults} onChange={this.handlePreset} />
               <Preview settings={settings} defaults={defaults} />
             </div>
           </div>
