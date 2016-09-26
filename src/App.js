@@ -27,10 +27,10 @@ class App extends Component {
         <TopBar />
         <main className="mdl-layout__content">
           <div className="mdl-grid">
-            <div className="mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet">
+            <div className="mdl-cell mdl-cell--8-col mdl-cell--12-col-tablet">
               <Editor settings={settings} onChange={this.handleChange} />
             </div>
-            <div className="mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet">
+            <div className="mdl-cell mdl-cell--4-col mdl-cell--12-col-tablet">
               <Preview settings={settings} defaults={defaults} />
             </div>
           </div>

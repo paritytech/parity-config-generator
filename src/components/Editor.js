@@ -20,7 +20,7 @@ class Editor extends Component {
 
     return (
       <div>
-        <Section title={data.parity.section} description={data.parity.description} collapsed={false}>
+        <Section title={data.parity.section} description={data.parity.description}>
           { this.select('parity', 'chain') }
           { this.select('parity', 'mode') }
           { this.number('parity', 'mode_timeout', settings.parity.mode !== 'active') }
@@ -103,6 +103,17 @@ class Editor extends Component {
           { this.number('footprint', 'cache_size_blocks', !settings.footprint.cache_size) }
           { this.number('footprint', 'cache_size_queue', !settings.footprint.cache_size) }
           { this.flag('footprint', 'fast_and_loose') }
+        </Section>
+        <Section title={data.snapshots.section} description={data.snapshots.description}>
+          { this.flag('snapshots', 'disable_periodic') }
+        </Section>
+        <Section title={data.vm.section} description={data.vm.description}>
+          { this.flag('vm', 'jit') }
+        </Section>
+        <Section title={data.misc.section} description={data.misc.description}>
+          { this.text('misc', 'logging') }
+          { this.text('misc', 'log_file') }
+          { this.flag('misc', 'color') }
         </Section>
       </div>
     );

@@ -476,5 +476,42 @@
       "description": "Significant speed up but unclean exit is unrecoverable (disables DB WAL).",
       "default": false
     }
+  },
+  "snapshots": {
+    "section": "Snapshots",
+    "description": "Snapshoting (warp sync) settings.",
+    "disable_periodic": {
+      "name": "Disable Periodic",
+      "description": "Disables automatic periodic snapshots.",
+      "default": false
+    }
+  },
+  "vm": {
+    "section": "VM",
+    "description": "EVM settings.",
+    "jit": {
+      "name": "Enable JIT",
+      "description": "Enables Just In Time compiler. Super-fast for CPU-intensive contracts.",
+      "default": false
+    }
+  },
+  "misc": {
+    "section": "Miscellaneous",
+    "description": "Other uncategorized options.",
+    "logging": {
+      "name": "Logging",
+      "description": "Logging pattern (`<module>=<level>`, e.g. `own_tx=trace`).",
+      "default": ""
+    },
+    "log_file": {
+      "name": "Log File",
+      "description": "Logs will be stored at {}.",
+      "default": ""
+    },
+    "color": {
+      "name": "Enable Colors",
+      "description": "Enables colors in logs.",
+      "default": true
+    }
   }
 }
