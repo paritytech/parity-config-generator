@@ -28,7 +28,7 @@ class Editor extends Component {
         <Section title={data.parity.section} description={data.parity.description}>
           { this.select('parity', 'chain') }
           { this.select('parity', 'mode') }
-          { this.number('parity', 'mode_timeout', settings.parity.mode !== 'active') }
+          { this.number('parity', 'mode_timeout', settings.parity.mode !== 'active' && settings.parity.mode !== 'off') }
           { this.number('parity', 'mode_alarm', settings.parity.mode === 'passive') }
           { this.text('parity', 'db_path') }
           { this.text('parity', 'keys_path') }
@@ -48,15 +48,19 @@ class Editor extends Component {
         </Section>
         <Section title={data.network.section} description={data.network.description}>
           { this.flag('network', 'disable') }
+          { this.flag('network', 'warp', !settings.network.disable) }
           { this.number('network', 'port', !settings.network.disable) }
           { this.number('network', 'min_peers', !settings.network.disable) }
           { this.number('network', 'max_peers', !settings.network.disable) }
+          { this.number('network', 'snapshot_peers', !settings.network.disable) }
+          { this.number('network', 'max_pending_peers', !settings.network.disable) }
           { this.select('network', 'nat', !settings.network.disable) }
           { this.text('network', 'id', !settings.network.disable) }
           { this.list('network', 'bootnodes', !settings.network.disable) }
           { this.flag('network', 'discovery', !settings.network.disable) }
           { this.list('network', 'reserved_peers', !settings.network.disable) }
           { this.flag('network', 'reserved_only', !settings.network.disable) }
+          { this.select('network', 'allow_ips', !settings.network.disable) }
         </Section>
         <Section title={data.rpc.section} description={data.rpc.description}>
           { this.flag('rpc', 'disable') }
@@ -95,18 +99,24 @@ class Editor extends Component {
           { this.number('mining', 'gas_floor_target') }
           { this.number('mining', 'gas_cap') }
           { this.number('mining', 'tx_gas_limit') }
+          { this.number('mining', 'tx_time_limit') }
           { this.number('mining', 'tx_queue_size') }
+          { this.select('mining', 'tx_queue_strategy') }
+          { this.number('mining', 'tx_queue_ban_count') }
+          { this.number('mining', 'tx_queue_ban_time') }
           { this.list('mining', 'notify_work') }
         </Section>
         <Section title={data.footprint.section} description={data.footprint.description}>
           { this.select('footprint', 'tracing') }
           { this.select('footprint', 'pruning') }
+          { this.number('footprint', 'pruning_history', settings.footprint.pruning !== 'archive') }
           { this.flag('footprint', 'fat_db') }
           { this.select('footprint', 'db_compaction') }
           { this.number('footprint', 'cache_size') }
           { this.number('footprint', 'cache_size_db', !settings.footprint.cache_size) }
           { this.number('footprint', 'cache_size_blocks', !settings.footprint.cache_size) }
           { this.number('footprint', 'cache_size_queue', !settings.footprint.cache_size) }
+          { this.number('footprint', 'cache_size_state', !settings.footprint.cache_size) }
           { this.flag('footprint', 'fast_and_loose') }
         </Section>
         <Section title={data.snapshots.section} description={data.snapshots.description}>
@@ -125,9 +135,10 @@ class Editor extends Component {
   }
 
   select(section, prop, isEnabled = true) {
+    check(section, prop);
     const {settings} = this.props;
-    const value = settings[section][prop];
-    const description = fillDescription(data[section][prop].description[value], value);
+    const value = or(settings[section][prop], data[section][prop].default);
+    const description = fillDescription(data[section][prop].description[value], value, `${section}.${prop}`);
     
     return (
       <Item
@@ -147,6 +158,7 @@ class Editor extends Component {
   }
 
   multiselect(section, prop, isEnabled = true) {
+    check(section, prop);
     const {settings} = this.props;
     const current = settings[section][prop];
     const description = fillDescription(data[section][prop].description, current);
@@ -190,8 +202,9 @@ class Editor extends Component {
   }
 
   number(section, prop, isEnabled = true) {
+    check(section, prop);
     const {settings} = this.props;
-    const value = settings[section][prop];
+    const value = or(settings[section][prop], data[section][prop].default);
     const description = fillDescription(data[section][prop].description, value);
 
     return (
@@ -217,8 +230,9 @@ class Editor extends Component {
   }
 
   text(section, prop, isEnabled = true) {
+    check(section, prop);
     const {settings} = this.props;
-    const value = settings[section][prop];
+    const value = or(settings[section][prop], data[section][prop].default);
     const description = fillDescription(data[section][prop].description, value);
 
     return (
@@ -241,8 +255,9 @@ class Editor extends Component {
   }
 
   flag(section, prop, isEnabled = true) {
+    check(section, prop);
     const {settings} = this.props;
-    const value = settings[section][prop];
+    const value = or(settings[section][prop], data[section][prop].default);
     const description = fillDescription(data[section][prop].description, value);
 
     return (
@@ -267,8 +282,9 @@ class Editor extends Component {
   }
 
   list(section, prop, isEnabled = true) {
+    check(section, prop);
     const {settings} = this.props;
-    const value = settings[section][prop];
+    const value = or(settings[section][prop], data[section][prop].default);
     const description = fillDescription(data[section][prop].description, value.toString());
 
     return (
@@ -311,8 +327,24 @@ class Editor extends Component {
   }
 }
 
-export function fillDescription(description, value) {
+export function fillDescription(description, value, key) {
+  if (!description) {
+    throw new Error(`Cant find description for: value:${value} at ${key}`);
+  }
   return description.replace(/{}/g, value || '');
+}
+
+function or(value, def) {
+  if (value === undefined) {
+    return def;
+  }
+  return value;
+}
+
+function check(section, prop) {
+  if (!data[section][prop]) {
+    throw new Error(`Can't find data for ${section}.${prop}`);
+  }
 }
 
 function val(data) {

@@ -7,13 +7,15 @@
       "description": {
         "active": "Parity continously syncs the chain.",
         "passive": "Parity syncs initially, then sleeps and wakes regularly to resync",
-        "dark": "Parity syncs only when an external interface is active."
+        "dark": "Parity syncs only when an external interface is active.",
+        "off": "Syncing is disabled (no network)."
       },
       "default": "active",
       "values": [
         "Active [active]",
         "Dark Mode [dark]",
-        "Passive [passive]"
+        "Passive [passive]",
+        "Off [off]"
       ]
     },
     "mode_timeout": {
@@ -34,10 +36,12 @@
       "name": "Chain",
       "description": {
         "homestead": "Main Network",
-        "morden": " Test Network"
+        "morden": " Test Network",
+        "classic": "Ethereum Classic",
+        "expanse": "Expanse"
       },
       "default": "homestead",
-      "values": ["homestead", "morden"]
+      "values": ["homestead", "morden", "classic", "expanse"]
     },
     "db_path": {
       "name": "Database Path",
@@ -77,31 +81,31 @@
     }
   },
   "signer": {
-    "section": "Trusted Signer",
-    "description": "Signer is used to confirm transactions and sign transactions.",
+    "section": "Parity UI (Trusted Signer)",
+    "description": "Signer is used to manage your wallet, confirm and sign transactions.",
     "disable": {
-      "name": "Disable Signer",
-      "description": "You will need to unlock manually if Signer is disabled.",
+      "name": "Disable UI",
+      "description": "You will need to unlock accounts manually if UI is disabled.",
       "default": false
     },
     "force": {
-      "name": "Force Enable Signer",
+      "name": "Force Enable UI",
       "description": "Enable Signer even when it would be disabled by other options.",
       "default": false
     },
     "port": {
       "name": "Port",
-      "description": "Signer will be accessible on port {}.",
+      "description": "UI will be accessible on port {}.",
       "default": 8180
     },
     "interface": {
       "name": "Interface",
-      "description":" Signer will listen for connections on IP {}.",
+      "description":" UI will listen for connections on IP {}.",
       "default": "local"
     },
     "path": {
       "name": "Path",
-      "description": "Signer configuration will be stored at {}.",
+      "description": "UI configuration will be stored at {}.",
       "default": "$HOME/.parity/signer"
     }
   },
@@ -111,6 +115,11 @@
     "disable": {
       "name": "Disable Network",
       "description": "Parity will not attempt to connect to the network.",
+      "default": false
+    },
+    "warp": {
+      "name": "Warp Sync",
+      "description": "Parity will sync by downloading latest state first. Node will be operational in couple minutes.",
       "default": false
     },
     "port": {
@@ -129,6 +138,20 @@
       "name": "Max Peers",
       "description": "Parity will maintain at most {} peers.",
       "default": 50,
+      "min": 0,
+      "max": 100000
+    },
+    "snapshot_peers": {
+      "name": "Snapshot Sync Peers",
+      "description": "Parity will maintain additional {} peers for snapshot sync.",
+      "default": 16,
+      "min": 0,
+      "max": 100000
+    },
+    "max_pending_peers": {
+      "name": "Max Pending Peers",
+      "description": "Parity will allow up to {} pending connections.",
+      "default": 64,
       "min": 0,
       "max": 100000
     },
@@ -177,6 +200,20 @@
       "name": "Reserved Only", 
       "description": "Connect only to reserved nodes.",
       "default": false
+    },
+    "allow_ips": {
+      "name": "Allow Connections",
+      "description": {
+        "all": "Parity will not filter outbound connections.",
+        "private": "Parity will connect only to private network IP addresses.",
+        "public": "Parity will connect only to public network IP addresses."
+      },
+      "default": "all",
+      "values": [
+        "All IPs [all]",
+        "Private Network [private]",
+        "Public Network [public]"
+      ]
     }
   },
   "rpc": {
@@ -210,16 +247,17 @@
     "apis": {
       "name": "Exposed APIs",
       "description": "Only selected APIs will be exposed over this interface.",
-      "default": ["web3", "eth", "net", "personal", "ethcore", "traces", "rpc"],
+      "default": ["web3", "eth", "net", "parity", "traces", "rpc"],
       "values": [
         "Web3 [web3]",
         "Eth [eth]",
         "Net [net]",
         "Personal [personal]",
-        "Ethcore [ethcore]",
+        "Parity [parity]",
+        "Parity Accounts [parity_accounts]",
         "Traces [traces]",
         "Trusted Signer (unsafe) [signer]",
-        "Ethcore Set (unsafe) [ethcore_set]",
+        "Parity Set* (unsafe) [parity_set]",
         "RPC [rpc]"
       ]
     }
@@ -240,17 +278,17 @@
     "apis": {
       "name": "Exposed APIs",
       "description": "Only selected APIs will be exposed over this interface.",
-      "default": ["web3", "eth", "net", "personal", "ethcore", "traces", "rpc"],
+      "default": ["web3", "eth", "net", "parity", "parity_accounts", "traces", "rpc"],
       "values": [
         "Web3 [web3]",
         "Eth [eth]",
         "Net [net]",
         "Personal [personal]",
-        "Ethcore [ethcore]",
+        "Parity [parity]",
+        "Parity Accounts [parity_accounts]",
         "Traces [traces]",
         "Trusted Signer (unsafe) [signer]",
-        "Ethcore Set (unsafe) [ethcore_set]",
-        "RPC [rpc]"
+        "Parity Set* (unsafe) [parity_set]"
       ]
     }
   },
@@ -382,12 +420,47 @@
       "min": 0,
       "max": 10000000
     },
+    "tx_time_limit": {
+      "name": "Time Limit per Transaction [ms]",
+      "description": "Parity will start banning senders/code when execution exceeds specified limit.",
+      "default": 0,
+      "min": 0,
+      "max": 100000
+    },
+    "tx_queue_ban_count": {
+      "name": "Ban After",
+      "description": "Parity will start banning senders/code when execution exceeds limit {} time(s).",
+      "default": 1,
+      "min": 0,
+      "max": 1000
+    },
+    "tx_queue_ban_time": {
+      "name": "Ban For",
+      "description": "Parity will ban senders/code for {} seconds.",
+      "default": 180,
+      "min": 0,
+      "max": 10000
+    },
     "tx_queue_size": {
       "name": "Transaction Queue Size",
       "description": "Parity will keep/relay at most {} transactions in queue.",
       "default": 1024,
       "min": 0,
       "max": 1000000
+    },
+    "tx_queue_strategy": {
+      "name": "Transaction Queue Strategy",
+      "description": {
+        "gas_price": "Txs in the queue are ordered by gas price (high gas price = high priority)",
+        "gas": "Txs in the queue are ordered by gas (low gas = high priority)",
+        "gas_factory": "Txs in the queue are ordered by gas/2^15 + gas_price (low gas or high gas+high fee = high priority)"
+      },
+      "default": "gas_price",
+      "values": [
+        "Gas Price [gas_price]",
+        "Gas Only [gas]",
+        "Gas & Gas Price [gas_factor]"
+      ]
     },
     "extra_data": {
       "name": "Extra Data",
@@ -433,6 +506,13 @@
       ],
       "default": "auto"
     },
+    "pruning_history": {
+      "name": "Pruning History",
+      "description": "Will keep up to {} old state entries.",
+      "default": 64,
+      "min": 0,
+      "max": 32000
+    },
     "fat_db": {
       "name": "Fat DB",
       "description": "Enables Fat DB",
@@ -465,6 +545,13 @@
       "name": "Import Queue Cache",
       "description": "Will keep up to {}MB of blocks in block import queue.",
       "default": 50,
+      "min": 0,
+      "max": 32000
+    },
+    "cache_size_state": {
+      "name": "State Cache",
+      "description": "Will keep up to {}MB data in State cache.",
+      "default": 25,
       "min": 0,
       "max": 32000
     },
