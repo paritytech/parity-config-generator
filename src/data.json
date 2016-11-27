@@ -36,12 +36,12 @@
       "name": "Chain",
       "description": {
         "homestead": "Main Network",
-        "morden": " Test Network",
+        "ropsten": " Test Network",
         "classic": "Ethereum Classic",
         "expanse": "Expanse"
       },
       "default": "homestead",
-      "values": ["homestead", "morden", "classic", "expanse"]
+      "values": ["homestead", "ropsten", "classic", "expanse"]
     },
     "db_path": {
       "name": "Database Path",
