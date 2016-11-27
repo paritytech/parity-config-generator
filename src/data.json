@@ -80,7 +80,7 @@
       "max": 1000000
     }
   },
-  "signer": {
+  "ui": {
     "section": "Parity UI (Trusted Signer)",
     "description": "Signer is used to manage your wallet, confirm and sign transactions.",
     "disable": {

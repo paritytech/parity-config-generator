@@ -39,12 +39,12 @@ class Editor extends Component {
           { this.text('account', 'password') }
           { this.number('account', 'keys_iterations') }
         </Section>
-        <Section title={data.signer.section} description={data.signer.description}>
-          { this.flag('signer', 'disable') }
-          { this.flag('signer', 'force', !settings.signer.disable) }
-          { this.number('signer', 'port', !settings.signer.disable) }
-          { this.text('signer', 'interface', !settings.signer.disable) }
-          { this.text('signer', 'path', !settings.signer.disable) }
+        <Section title={data.ui.section} description={data.ui.description}>
+          { this.flag('ui', 'disable') }
+          { this.flag('ui', 'force', !settings.ui.disable) }
+          { this.number('ui', 'port', !settings.ui.disable) }
+          { this.text('ui', 'interface', !settings.ui.disable) }
+          { this.text('ui', 'path', !settings.ui.disable) }
         </Section>
         <Section title={data.network.section} description={data.network.description}>
           { this.flag('network', 'disable') }
