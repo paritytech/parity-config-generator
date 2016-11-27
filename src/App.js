@@ -18,7 +18,7 @@ function loadSettings() {
   }
 
   const settings = generateDefaults(data);
-  settings.parity.chain = 'morden';
+  settings.parity.chain = 'ropsten';
   return settings;
 }
 
