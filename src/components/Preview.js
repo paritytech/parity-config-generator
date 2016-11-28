@@ -55,6 +55,9 @@ class Preview extends Component {
 
 function toToml(settings, defaults) {
   const toml = Object.keys(settings).reduce((acc, section) => {
+    // for old configs the section might be missing in defaults
+    defaults[section] = defaults[section] || {};
+
     const vals = Object.keys(settings[section])
       .filter(key => !isEqual(settings[section][key], defaults[section][key]))
       .map(key => {
@@ -85,6 +88,10 @@ function isEqual(a, b) {
 }
 
 function toComment(settings, section, key, value) {
+  // for old configs the section might be missing in defaults
+  data[section] = data[section] || {};
+  data[section][key] = data[section][key] || {};
+
   if (typeof data[section][key].description === 'object') {
     return fillDescription(data[section][key].description[value], value);
   }

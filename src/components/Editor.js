@@ -329,7 +329,8 @@ class Editor extends Component {
 
 export function fillDescription(description, value, key) {
   if (!description) {
-    throw new Error(`Cant find description for: value:${value} at ${key}`);
+    console.warn(`Cant find description for: value:${value} at ${key}`);
+    return 'unknown entry';
   }
   return description.replace(/{}/g, value || '');
 }

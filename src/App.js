@@ -9,17 +9,21 @@ import data from './data.json';
 
 
 function loadSettings() {
+  const defaultSettings = generateDefaults(data);
   try {
     const settings = JSON.parse(window.localStorage.getItem('last-config'));
     if (settings && typeof settings === 'object') {
+      // make sure the sections are always created
+      Object.keys(defaultSettings).forEach(key => {
+        settings[key] = settings[key] || {};
+      });
       return settings;
     }
   } catch (e) {
   }
 
-  const settings = generateDefaults(data);
-  settings.parity.chain = 'ropsten';
-  return settings;
+  defaultSettings.parity.chain = 'ropsten';
+  return defaultSettings;
 }
 
 function saveSettings(settings) {
