@@ -515,8 +515,15 @@
     },
     "fat_db": {
       "name": "Fat DB",
-      "description": "Enables Fat DB",
-      "default": false
+      "description": {
+        "on": "Enables Fat DB",
+        "off": "Disable Fat DB.",
+        "auto": "Detect if Fat DB was enabled previously."
+      },
+      "values": [
+        "on", "off", "auto"
+      ],
+      "default": "auto"
     },
     "db_compaction": {
       "name": "DB Compaction Profile",

@@ -110,7 +110,7 @@ class Editor extends Component {
           { this.select('footprint', 'tracing') }
           { this.select('footprint', 'pruning') }
           { this.number('footprint', 'pruning_history', settings.footprint.pruning !== 'archive') }
-          { this.flag('footprint', 'fat_db') }
+          { this.select('footprint', 'fat_db') }
           { this.select('footprint', 'db_compaction') }
           { this.number('footprint', 'cache_size') }
           { this.number('footprint', 'cache_size_db', !settings.footprint.cache_size) }
