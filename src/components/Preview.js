@@ -35,7 +35,7 @@ class Preview extends Component {
       <div className='mdl-card mdl-shadow--2dp preview-card'>
         <div className='mdl-card__title'>
           <div className='preview-title mdl-card__title-text'>
-            .parity/config.toml
+            config.toml
           </div>
         </div>
         <div className='mdl-card__actions mdl-card--border'>
@@ -75,11 +75,16 @@ function toToml (settings, defaults) {
     return acc.concat(vals);
   }, []);
 
+  toml.unshift(
+    '# This config should be placed in following paths:',
+    '#   $HOME/.local/share/io.parity.ethereum (Linux)',
+    '#   %UserProfile%\\AppData\\Roaming\\Parity\\Ethereum (Windows)',
+  );
   if (!toml.length) {
     return '# All values you use are defaults. Config is not needed.';
   }
 
-  return toml.join('\n').substr(1);
+  return toml.join('\n');
 }
 
 function isEqual (a, b) {
@@ -111,6 +116,8 @@ function toVal (val) {
     return `[${val.map(v => toVal(v)).join(', ')}]`;
   }
 
+  // Escape windows paths
+  val = val.replace(/\\([^\\])/g, '\\\\$1')
   return `"${val}"`;
 }
 
