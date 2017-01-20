@@ -5,17 +5,17 @@ import './Section.css';
 class Section extends Component {
 
   state = {
-    collapsed: true,
+    collapsed: true
   };
 
-  constructor(...args) {
+  constructor (...args) {
     super(...args);
     this.state = {
       collapsed: this.props.collapsed
     };
   }
 
-  componentWillReceiveProps(newProps) {
+  componentWillReceiveProps (newProps) {
     if (this.props.collapsed !== newProps.collapsed) {
       this.setState({
         collapsed: newProps.collapsed
@@ -29,24 +29,24 @@ class Section extends Component {
     });
   };
 
-  render() {
+  render () {
     const {title, description, children} = this.props;
     const {collapsed} = this.state;
     return (
-      <div className="section">
+      <div className='section'>
         <h5 onClick={this.toggleCollapsed} style={{cursor: 'pointer'}}>
-          <button className="mdl-button mdl-js-button mdl-button--icon">
-          {collapsed ? (
-            <i className="material-icons">expand_more</i>
-          ) : (
-            <i className="material-icons">expand_less</i>
-          )}
+          <button className='mdl-button mdl-js-button mdl-button--icon'>
+            {collapsed ? (
+              <i className='material-icons'>expand_more</i>
+            ) : (
+              <i className='material-icons'>expand_less</i>
+            )}
           </button>
           {title}
         </h5>
         <p>{description}</p>
         {collapsed ? '' : (
-          <ul className="mdl-list section-list">
+          <ul className='mdl-list section-list'>
             {children}
           </ul>
         )}
@@ -62,7 +62,7 @@ class Section extends Component {
   };
 
   static defaultProps = {
-    collapsed: true,
+    collapsed: true
   };
 }
 

@@ -1,3 +1,5 @@
+/* global it */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Preview from './Preview';

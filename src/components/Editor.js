@@ -10,7 +10,7 @@ class Editor extends Component {
 
   static propTypes = {
     settings: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired
   };
 
   change = (data, name) => {
@@ -20,7 +20,7 @@ class Editor extends Component {
     };
   };
 
-  render() {
+  render () {
     const {settings} = this.props;
 
     return (
@@ -134,12 +134,12 @@ class Editor extends Component {
     );
   }
 
-  select(section, prop, isEnabled = true) {
+  select (section, prop, isEnabled = true) {
     check(section, prop);
     const {settings} = this.props;
     const value = or(settings[section][prop], data[section][prop].default);
     const description = fillDescription(data[section][prop].description[value], value, `${section}.${prop}`);
-    
+
     return (
       <Item
         title={data[section][prop].name}
@@ -157,7 +157,7 @@ class Editor extends Component {
     );
   }
 
-  multiselect(section, prop, isEnabled = true) {
+  multiselect (section, prop, isEnabled = true) {
     check(section, prop);
     const {settings} = this.props;
     const current = settings[section][prop];
@@ -170,13 +170,13 @@ class Editor extends Component {
 
       if (checked) {
         newValue.push(val);
-      } else if (idx !== -1){
+      } else if (idx !== -1) {
         newValue.splice(idx, 1);
       }
 
       this.change(settings[section], prop)(newValue);
     };
-    
+
     return (
       <Item
         title={data[section][prop].name}
@@ -185,23 +185,23 @@ class Editor extends Component {
         large
         >
         {data[section][prop].values.map(val).map(value => (
-          <label className="mdl-switch mdl-js-switch" htmlFor={`${section}.${prop}.${value.value}`} key={value.name}>
+          <label className='mdl-switch mdl-js-switch' htmlFor={`${section}.${prop}.${value.value}`} key={value.name}>
             <input
-              type="checkbox"
+              type='checkbox'
               id={`${section}.${prop}.${value.value}`}
-              className="mdl-switch__input"
+              className='mdl-switch__input'
               checked={current.indexOf(value.value) !== -1}
               disabled={!isEnabled}
               onChange={change(value.value)}
               />
-            <span className="mdl-switch__label">{value.name}</span>
+            <span className='mdl-switch__label'>{value.name}</span>
           </label>
         ))}
       </Item>
     );
   }
 
-  number(section, prop, isEnabled = true) {
+  number (section, prop, isEnabled = true) {
     check(section, prop);
     const {settings} = this.props;
     const value = or(settings[section][prop], data[section][prop].default);
@@ -213,23 +213,23 @@ class Editor extends Component {
         description={description}
         disabled={!isEnabled}
         >
-        <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <div className='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
           <input
-            className="mdl-textfield__input"
-            type="number"
+            className='mdl-textfield__input'
+            type='number'
             value={value || 0}
             onChange={(ev) => this.change(settings[section], prop)(Number(ev.target.value))}
             min={data[section][prop].min}
             max={data[section][prop].max}
             disabled={!isEnabled}
             />
-          <span className="mdl-textfield__error">Please provide a valid number (min: {data[section][prop].min}, max: {data[section][prop].max})</span>
+          <span className='mdl-textfield__error'>Please provide a valid number (min: {data[section][prop].min}, max: {data[section][prop].max})</span>
         </div>
       </Item>
     );
   }
 
-  text(section, prop, isEnabled = true) {
+  text (section, prop, isEnabled = true) {
     check(section, prop);
     const {settings} = this.props;
     const value = or(settings[section][prop], data[section][prop].default);
@@ -241,10 +241,10 @@ class Editor extends Component {
         description={description}
         disabled={!isEnabled}
         >
-        <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <div className='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
           <input
-            className="mdl-textfield__input"
-            type="text"
+            className='mdl-textfield__input'
+            type='text'
             value={value || ''}
             onChange={(ev) => this.change(settings[section], prop)(ev.target.value)}
             disabled={!isEnabled}
@@ -254,7 +254,7 @@ class Editor extends Component {
     );
   }
 
-  flag(section, prop, isEnabled = true) {
+  flag (section, prop, isEnabled = true) {
     check(section, prop);
     const {settings} = this.props;
     const value = or(settings[section][prop], data[section][prop].default);
@@ -266,22 +266,22 @@ class Editor extends Component {
         description={description}
         disabled={!isEnabled}
         >
-        <label className="mdl-switch mdl-js-switch" htmlFor={`${section}.${prop}`}>
+        <label className='mdl-switch mdl-js-switch' htmlFor={`${section}.${prop}`}>
           <input
-            type="checkbox"
+            type='checkbox'
             id={`${section}.${prop}`}
-            className="mdl-switch__input"
+            className='mdl-switch__input'
             checked={value}
             disabled={!isEnabled}
             onChange={(ev) => this.change(settings[section], prop)(ev.target.checked)}
             />
-          <span className="mdl-switch__label"></span>
+          <span className='mdl-switch__label' />
         </label>
       </Item>
     );
   }
 
-  list(section, prop, isEnabled = true) {
+  list (section, prop, isEnabled = true) {
     check(section, prop);
     const {settings} = this.props;
     const value = or(settings[section][prop], data[section][prop].default);
@@ -293,13 +293,13 @@ class Editor extends Component {
         description={description}
         disabled={!isEnabled}
         >
-        <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <div className='mdl-textfield mdl-js-textfield mdl-textfield--floating-label'>
           {value.map((v, idx) => (
             <input
               disabled={!isEnabled}
               key={idx}
-              className="mdl-textfield__input"
-              type="text"
+              className='mdl-textfield__input'
+              type='text'
               value={v || ''}
               onChange={(ev) => {
                 const newValue = [...value];
@@ -312,14 +312,14 @@ class Editor extends Component {
               }}
               />
           ))}
-          <br/>
+          <br />
           <button
             style={{bottom: 0, right: 0, zIndex: 10, transform: 'scale(0.5)'}}
-            className="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect"
+            className='mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect'
             onClick={() => this.change(settings[section], prop)(value.concat(['']))}
             disabled={!isEnabled}
             >
-            <i className="material-icons">add</i>
+            <i className='material-icons'>add</i>
           </button>
         </div>
       </Item>
@@ -327,7 +327,7 @@ class Editor extends Component {
   }
 }
 
-export function fillDescription(description, value, key) {
+export function fillDescription (description, value, key) {
   if (!description) {
     console.warn(`Cant find description for: value:${value} at ${key}`);
     return 'unknown entry';
@@ -335,21 +335,21 @@ export function fillDescription(description, value, key) {
   return description.replace(/{}/g, value || '');
 }
 
-function or(value, def) {
+function or (value, def) {
   if (value === undefined) {
     return def;
   }
   return value;
 }
 
-function check(section, prop) {
+function check (section, prop) {
   if (!data[section][prop]) {
     throw new Error(`Can't find data for ${section}.${prop}`);
   }
 }
 
-function val(data) {
-  const match = data.match(/(.+)\s+\[(.+)\]/);
+function val (data) {
+  const match = data.match(/(.+)\s+\[(.+)]/);
   if (!match) {
     return { name: data, value: data };
   }

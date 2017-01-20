@@ -8,11 +8,11 @@ import Item from '../Item';
 import mining from './mining.json';
 import ports from './ports.json';
 
-function toVal(val) {
+function toVal (val) {
   return { name: val, value: val };
 }
 
-function mix(a, b) {
+function mix (a, b) {
   if (typeof a !== 'object' || typeof b !== 'object') {
     return b || a;
   }
@@ -36,7 +36,7 @@ class Presets extends Component {
   static propTypes = {
     preset: PropTypes.string,
     defaults: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -49,7 +49,7 @@ class Presets extends Component {
     }
 
     if (this.props.preset === 'None') {
-      if (!confirm('Do you want to overwrite current config?')) {
+      if (!window.confirm('Do you want to overwrite current config?')) {
         this.forceUpdate();
         return;
       }
@@ -59,11 +59,11 @@ class Presets extends Component {
     this.props.onChange(preset, data);
   };
 
-  render() {
+  render () {
     const {preset} = this.props;
 
     return (
-      <div className="presets">
+      <div className='presets'>
         <Item title={''} description={'Load predefined config.'}>
           <Select
             onChange={this.change}
@@ -71,14 +71,14 @@ class Presets extends Component {
             values={Object.keys(presets).map(toVal)}
             id={'presets'}
             disabled={false}
-            ></Select>
+            />
         </Item>
       </div>
     );
   }
 }
 
-function clone(val) {
+function clone (val) {
   return JSON.parse(JSON.stringify(val));
 }
 

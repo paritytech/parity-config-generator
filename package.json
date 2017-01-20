@@ -4,7 +4,10 @@
   "private": true,
   "homepage": "http://ethcore.github.io/parity-config-generator",
   "devDependencies": {
-    "react-scripts": "0.4.3"
+    "babel-eslint": "^7.1.1",
+    "react-scripts": "0.4.3",
+    "semistandard": "^9.2.1",
+    "snazzy": "^6.0.0"
   },
   "dependencies": {
     "getmdl-select": "^1.0.4",
@@ -16,6 +19,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "semistandard --verbose | snazzy"
+  },
+  "semistandard": {
+    "parser": "babel-eslint"
   }
 }

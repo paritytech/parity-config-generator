@@ -1,3 +1,4 @@
+/* global Blob */
 import React, { Component, PropTypes } from 'react';
 import './Preview.css';
 
@@ -21,31 +22,31 @@ class Preview extends Component {
     } else {
       var elem = window.document.createElement('a');
       elem.href = window.URL.createObjectURL(blob);
-      elem.download = filename;        
+      elem.download = filename;
       document.body.appendChild(elem);
-      elem.click();        
+      elem.click();
       document.body.removeChild(elem);
     }
   }
 
-  render() {
+  render () {
     const {settings, defaults} = this.props;
     return (
-      <div className="mdl-card mdl-shadow--2dp preview-card">
-        <div className="mdl-card__title">
-          <div className="preview-title mdl-card__title-text">
+      <div className='mdl-card mdl-shadow--2dp preview-card'>
+        <div className='mdl-card__title'>
+          <div className='preview-title mdl-card__title-text'>
             .parity/config.toml
           </div>
         </div>
-        <div className="mdl-card__actions mdl-card--border">
-          <textarea className="preview-editor" readOnly value={ toToml(settings, defaults) }></textarea>
+        <div className='mdl-card__actions mdl-card--border'>
+          <textarea className='preview-editor' readOnly value={toToml(settings, defaults)} />
         </div>
-        <div className="mdl-card__menu">
+        <div className='mdl-card__menu'>
           <button
-            className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-efect"
+            className='mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-efect'
             onClick={this.generateConfig}>
-            <i className="material-icons" id="download">cloud download</i>
-            <span className="mdl-tooltip" htmlFor="download">Download Config File</span>
+            <i className='material-icons' id='download'>cloud download</i>
+            <span className='mdl-tooltip' htmlFor='download'>Download Config File</span>
           </button>
         </div>
       </div>
@@ -53,7 +54,7 @@ class Preview extends Component {
   }
 }
 
-function toToml(settings, defaults) {
+function toToml (settings, defaults) {
   const toml = Object.keys(settings).reduce((acc, section) => {
     // for old configs the section might be missing in defaults
     defaults[section] = defaults[section] || {};
@@ -61,7 +62,6 @@ function toToml(settings, defaults) {
     const vals = Object.keys(settings[section])
       .filter(key => !isEqual(settings[section][key], defaults[section][key]))
       .map(key => {
-
         const val = settings[section][key];
         const comment = toComment(settings, section, key, val);
         const setting = `${key} = ${toVal(val)}`;
@@ -74,7 +74,7 @@ function toToml(settings, defaults) {
 
     return acc.concat(vals);
   }, []);
-  
+
   if (!toml.length) {
     return '# All values you use are defaults. Config is not needed.';
   }
@@ -82,12 +82,12 @@ function toToml(settings, defaults) {
   return toml.join('\n').substr(1);
 }
 
-function isEqual(a, b) {
+function isEqual (a, b) {
   // TODO [todr] optimize
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
-function toComment(settings, section, key, value) {
+function toComment (settings, section, key, value) {
   // for old configs the section might be missing in defaults
   data[section] = data[section] || {};
   data[section][key] = data[section][key] || {};
@@ -98,7 +98,7 @@ function toComment(settings, section, key, value) {
   return fillDescription(data[section][key].description, value);
 }
 
-function toVal(val) {
+function toVal (val) {
   if (typeof val === 'boolean') {
     return `${val}`;
   }

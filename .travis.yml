@@ -7,6 +7,8 @@ env:
     - secure: "VyqeNnK4Hi7nmTuoEhdTpJUv5fG/ZxrVXQug1vFr8qQfAMEEVGEoFgLrejEBhssHN/LwrSWQrAYqpPraHKvlDH1D5no9V9I39Q6AqvJ5tWGoUuNjV4aq74GGgRVhq5Tfl8gSIvjC8d2HwOjEpa6QjTuUAJtjO/UgujTmxhChLfmZnCTfoAGvmP2akOUwV1D6+Pbdoq46dW5BuHVVe2yPN/rStEuS8vTdAs5f6JxlSOjA36OKNuA4V2vqYLGzcXEzCnOS7DICXkBhxSG6rBY0q0bFOQy0vFFVkQVS4C4MRbmhMkUiwbXFJoNBsr+mi6tEdmd+QIpyyfqpPEQyB4Q7b4C6+YLeTaNLAk/t/wrhtLHjscxYss3BArHL8teeBz9VwiEPUM4Fy8QTHTsqhkBWy+RJpZIyfDNNo2fNZTqSorEuF7GF36QyQf1qcZ4An8FtkbI/Umay0MQycCM6fDpNEd5usgINKoRO/BTvQlreY/2AciCml/hKspqxHkLgaDm32z1Aouv8mACOZgT/50YqILcBn7wQqmq62hhmhy72wUZzvOLDO9V9Fpy63dGSGzG8lPfdgYNjK9gR3+RbKFS+GAb6xS+VrRUUy6P6t9wJONEe7N1TVb7Ruzamqdr2YTsUT5sWM5S/n97MW8er0Tm15ICIPmdy+V8CTVMpDSiPEUY="
 
 script:
+  - npm run lint
+  - npm test
   - npm run build
 
 after_success:
