@@ -5,6 +5,7 @@ import Editor from './components/Editor';
 import Preview from './components/Preview';
 import Presets from './components/Presets';
 
+import { detectPlatform } from './system';
 import data from './data.json';
 
 function loadSettings () {
@@ -78,7 +79,7 @@ class App extends Component {
 }
 
 function generateDefaults (settings) {
-  return Object.keys(settings).reduce((data, section) => {
+  const defaults = Object.keys(settings).reduce((data, section) => {
     data[section] = Object.keys(settings[section])
     .filter(key => settings[section][key].default !== undefined)
     .reduce((d, key) => {
@@ -87,6 +88,9 @@ function generateDefaults (settings) {
     }, {});
     return data;
   }, {});
+
+  defaults.__internal.platform = detectPlatform();
+  return defaults;
 }
 
 export default App;

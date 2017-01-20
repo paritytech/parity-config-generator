@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import './Preview.css';
 
+import { joinPath, basePath } from '../system';
 import data from '../data.json';
 // TODO [ToDr] move to some common?
 import {fillDescription} from './Editor';
@@ -55,34 +56,42 @@ class Preview extends Component {
 }
 
 function toToml (settings, defaults) {
-  const toml = Object.keys(settings).reduce((acc, section) => {
-    // for old configs the section might be missing in defaults
-    defaults[section] = defaults[section] || {};
+  const toml = Object.keys(settings)
+    .filter(section => section !== '__internal')
+    .reduce((acc, section) => {
+      // for old configs the section might be missing in defaults
+      defaults[section] = defaults[section] || {};
 
-    const vals = Object.keys(settings[section])
-      .filter(key => !isEqual(settings[section][key], defaults[section][key]))
-      .map(key => {
-        const val = settings[section][key];
-        const comment = toComment(settings, section, key, val);
-        const setting = `${key} = ${toVal(val)}`;
-        return `# ${comment}\n${setting}`;
-      });
+      const vals = Object.keys(settings[section])
+        .filter(key => !isEqual(settings[section][key], defaults[section][key]))
+        .map(key => {
+          const val = settings[section][key];
+          const comment = toComment(settings, section, key, val);
+          const setting = `${key} = ${toVal(val)}`;
+          return `# ${comment}\n${setting}`;
+        });
 
-    if (vals.length) {
-      acc.push(`\n[${section}]`);
-    }
+      if (vals.length) {
+        acc.push(`\n[${section}]`);
+      }
 
-    return acc.concat(vals);
-  }, []);
+      return acc.concat(vals);
+    }, []);
 
-  toml.unshift(
-    '# This config should be placed in following paths:',
-    '#   $HOME/.local/share/io.parity.ethereum (Linux)',
-    '#   %UserProfile%\\AppData\\Roaming\\Parity\\Ethereum (Windows)',
-  );
   if (!toml.length) {
-    return '# All values you use are defaults. Config is not needed.';
+    toml.push(
+      '',
+      '',
+      '# All values you use are defaults. Config is not needed.'
+    );
   }
+
+  const { platform } = settings.__internal || defaults.__internal;
+  const configPath = joinPath([basePath(platform), 'config.toml'], platform);
+  toml.unshift(
+    '# This config should be placed in following path:',
+    `#   ${configPath}`,
+  );
 
   return toml.join('\n');
 }
@@ -117,7 +126,7 @@ function toVal (val) {
   }
 
   // Escape windows paths
-  val = val.replace(/\\([^\\])/g, '\\\\$1')
+  val = val ? val.replace(/\\([^\\])/g, '\\\\$1') : val;
   return `"${val}"`;
 }
 

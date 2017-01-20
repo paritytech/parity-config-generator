@@ -4,6 +4,7 @@ import Section from './Section';
 import Item from './Item';
 import Select from './controls/Select';
 
+import { localPath, basePath, joinPath } from '../system';
 import data from '../data.json';
 
 class Editor extends Component {
@@ -22,16 +23,25 @@ class Editor extends Component {
 
   render () {
     const {settings} = this.props;
+    const platform = settings.__internal.platform;
+    const base = settings.parity.base_path !== '$BASE' ? settings.parity.base_path : basePath(platform);
 
     return (
       <div>
+        { this.select('__internal', 'platform') }
+
         <Section title={data.parity.section} description={data.parity.description}>
           { this.select('parity', 'chain') }
           { this.select('parity', 'mode') }
           { this.number('parity', 'mode_timeout', settings.parity.mode !== 'active' && settings.parity.mode !== 'off') }
           { this.number('parity', 'mode_alarm', settings.parity.mode === 'passive') }
-          { this.text('parity', 'db_path') }
-          { this.text('parity', 'keys_path') }
+          { this.select('parity', 'auto_update') }
+          { this.select('parity', 'release_track', settings.parity.auto_update !== 'none') }
+          { this.flag('parity', 'no_download') }
+          { this.flag('parity', 'no_consensus') }
+          { this.path('parity', 'base_path', base, platform) }
+          { this.path('parity', 'db_path', base, platform) }
+          { this.path('parity', 'keys_path', base, platform) }
           { this.text('parity', 'identity') }
         </Section>
         <Section title={data.account.section} description={data.account.description}>
@@ -44,7 +54,7 @@ class Editor extends Component {
           { this.flag('ui', 'force', !settings.ui.disable) }
           { this.number('ui', 'port', !settings.ui.disable) }
           { this.text('ui', 'interface', !settings.ui.disable) }
-          { this.text('ui', 'path', !settings.ui.disable) }
+          { this.path('ui', 'path', base, platform, !settings.ui.disable) }
         </Section>
         <Section title={data.network.section} description={data.network.description}>
           { this.flag('network', 'disable') }
@@ -72,7 +82,7 @@ class Editor extends Component {
         </Section>
         <Section title={data.ipc.section} description={data.ipc.description}>
           { this.flag('ipc', 'disable') }
-          { this.text('ipc', 'path', !settings.ipc.disable) }
+          { this.path('ipc', 'path', base, platform, !settings.ipc.disable) }
           { this.multiselect('ipc', 'apis', !settings.ipc.disable) }
         </Section>
         <Section title={data.dapps.section} description={data.dapps.description}>
@@ -80,12 +90,13 @@ class Editor extends Component {
           { this.number('dapps', 'port', !settings.dapps.disable) }
           { this.text('dapps', 'interface', !settings.dapps.disable) }
           { this.list('dapps', 'hosts', !settings.dapps.disable) }
-          { this.text('dapps', 'path', !settings.dapps.disable) }
+          { this.path('dapps', 'path', base, platform, !settings.dapps.disable) }
           { this.text('dapps', 'user', !settings.dapps.disable) }
           { this.text('dapps', 'password', settings.dapps.user && !settings.dapps.disable) }
         </Section>
         <Section title={data.mining.section} description={data.mining.description}>
           { this.text('mining', 'author') }
+          { this.text('mining', 'engine_signer') }
           { this.text('mining', 'extra_data') }
           { this.flag('mining', 'force_sealing') }
           { this.select('mining', 'reseal_on_txs') }
@@ -111,6 +122,8 @@ class Editor extends Component {
           { this.select('footprint', 'pruning') }
           { this.number('footprint', 'pruning_history', settings.footprint.pruning !== 'archive') }
           { this.select('footprint', 'fat_db') }
+          { this.flag('footprint', 'scale_verifiers') }
+          { this.number('footprint', 'num_verifiers', settings.footprint.scale_verifiers) }
           { this.select('footprint', 'db_compaction') }
           { this.number('footprint', 'cache_size') }
           { this.number('footprint', 'cache_size_db', !settings.footprint.cache_size) }
@@ -229,10 +242,24 @@ class Editor extends Component {
     );
   }
 
-  text (section, prop, isEnabled = true) {
+  path (section, prop, base, platform, isEnabled = true) {
+    return this.text(section, prop, isEnabled, value => {
+      if (!value) {
+        return value;
+      }
+      value = value.replace('$LOCAL', localPath(platform));
+      value = value.replace('$BASE', base);
+      // normalize separators
+      value = joinPath(value.split('\\'), platform);
+      value = joinPath(value.split('/'), platform);
+      return value;
+    });
+  }
+
+  text (section, prop, isEnabled = true, processValue = x => x) {
     check(section, prop);
     const {settings} = this.props;
-    const value = or(settings[section][prop], data[section][prop].default);
+    const value = processValue(or(settings[section][prop], data[section][prop].default));
     const description = fillDescription(data[section][prop].description, value);
 
     return (
