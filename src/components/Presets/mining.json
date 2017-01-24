@@ -1,10 +1,6 @@
 {
   "footprint": {
-    "pruning": "archive",
     "cache_size": 256
-  },
-  "snapshots": {
-    "disable_periodic": true
   },
   "dapps": {
     "disable": true
@@ -23,7 +19,7 @@
     "force_sealing": true,
     "reseal_on_txs": "all",
     "reseal_min_period": 4000,
-    "tx_queue_size": 4096
+    "tx_queue_size": 2048
   },
   "misc": {
     "logging": "miner=trace,own_tx=trace"
