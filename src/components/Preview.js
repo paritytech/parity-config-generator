@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import './Preview.css';
 
+import { joinPath, basePath } from '../system';
 import data from '../data.json';
 // TODO [ToDr] move to some common?
 import {fillDescription} from './Editor';
@@ -35,7 +36,7 @@ class Preview extends Component {
       <div className='mdl-card mdl-shadow--2dp preview-card'>
         <div className='mdl-card__title'>
           <div className='preview-title mdl-card__title-text'>
-            .parity/config.toml
+            config.toml
           </div>
         </div>
         <div className='mdl-card__actions mdl-card--border'>
@@ -55,31 +56,44 @@ class Preview extends Component {
 }
 
 function toToml (settings, defaults) {
-  const toml = Object.keys(settings).reduce((acc, section) => {
-    // for old configs the section might be missing in defaults
-    defaults[section] = defaults[section] || {};
+  const toml = Object.keys(settings)
+    .filter(section => section !== '__internal')
+    .reduce((acc, section) => {
+      // for old configs the section might be missing in defaults
+      defaults[section] = defaults[section] || {};
 
-    const vals = Object.keys(settings[section])
-      .filter(key => !isEqual(settings[section][key], defaults[section][key]))
-      .map(key => {
-        const val = settings[section][key];
-        const comment = toComment(settings, section, key, val);
-        const setting = `${key} = ${toVal(val)}`;
-        return `# ${comment}\n${setting}`;
-      });
+      const vals = Object.keys(settings[section])
+        .filter(key => !isEqual(settings[section][key], defaults[section][key]))
+        .map(key => {
+          const val = settings[section][key];
+          const comment = toComment(settings, section, key, val);
+          const setting = `${key} = ${toVal(val)}`;
+          return `# ${comment}\n${setting}`;
+        });
 
-    if (vals.length) {
-      acc.push(`\n[${section}]`);
-    }
+      if (vals.length) {
+        acc.push(`\n[${section}]`);
+      }
 
-    return acc.concat(vals);
-  }, []);
+      return acc.concat(vals);
+    }, []);
 
   if (!toml.length) {
-    return '# All values you use are defaults. Config is not needed.';
+    toml.push(
+      '',
+      '',
+      '# All values you use are defaults. Config is not needed.'
+    );
   }
 
-  return toml.join('\n').substr(1);
+  const { platform } = settings.__internal || defaults.__internal;
+  const configPath = joinPath([basePath(platform), 'config.toml'], platform);
+  toml.unshift(
+    '# This config should be placed in following path:',
+    `#   ${configPath}`,
+  );
+
+  return toml.join('\n');
 }
 
 function isEqual (a, b) {
@@ -111,6 +125,8 @@ function toVal (val) {
     return `[${val.map(v => toVal(v)).join(', ')}]`;
   }
 
+  // Escape windows paths
+  val = val ? val.replace(/\\([^\\])/g, '\\\\$1') : val;
   return `"${val}"`;
 }
 

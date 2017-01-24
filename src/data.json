@@ -1,4 +1,16 @@
 {
+  "__internal": {
+    "platform": {
+      "name": "Platform",
+      "description": {
+        "Windows": "Config for Windows",
+        "Linux": "Config for Linux",
+        "Mac OS": "Config for Mac OS"
+      },
+      "default": null,
+      "values": ["Windows", "Linux", "Mac OS"]
+    }
+  },
   "parity": {
     "section": "Parity",
     "description": "Basic parameters regarding Parity operation.",
@@ -32,6 +44,36 @@
       "min": 0,
       "max": 600000
     },
+    "auto_update": {
+      "name": "Auto Update",
+      "description": {
+        "all": "Auto-updates to every release.",
+        "critical": "Auto-updates only to consensus/security updates.",
+        "none": "No updates will be auto-installed."
+      },
+      "default": "none",
+      "values": ["all", "critical", "none"]
+    },
+    "release_track": {
+      "name": "Auto Update Relese Track",
+      "description": {
+        "beta": "Beta",
+        "nightly": "Nightly (Unstable)",
+        "current": "Whatever track this executable was released on"
+      },
+      "default": "current",
+      "values": ["beta", "nightly", "current"]
+    },
+    "no_download": {
+      "name": "Don't Download Updates",
+      "description": "Disables auto downloading of new releases. Not recommended.",
+      "default": false
+    },
+    "no_consensus": {
+      "name": "No Consensus",
+      "description": "Forces Parity to run even if there are known issues regarding consensus. Not recommended.",
+      "default": false
+    },
     "chain": {
       "name": "Chain",
       "description": {
@@ -43,15 +85,20 @@
       "default": "homestead",
       "values": ["homestead", "ropsten", "classic", "expanse"]
     },
+    "base_path": {
+      "name": "Base Path",
+      "description": "Blockchain and settings will be stored in {}.",
+      "default": "$BASE"
+    },
     "db_path": {
       "name": "Database Path",
-      "description": "Parity database will be stored in {}.",
-      "default": "$HOME/.parity"
+      "description": "Parity databases will be stored in {}.",
+      "default": "$LOCAL/chains"
     },
     "keys_path": {
       "name": "Keys Path",
       "description": "Your encrypted private keys will be stored in {}.",
-      "default": "$HOME/.parity/keys"
+      "default": "$BASE/keys"
     },
     "identity": {
       "name": "Identity",
@@ -339,6 +386,11 @@
       "description": "Account address to receive reward when block is mined.",
       "default": ""
     },
+    "engine_signer": {
+      "name": "Engine Signer",
+      "description": "Account to sign consensus messages and issue blocks for non-PoW chains.",
+      "default": ""
+    },
     "force_sealing": {
       "name": "Force Sealing",
       "description": "Prepare a block to seal even when there are no miners connected.",
@@ -391,7 +443,7 @@
     "usd_per_tx": {
       "name": "USD per Transaction",
       "description": "You will be paid ${} for a basic transaction - Minimum gas price will be set accordingly.",
-      "default": 0.005
+      "default": 0.0025
     },
     "usd_per_eth": {
       "name": "USD per Eth",
@@ -482,18 +534,6 @@
   "footprint": {
     "section": "Footprint",
     "description": "Tune Parity CPU, Memory and Disk usage.",
-    "tracing": {
-      "name": "Tracing",
-      "description": {
-        "on": "Compute and Store tracing data. (Enables trace_* APIs).",
-        "off": "Disable tracing.",
-        "auto": "Disable tracing unless it was enable previously for that DB."
-      },
-      "values": [
-        "on", "off", "auto"
-      ],
-      "default": "auto"
-    },
     "pruning": {
       "name": "Tracing",
       "description": {
@@ -509,9 +549,21 @@
     "pruning_history": {
       "name": "Pruning History",
       "description": "Will keep up to {} old state entries.",
-      "default": 64,
+      "default": 1200,
       "min": 0,
       "max": 32000
+    },
+    "tracing": {
+      "name": "Tracing",
+      "description": {
+        "on": "Compute and Store tracing data. (Enables trace_* APIs).",
+        "off": "Disable tracing.",
+        "auto": "Disable tracing unless it was enable previously for that DB."
+      },
+      "values": [
+        "on", "off", "auto"
+      ],
+      "default": "auto"
     },
     "fat_db": {
       "name": "Fat DB",
@@ -524,6 +576,16 @@
         "on", "off", "auto"
       ],
       "default": "auto"
+    },
+    "scale_verifiers": {
+      "name": "Autoscale Verifiers Threads",
+      "description": "Number of threads will vary dependning on the workload. Not guaranteed to be faster.",
+      "default": false
+    },
+    "num_verifiers": {
+      "name": "Number of Verifiers Threads",
+      "description": "Initial number of verifier threads",
+      "default": 6
     },
     "db_compaction": {
       "name": "DB Compaction Profile",
