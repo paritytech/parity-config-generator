@@ -48,7 +48,7 @@ export function basePath (platform) {
       '$HOME',
       'Library',
       'Application Support',
-      'Parity'
+      'io.parity.ethereum'
     ], platform);
   }
 
