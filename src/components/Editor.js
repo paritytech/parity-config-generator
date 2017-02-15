@@ -65,7 +65,7 @@ class Editor extends Component {
           { this.number('network', 'snapshot_peers', !settings.network.disable) }
           { this.number('network', 'max_pending_peers', !settings.network.disable) }
           { this.select('network', 'nat', !settings.network.disable) }
-          { this.text('network', 'id', !settings.network.disable) }
+          { this.number('network', 'id', !settings.network.disable) }
           { this.list('network', 'bootnodes', !settings.network.disable) }
           { this.flag('network', 'discovery', !settings.network.disable) }
           { this.list('network', 'reserved_peers', !settings.network.disable) }
