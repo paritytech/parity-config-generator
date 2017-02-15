@@ -221,7 +221,7 @@
     "id": {
       "name": "Network ID",
       "description": "Network ID of the chain will be overridden to: {}",
-      "default": ""
+      "default": 0
     },
     "bootnodes": {
       "name": "Bootnodes",
