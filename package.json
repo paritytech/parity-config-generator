@@ -10,6 +10,7 @@
     "snazzy": "^6.0.0"
   },
   "dependencies": {
+    "classnames": "^2.2.5",
     "getmdl-select": "^1.0.4",
     "material-design-lite": "^1.2.1",
     "react": "^15.3.2",
