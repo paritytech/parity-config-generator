@@ -22,6 +22,7 @@ function Select ({value, onChange, values, id, disabled}) {
   return (
     <div className='mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select'>
       <input
+        onKeyDown={handleKeyPress}
         className={classnames('mdl-textfield__input', {
           'is-disabled': disabled, // Overcome mdl light issues
         })}
@@ -30,12 +31,17 @@ function Select ({value, onChange, values, id, disabled}) {
         type='text'
         id={id}
         readOnly
-        tabIndex='-1'
         data-val={selected.value}
         />
       {list}
     </div>
   );
+}
+
+function handleKeyPress (ev) {
+  if (ev.keyCode === 13) {
+    ev.target.dispatchEvent(new MouseEvent('click'));
+  }
 }
 
 Select.propTypes = {
