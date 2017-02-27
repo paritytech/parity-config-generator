@@ -1,10 +1,16 @@
 import React, { PropTypes } from 'react';
+import classnames from 'classnames';
 
 function Select ({value, onChange, values, id, disabled}) {
   const selected = values.find(val => val.value === value) || {};
 
-  const list = disabled ? [] : (
-    <ul className='mdl-menu mdl-menu--bottom-left mdl-js-menu' htmlFor={id}>
+  // We cannot just remove options, since mdl is adding some additional dom nodes.
+  const list = (
+    <ul
+      className='mdl-menu mdl-menu--bottom-left mdl-js-menu'
+      htmlFor={id}
+      style={disabled ? { display: 'none' } : {}}
+    >
       {
         values.map(({name, value}) => (
           <li className='mdl-menu__item' data-val={value} key={value} onClick={() => onChange(value)}>{name}</li>
@@ -15,14 +21,27 @@ function Select ({value, onChange, values, id, disabled}) {
 
   return (
     <div className='mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select'>
-      <input className='mdl-textfield__input'
+      <input
+        onKeyDown={handleKeyPress}
+        className={classnames('mdl-textfield__input', {
+          'is-disabled': disabled // Overcome mdl light issues
+        })}
         disabled={disabled}
-        value={selected.name} type='text' id={id}
-        readOnly tabIndex='-1' data-val={selected.value}
+        value={selected.name}
+        type='text'
+        id={id}
+        readOnly
+        data-val={selected.value}
         />
       {list}
     </div>
   );
+}
+
+function handleKeyPress (ev) {
+  if (ev.keyCode === 13) {
+    ev.target.dispatchEvent(new window.MouseEvent('click'));
+  }
 }
 
 Select.propTypes = {
