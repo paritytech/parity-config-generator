@@ -27,7 +27,7 @@
         "Active [active]",
         "Dark Mode [dark]",
         "Passive [passive]",
-        "Off [off]"
+        "Offline [offline]"
       ]
     },
     "mode_timeout": {
@@ -158,12 +158,7 @@
   },
   "network": {
     "section": "Networking",
-    "description": "Network and peer-related settings.",
-    "disable": {
-      "name": "Disable Network",
-      "description": "Parity will not attempt to connect to the network.",
-      "default": false
-    },
+    "description": "Network and peer-related settings. Network is not available if Parity is in offline mode.",
     "warp": {
       "name": "Warp Sync",
       "description": "Parity will sync by downloading latest state first. Node will be operational in couple minutes.",

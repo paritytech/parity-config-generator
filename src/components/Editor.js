@@ -26,6 +26,7 @@ class Editor extends Component {
     const platform = settings.__internal.platform;
     const base = settings.parity.base_path !== '$BASE' ? settings.parity.base_path : basePath(platform);
 
+    const isOffline = settings.parity.mode === 'off';
     return (
       <div>
         { this.select('__internal', 'platform') }
@@ -33,7 +34,7 @@ class Editor extends Component {
         <Section title={data.parity.section} description={data.parity.description}>
           { this.select('parity', 'chain') }
           { this.select('parity', 'mode') }
-          { this.number('parity', 'mode_timeout', settings.parity.mode !== 'active' && settings.parity.mode !== 'off') }
+          { this.number('parity', 'mode_timeout', settings.parity.mode !== 'active' && !isOffline) }
           { this.number('parity', 'mode_alarm', settings.parity.mode === 'passive') }
           { this.select('parity', 'auto_update') }
           { this.select('parity', 'release_track', settings.parity.auto_update !== 'none') }
@@ -57,20 +58,19 @@ class Editor extends Component {
           { this.path('ui', 'path', base, platform, !settings.ui.disable) }
         </Section>
         <Section title={data.network.section} description={data.network.description}>
-          { this.flag('network', 'disable') }
-          { this.flag('network', 'warp', !settings.network.disable) }
-          { this.number('network', 'port', !settings.network.disable) }
-          { this.number('network', 'min_peers', !settings.network.disable) }
-          { this.number('network', 'max_peers', !settings.network.disable) }
-          { this.number('network', 'snapshot_peers', !settings.network.disable) }
-          { this.number('network', 'max_pending_peers', !settings.network.disable) }
-          { this.select('network', 'nat', !settings.network.disable) }
-          { this.number('network', 'id', !settings.network.disable) }
-          { this.list('network', 'bootnodes', !settings.network.disable) }
-          { this.flag('network', 'discovery', !settings.network.disable) }
-          { this.list('network', 'reserved_peers', !settings.network.disable) }
-          { this.flag('network', 'reserved_only', !settings.network.disable) }
-          { this.select('network', 'allow_ips', !settings.network.disable) }
+          { this.flag('network', 'warp', !isOffline) }
+          { this.number('network', 'port', !isOffline) }
+          { this.number('network', 'min_peers', !isOffline) }
+          { this.number('network', 'max_peers', !isOffline) }
+          { this.number('network', 'snapshot_peers', !isOffline) }
+          { this.number('network', 'max_pending_peers', !isOffline) }
+          { this.select('network', 'nat', !isOffline) }
+          { this.number('network', 'id', !isOffline) }
+          { this.list('network', 'bootnodes', !isOffline) }
+          { this.flag('network', 'discovery', !isOffline) }
+          { this.list('network', 'reserved_peers', !isOffline) }
+          { this.flag('network', 'reserved_only', !isOffline) }
+          { this.select('network', 'allow_ips', !isOffline) }
         </Section>
         <Section title={data.rpc.section} description={data.rpc.description}>
           { this.flag('rpc', 'disable') }
