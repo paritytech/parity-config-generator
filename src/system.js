@@ -23,9 +23,8 @@ export function localPath (platform) {
     return joinPath([
       '%UserProfile%',
       'AppData',
-      'Local',
-      'Parity',
-      'Ethereum'
+      'Roaming',
+      'Bitcoin'
     ], platform);
   }
 
@@ -38,8 +37,7 @@ export function basePath (platform) {
       '%UserProfile%',
       'AppData',
       'Roaming',
-      'Parity',
-      'Ethereum'
+      'Bitcoin'
     ], platform);
   }
 
@@ -48,14 +46,12 @@ export function basePath (platform) {
       '$HOME',
       'Library',
       'Application Support',
-      'io.parity.ethereum'
+      'Bitcoin'
     ], platform);
   }
 
   return joinPath([
     '~',
-    '.local',
-    'share',
-    'io.parity.ethereum'
+    '.bitcoin'
   ], platform);
 }
