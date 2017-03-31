@@ -269,7 +269,7 @@
     "port": {
       "name": "Port",
       "description": "JSON-RPC over HTTP will be accessible on port {}.",
-      "default": 8180
+      "default": 8545
     },
     "interface": {
       "name": "Interface",
