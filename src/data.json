@@ -153,7 +153,7 @@
     "path": {
       "name": "Path",
       "description": "Wallet configuration will be stored at {}.",
-      "default": "$HOME/.parity/signer"
+      "default": "$HOME/.local/share/io.parity.ethereum/signer"
     }
   },
   "network": {
@@ -284,7 +284,7 @@
     "port": {
       "name": "Port",
       "description": "JSON-RPC over HTTP will be accessible on port {}.",
-      "default": 8180
+      "default": 8545
     },
     "interface": {
       "name": "Interface",
@@ -379,7 +379,7 @@
     "path": {
       "name": "Path",
       "description": "Parity will create an IPC socket at {}.",
-      "default": "$HOME/.parity/jsonrpc.ipc"
+      "default": "$HOME/.local/share/io.parity.ethereum/jsonrpc.ipc"
     },
     "apis": {
       "name": "Exposed APIs",
@@ -500,7 +500,7 @@
     "path": {
       "name": "Path",
       "description": "Local Dapps will be served from {}.",
-      "default": "$HOME/.parity/dapps"
+      "default": "$HOME/.local/share/io.parity.ethereum/dapps"
     },
     "user": {
       "name": "Authentication User (Deprecated since 1.7)",
@@ -700,7 +700,7 @@
     "section": "Footprint",
     "description": "Tune Parity CPU, Memory and Disk usage.",
     "pruning": {
-      "name": "Tracing",
+      "name": "Pruning",
       "description": {
         "fast": "Prune old state data. Maintains journal overlay - fast but extra 50MB of memory used.",
         "archive": "Keep all state trie data. No pruning.",
