@@ -128,31 +128,31 @@
     }
   },
   "ui": {
-    "section": "Parity UI (Trusted Signer)",
-    "description": "Signer is used to manage your wallet, confirm and sign transactions.",
+    "section": "Parity Wallet",
+    "description": "UI is used to manage your wallet, confirm and sign transactions.",
     "disable": {
-      "name": "Disable UI",
-      "description": "You will need to unlock accounts manually if UI is disabled.",
+      "name": "Disable Wallet",
+      "description": "You will need to unlock accounts manually if Wallet is disabled.",
       "default": false
     },
     "force": {
-      "name": "Force Enable UI",
+      "name": "Force Enable Wallet",
       "description": "Enable Signer even when it would be disabled by other options.",
       "default": false
     },
     "port": {
       "name": "Port",
-      "description": "UI will be accessible on port {}.",
+      "description": "Wallet will be accessible on port {}.",
       "default": 8180
     },
     "interface": {
       "name": "Interface",
-      "description":" UI will listen for connections on IP {}.",
+      "description":" Wallet will listen for connections on IP {}.",
       "default": "local"
     },
     "path": {
       "name": "Path",
-      "description": "UI configuration will be stored at {}.",
+      "description": "Wallet configuration will be stored at {}.",
       "default": "$HOME/.local/share/io.parity.ethereum/signer"
     }
   },
@@ -160,8 +160,13 @@
     "section": "Networking",
     "description": "Network and peer-related settings. Network is not available if Parity is in offline mode.",
     "warp": {
-      "name": "Warp Sync",
+      "name": "Warp Sync (up to 1.5)",
       "description": "Parity will sync by downloading latest state first. Node will be operational in couple minutes.",
+      "default": false
+    },
+    "no_warp": {
+      "name": "Disable Warp Sync (since 1.6)",
+      "description": "Disable Warp Sync",
       "default": false
     },
     "port": {
@@ -256,6 +261,16 @@
         "Private Network [private]",
         "Public Network [public]"
       ]
+    },
+    "no_ancient_blocks": {
+      "name": "Disable Ancient Blocks",
+      "description": "Disable downloading old blocks after snapshot restorating or warp sync.",
+      "default": false
+    },
+    "no_serve_light": {
+      "name": "Disable light server",
+      "description": "Disable serving light peers.",
+      "default": false
     }
   },
   "rpc": {
@@ -289,7 +304,7 @@
     "apis": {
       "name": "Exposed APIs",
       "description": "Only selected APIs will be exposed over this interface.",
-      "default": ["web3", "eth", "net", "parity", "traces", "rpc"],
+      "default": ["web3", "eth", "net", "parity", "traces", "rpc", "secretstore"],
       "values": [
         "Web3 [web3]",
         "Eth [eth]",
@@ -300,7 +315,56 @@
         "Traces [traces]",
         "Trusted Signer (unsafe) [signer]",
         "Parity Set* (unsafe) [parity_set]",
-        "RPC [rpc]"
+        "RPC [rpc]",
+        "Secret Store [secretstore]"
+      ]
+    }
+  },
+  "ws": {
+    "section": "WebSockets (since 1.7)",
+    "description": "Expose JSON-RPC APIs over WebSockets.",
+    "disable": {
+      "name": "Disable WebSockets",
+      "description": "UI won't work and WebSockets server will be not available.",
+      "default": false
+    },
+    "port": {
+      "name": "Port",
+      "description": "JSON-RPC over WebSockets will be accessible on port {}.",
+      "default": 8546
+    },
+    "interface": {
+      "name": "Interface",
+      "description":" JSON-RPC will be listening for connections on IP {}.",
+      "default": "local"
+    },
+    "origins": {
+      "name": "Origins",
+      "description": "Allows connecting from Origin '{}'.",
+      "default": "chrome-extension://*"
+    },
+    "hosts": {
+      "name": "Allowed Hosts",
+      "description": "Allow connections only using specified addresses.",
+      "default": [""]
+    },
+    "apis": {
+      "name": "Exposed APIs",
+      "description": "Only selected APIs will be exposed over this interface.",
+      "default": ["web3", "eth", "net", "parity", "parity_pubsub", "traces", "rpc", "secretstore"],
+      "values": [
+        "Web3 [web3]",
+        "Eth [eth]",
+        "Net [net]",
+        "Personal [personal]",
+        "Parity [parity]",
+        "Parity Accounts [parity_accounts]",
+        "Traces [traces]",
+        "Trusted Signer (unsafe) [signer]",
+        "Parity Set* (unsafe) [parity_set]",
+        "RPC [rpc]",
+        "Secret Store [secretstore]",
+        "Parity PUB-SUB [parity_pubsub]"
       ]
     }
   },
@@ -320,7 +384,7 @@
     "apis": {
       "name": "Exposed APIs",
       "description": "Only selected APIs will be exposed over this interface.",
-      "default": ["web3", "eth", "net", "parity", "parity_accounts", "traces", "rpc"],
+      "default": ["web3", "eth", "net", "parity", "parity_accounts", "parity_pubsub", "traces", "rpc", "secretstore"],
       "values": [
         "Web3 [web3]",
         "Eth [eth]",
@@ -330,8 +394,84 @@
         "Parity Accounts [parity_accounts]",
         "Traces [traces]",
         "Trusted Signer (unsafe) [signer]",
-        "Parity Set* (unsafe) [parity_set]"
+        "Parity Set* (unsafe) [parity_set]",
+        "RPC [rpc]",
+        "Secret Store [secretstore]",
+        "Parity PUB-SUB [parity_pubsub]"
       ]
+    }
+  },
+  "secretstore": {
+    "section": "Secret Store (since 1.7)",
+    "description": "Secret Store. Requires a special build of Parity.",
+    "disable": {
+      "name": "Disable Secret Store",
+      "description": "You won't be able to encrypt and decrypt secrets.",
+      "default": false
+    },
+    "secret": {
+      "name": "Secret",
+      "description": "Hex-encoded secret of this node is '{}'.",
+      "default": ""
+    },
+    "nodes": {
+      "name": "Nodes",
+      "description": "List of other secret store cluster nodes. Format: NODE_PUBLIC_KEY_IN_HEX@NODE_IP:NODE_PORT",
+      "default": [""]
+    },
+    "port": {
+      "name": "Port",
+      "description": "Secret Store will be running on port {}.",
+      "default": 8083
+    },
+    "interface": {
+      "name": "Interface",
+      "description":"Secret Store will listen for connections on IP {}.",
+      "default": "local"
+    },
+    "http_port": {
+      "name": "HTTP Port",
+      "description": "Secret Store HTTP iface will be running on port {}.",
+      "default": 8082
+    },
+    "http_interface": {
+      "name": "HTTP Interface",
+      "description":"Secret Store will listen for HTTP requests on IP {}.",
+      "default": "local"
+    },
+    "path": {
+      "name": "Path",
+      "description": "Encrypted secrets will be stored in {}.",
+      "default": "$BASE/secretstore"
+    }
+  },
+  "ipfs": {
+    "section": "IPFS API (since 1.7)",
+    "description": "IPFS-compatible API for blockchain data.",
+    "disable": {
+      "name": "Disable IPFS API",
+      "description": "You won't be able to hash-query blockchain data.",
+      "default": false
+    },
+    "port": {
+      "name": "Port",
+      "description": "Secret Store will be running on port {}.",
+      "default": 5001
+    },
+    "interface": {
+      "name": "Interface",
+      "description":"Secret Store will listen for connections on IP {}.",
+      "default": "local"
+    },
+    "cors": {
+      "name": "CORS",
+      "description": "Allows Cross-Origin Requests from domain '{}'.",
+      "default": "null"
+    },
+    "hosts": {
+      "name": "Allowed Hosts",
+      "description": "Allow connections only using specified addresses.",
+      "default": [""]
     }
   },
   "dapps": {
@@ -343,17 +483,17 @@
       "default": false
     },
     "port": {
-      "name": "Port",
+      "name": "Port (Deprecated since 1.7)",
       "description": "Dapps Server will be running on port {}.",
       "default": 8080
     },
     "interface": {
-      "name": "Interface",
+      "name": "Interface (Deprecated since 1.7)",
       "description":" Dapps Server will listen for connections on IP {}.",
       "default": "local"
     },
     "hosts": {
-      "name": "Allowed Hosts",
+      "name": "Allowed Hosts (Deprectated since 1.7)",
       "description": "Allow connections only using specified addresses.",
       "default": [""]
     },
@@ -363,12 +503,12 @@
       "default": "$HOME/.local/share/io.parity.ethereum/dapps"
     },
     "user": {
-      "name": "Authentication User",
+      "name": "Authentication User (Deprecated since 1.7)",
       "description": "If specified, will require authorization to access dapps server.",
       "default": ""
     },
     "password": {
-      "name": "Authentication Password",
+      "name": "Authentication Password (Deprecated since 1.7)",
       "description": "Password for specified Dapps User.",
       "default": ""
     }
@@ -524,6 +664,36 @@
       "name": "Notify Work",
       "description": "URLs to which work package notifications are pushed.",
       "default": [""]
+    },
+    "refuse_service_transactions": {
+      "name": "Refuse Service Transactions",
+      "description": "Always refuse service ZGP transactions.",
+
+      "default": false
+    }
+  },
+  "stratum": {
+    "section": "Stratum (since 1.6)",
+    "description": "Stratum Server for miner push notifications.",
+    "enable": {
+      "name": "Enable Stratum",
+      "description": "Stratum server will be enabled",
+      "default": false
+    },
+    "port": {
+      "name": "Port",
+      "description": "Stratum Server will be running on port {}.",
+      "default": 8008
+    },
+    "interface": {
+      "name": "Interface",
+      "description":" Stratum Server will listen for connections on IP {}.",
+      "default": "local"
+    },
+    "secret" :{
+      "name": "Secret",
+      "description": "Stratum Secret to authorize peers.",
+      "default": ""
     }
   },
   "footprint": {

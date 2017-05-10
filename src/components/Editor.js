@@ -59,6 +59,7 @@ class Editor extends Component {
         </Section>
         <Section title={data.network.section} description={data.network.description}>
           { this.flag('network', 'warp', !isOffline) }
+          { this.flag('network', 'no_warp', !isOffline) }
           { this.number('network', 'port', !isOffline) }
           { this.number('network', 'min_peers', !isOffline) }
           { this.number('network', 'max_peers', !isOffline) }
@@ -71,6 +72,8 @@ class Editor extends Component {
           { this.list('network', 'reserved_peers', !isOffline) }
           { this.flag('network', 'reserved_only', !isOffline) }
           { this.select('network', 'allow_ips', !isOffline) }
+          { this.flag('network', 'no_ancient_blocks', !isOffline) }
+          { this.flag('network', 'no_serve_light', !isOffline) }
         </Section>
         <Section title={data.rpc.section} description={data.rpc.description}>
           { this.flag('rpc', 'disable') }
@@ -79,6 +82,14 @@ class Editor extends Component {
           { this.text('rpc', 'cors', !settings.rpc.disable) }
           { this.list('rpc', 'hosts', !settings.rpc.disable) }
           { this.multiselect('rpc', 'apis', !settings.rpc.disable) }
+        </Section>
+        <Section title={data.ws.section} description={data.ws.description}>
+          { this.flag('ws', 'disable') }
+          { this.number('ws', 'port', !settings.ws.disable) }
+          { this.text('ws', 'interface', !settings.ws.disable) }
+          { this.text('ws', 'origins', !settings.ws.disable) }
+          { this.list('ws', 'hosts', !settings.ws.disable) }
+          { this.multiselect('ws', 'apis', !settings.ws.disable) }
         </Section>
         <Section title={data.ipc.section} description={data.ipc.description}>
           { this.flag('ipc', 'disable') }
@@ -93,6 +104,23 @@ class Editor extends Component {
           { this.path('dapps', 'path', base, platform, !settings.dapps.disable) }
           { this.text('dapps', 'user', !settings.dapps.disable) }
           { this.text('dapps', 'password', settings.dapps.user && !settings.dapps.disable) }
+        </Section>
+        <Section title={data.secretstore.section} description={data.secretstore.description}>
+          { this.flag('secretstore', 'disable') }
+          { this.text('secretstore', 'secret', !settings.secretstore.disable) }
+          { this.list('secretstore', 'nodes', !settings.dapps.disable) }
+          { this.number('secretstore', 'port', !settings.secretstore.disable) }
+          { this.text('secretstore', 'interface', !settings.secretstore.disable) }
+          { this.number('secretstore', 'http_port', !settings.secretstore.disable) }
+          { this.text('secretstore', 'http_interface', !settings.secretstore.disable) }
+          { this.path('secretstore', 'path', base, platform, !settings.secretstore.disable) }
+        </Section>
+        <Section title={data.ipfs.section} description={data.ipfs.description}>
+          { this.flag('ipfs', 'disable') }
+          { this.number('ipfs', 'port', !settings.ipfs.disable) }
+          { this.text('ipfs', 'interface', !settings.ipfs.disable) }
+          { this.text('ipfs', 'cors', !settings.ipfs.disable) }
+          { this.list('ipfs', 'hosts', !settings.ipfs.disable) }
         </Section>
         <Section title={data.mining.section} description={data.mining.description}>
           { this.text('mining', 'author') }
@@ -116,6 +144,13 @@ class Editor extends Component {
           { this.number('mining', 'tx_queue_ban_count') }
           { this.number('mining', 'tx_queue_ban_time') }
           { this.list('mining', 'notify_work') }
+          { this.flag('mining', 'refuse_service_transactions') }
+        </Section>
+        <Section title={data.stratum.section} description={data.stratum.description}>
+          { this.flag('stratum', 'enable') }
+          { this.number('stratum', 'port', settings.stratum.enable) }
+          { this.text('stratum', 'interface', settings.stratum.enable) }
+          { this.text('stratum', 'secret', settings.stratum.enable) }
         </Section>
         <Section title={data.footprint.section} description={data.footprint.description}>
           { this.select('footprint', 'tracing') }
