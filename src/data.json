@@ -86,13 +86,15 @@
     "chain": {
       "name": "Chain",
       "description": {
-        "homestead": "Main Network",
-        "ropsten": " Test Network",
+        "foundation": "Main Network",
+        "kovan": "Kovan Test Network",
+        "dev": "Local Development Chain",
+        "ropsten": "Ropsten Test Network",
         "classic": "Ethereum Classic",
         "expanse": "Expanse"
       },
-      "default": "homestead",
-      "values": ["homestead", "ropsten", "classic", "expanse"]
+      "default": "foundation",
+      "values": ["foundation", "kovan", "dev", "ropsten", "classic", "expanse"]
     },
     "base_path": {
       "name": "Base Path",

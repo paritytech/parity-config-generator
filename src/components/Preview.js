@@ -21,7 +21,7 @@ class Preview extends Component {
     if (window.navigator.msSaveOrOpenBlob) {
       window.navigator.msSaveBlob(blob, filename);
     } else {
-      var elem = window.document.createElement('a');
+      const elem = window.document.createElement('a');
       elem.href = window.URL.createObjectURL(blob);
       elem.download = filename;
       document.body.appendChild(elem);
@@ -43,6 +43,13 @@ class Preview extends Component {
           <textarea className='preview-editor' readOnly value={toToml(settings, defaults)} />
         </div>
         <div className='mdl-card__menu'>
+          <a
+            className='mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-efect'
+            target='_blank'
+            href={window.location.toString()}>
+            <i className='material-icons' id='link'>link</i>
+            <span className='mdl-tooltip' htmlFor='link'>Link to this Config File</span>
+          </a>
           <button
             className='mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-efect'
             onClick={this.generateConfig}>
