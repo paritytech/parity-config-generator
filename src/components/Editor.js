@@ -269,7 +269,7 @@ class Editor extends Component {
   multiselect (section, prop, isEnabled = true) {
     check(section, prop);
     const {settings} = this.props;
-    const current = settings[section][prop];
+    const current = settings[section][prop] || [];
     const description = fillDescription(data[section][prop].description, current);
 
     const change = (val) => (ev) => {
