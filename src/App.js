@@ -8,10 +8,44 @@ import Presets from './components/Presets';
 import { detectPlatform } from './system';
 import data from './data.json';
 
+function loadFromURL () {
+  const hash = window.location.hash;
+  if (!hash.startsWith('#config=')) {
+    return null;
+  }
+
+  try {
+    const config = hash.split('=')[1];
+    return JSON.parse(window.atob(config));
+  } catch (e) {
+    console.warn('Error parsing config from URL: ', e);
+    return null;
+  }
+}
+
+function loadFromLocalStorage () {
+  try {
+    return JSON.parse(window.localStorage.getItem('last-config'));
+  } catch (e) {
+    window.localStorage.setItem('last-config', null);
+    return null;
+  }
+}
+
 function loadSettings () {
   const defaultSettings = generateDefaults(data);
   try {
-    const settings = JSON.parse(window.localStorage.getItem('last-config'));
+    let settings = loadFromLocalStorage();
+    const url = loadFromURL();
+    if (settings && url) {
+      const diff = JSON.stringify(settings) !== JSON.stringify(url);
+      if (diff && window.confirm('Detected config in URL. Do you want to override your current config?')) {
+        settings = null;
+      }
+    }
+    if (!settings && url) {
+      settings = url;
+    }
     if (settings && typeof settings === 'object') {
       // make sure the sections are always created
       Object.keys(defaultSettings).forEach(key => {
@@ -20,15 +54,18 @@ function loadSettings () {
       return settings;
     }
   } catch (e) {
+    console.warn(e);
   }
 
-  defaultSettings.parity.chain = 'ropsten';
+  defaultSettings.parity.chain = 'kovan';
   return defaultSettings;
 }
 
 function saveSettings (settings) {
+  const json = JSON.stringify(settings);
   try {
-    window.localStorage.setItem('last-config', JSON.stringify(settings));
+    window.localStorage.setItem('last-config', json);
+    window.location.hash = 'config=' + window.btoa(json);
   } catch (e) {
   }
 }
