@@ -23,12 +23,12 @@ class Editor extends Component {
 
   render () {
     const {settings} = this.props;
-    const {config_mode, platform} = settings.__internal;
+    const {configMode, platform} = settings.__internal;
     const base = settings.parity.base_path !== '$BASE' ? settings.parity.base_path : basePath(platform);
 
     const isOffline = settings.parity.mode === 'off';
     const config = () => {
-      if (config_mode === 'simple') {
+      if (configMode === 'simple') {
         return this.renderSimple(settings, platform, base, isOffline);
       }
       return this.renderConfig(settings, platform, base, isOffline);
@@ -37,7 +37,7 @@ class Editor extends Component {
     return (
       <div>
         { this.select('__internal', 'platform') }
-        { this.select('__internal', 'config_mode') }
+        { this.select('__internal', 'configMode') }
         { config() }
       </div>
     );

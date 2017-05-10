@@ -1,6 +1,6 @@
 {
   "__internal": {
-    "config_mode": {
+    "configMode": {
       "name": "Mode",
       "description": {
         "simple": "Simplified config options",
