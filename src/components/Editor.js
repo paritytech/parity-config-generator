@@ -23,14 +23,74 @@ class Editor extends Component {
 
   render () {
     const {settings} = this.props;
-    const platform = settings.__internal.platform;
+    const {configMode, platform} = settings.__internal;
     const base = settings.parity.base_path !== '$BASE' ? settings.parity.base_path : basePath(platform);
 
     const isOffline = settings.parity.mode === 'off';
+    const config = () => {
+      if (configMode === 'simple') {
+        return this.renderSimple(settings, platform, base, isOffline);
+      }
+      return this.renderConfig(settings, platform, base, isOffline);
+    };
+
     return (
       <div>
         { this.select('__internal', 'platform') }
+        { this.select('__internal', 'configMode') }
+        { config() }
+      </div>
+    );
+  }
 
+  renderSimple (settings, platform, base, isOffline) {
+    return (
+      <div>
+        <h5>{data.parity.section}</h5>
+        <p>{data.parity.description}</p>
+        { this.select('parity', 'chain') }
+        { this.select('parity', 'mode') }
+        { this.select('parity', 'auto_update') }
+        { this.select('parity', 'release_track', settings.parity.auto_update !== 'none') }
+        { this.path('parity', 'base_path', base, platform) }
+        <h5>{data.footprint.section}</h5>
+        <p>{data.footprint.description}</p>
+        { this.select('footprint', 'db_compaction') }
+        { this.select('footprint', 'pruning') }
+        { this.number('footprint', 'pruning_memory', settings.footprint.pruning !== 'archive') }
+        { this.select('footprint', 'fat_db') }
+        { this.select('footprint', 'tracing') }
+        { this.number('footprint', 'cache_size') }
+        <Section title={'Servers'} description={'Parity RPC servers configuration'}>
+          { this.number('ui', 'port', !settings.ui.disable) }
+          { this.text('ui', 'interface', !settings.ui.disable) }
+          { this.number('rpc', 'port', !settings.rpc.disable) }
+          { this.text('rpc', 'interface', !settings.rpc.disable) }
+          { this.text('rpc', 'cors', !settings.rpc.disable) }
+          { this.number('ws', 'port', !settings.ws.disable) }
+          { this.text('ws', 'interface', !settings.ws.disable) }
+          { this.text('ws', 'origins', !settings.ws.disable) }
+        </Section>
+        <Section title={data.network.section} description={data.network.description}>
+          { this.number('network', 'min_peers', !isOffline) }
+          { this.number('network', 'max_peers', !isOffline) }
+          { this.select('network', 'nat', !isOffline) }
+        </Section>
+        <Section title={data.mining.section} description={data.mining.description}>
+          { this.text('mining', 'author') }
+          { this.number('mining', 'usd_per_tx') }
+        </Section>
+        <Section title={data.misc.section} description={data.misc.description}>
+          { this.text('misc', 'logging') }
+          { this.text('misc', 'log_file') }
+        </Section>
+      </div>
+    );
+  }
+
+  renderConfig (settings, platform, base, isOffline) {
+    return (
+      <div>
         <Section title={data.parity.section} description={data.parity.description}>
           { this.select('parity', 'chain') }
           { this.select('parity', 'mode') }
@@ -155,6 +215,7 @@ class Editor extends Component {
         <Section title={data.footprint.section} description={data.footprint.description}>
           { this.select('footprint', 'tracing') }
           { this.select('footprint', 'pruning') }
+          { this.number('footprint', 'pruning_memory', settings.footprint.pruning !== 'archive') }
           { this.number('footprint', 'pruning_history', settings.footprint.pruning !== 'archive') }
           { this.select('footprint', 'fat_db') }
           { this.flag('footprint', 'scale_verifiers') }

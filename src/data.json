@@ -1,5 +1,14 @@
 {
   "__internal": {
+    "configMode": {
+      "name": "Mode",
+      "description": {
+        "simple": "Simplified config options",
+        "advanced": "All available options"
+      },
+      "default": "simple",
+      "values": ["Quick Configuration [simple]", "Advanced Configuration [advanced]"]
+    },
     "platform": {
       "name": "Platform",
       "description": {
@@ -714,7 +723,14 @@
     "pruning_history": {
       "name": "Pruning History",
       "description": "Will keep up to {} old state entries.",
-      "default": 1200,
+      "default": 64,
+      "min": 0,
+      "max": 32000
+    },
+    "pruning_memory": {
+      "name": "Pruning Memory",
+      "description": "Will keep up to {} MB old state entries.",
+      "default": 32,
       "min": 0,
       "max": 32000
     },
