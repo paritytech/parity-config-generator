@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import isEqual from 'lodash.isequal';
 
 import TopBar from './components/TopBar';
 import Editor from './components/Editor';
@@ -50,6 +51,11 @@ function loadSettings () {
       // make sure the sections are always created
       Object.keys(defaultSettings).forEach(key => {
         settings[key] = settings[key] || {};
+        Object.keys(defaultSettings[key]).forEach(prop => {
+          if (settings[key][prop] === undefined) {
+            settings[key][prop] = defaultSettings[key][prop];
+          }
+        });
       });
       return settings;
     }
@@ -62,7 +68,22 @@ function loadSettings () {
 }
 
 function saveSettings (settings) {
-  const json = JSON.stringify(settings);
+  const defaultSettings = generateDefaults(data);
+  const cloned = JSON.parse(JSON.stringify(settings));
+
+  Object.keys(defaultSettings).forEach(section => {
+    Object.keys(defaultSettings[section]).forEach(prop => {
+      if (isEqual(cloned[section][prop], defaultSettings[section][prop])) {
+        delete cloned[section][prop];
+      }
+    });
+
+    if (Object.keys(cloned[section]).length === 0) {
+      delete cloned[section];
+    }
+  });
+
+  const json = JSON.stringify(cloned);
   try {
     window.localStorage.setItem('last-config', json);
     window.location.hash = 'config=' + window.btoa(json);

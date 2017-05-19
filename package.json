@@ -12,6 +12,7 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "getmdl-select": "^1.0.4",
+    "lodash.isequal": "^4.5.0",
     "material-design-lite": "^1.2.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2"
