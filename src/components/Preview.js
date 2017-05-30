@@ -94,7 +94,7 @@ function toToml (settings, defaults) {
   }
 
   const { platform } = settings.__internal || defaults.__internal;
-  const configPath = joinPath([basePath(platform), 'config.toml'], platform);
+  const configPath = joinPath([basePath(platform).replace('Roaming', 'Local'), 'config.toml'], platform);
   toml.unshift(
     '# This config should be placed in following path:',
     `#   ${configPath}`,
