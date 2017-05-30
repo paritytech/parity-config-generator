@@ -21,8 +21,7 @@ export function joinPath (path, platform) {
 export function localPath (platform) {
   if (platform === 'Windows') {
     return joinPath([
-      '%UserProfile%',
-      'AppData',
+      '%AppData%',
       'Local',
       'Parity',
       'Ethereum'
@@ -35,8 +34,7 @@ export function localPath (platform) {
 export function basePath (platform) {
   if (platform === 'Windows') {
     return joinPath([
-      '%UserProfile%',
-      'AppData',
+      '%AppData%',
       'Roaming',
       'Parity',
       'Ethereum'
