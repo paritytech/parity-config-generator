@@ -79,6 +79,7 @@ class Editor extends Component {
         <Section title={data.mining.section} description={data.mining.description}>
           { this.text('mining', 'author') }
           { this.number('mining', 'usd_per_tx') }
+          { this.flag('mining', 'no_persistent_txqueue') }
         </Section>
         <Section title={data.misc.section} description={data.misc.description}>
           { this.text('misc', 'logging') }
@@ -203,6 +204,7 @@ class Editor extends Component {
           { this.select('mining', 'tx_queue_strategy') }
           { this.number('mining', 'tx_queue_ban_count') }
           { this.number('mining', 'tx_queue_ban_time') }
+          { this.flag('mining', 'no_persistent_txqueue') }
           { this.list('mining', 'notify_work') }
           { this.flag('mining', 'refuse_service_transactions') }
         </Section>

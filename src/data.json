@@ -639,6 +639,11 @@
       "min": 0,
       "max": 10000
     },
+    "no_persistent_txqueue": {
+      "name": "No Persistent Transaction Queue",
+      "description": "Parity will not save local transaction queue to disk.",
+      "default": false
+    },
     "tx_queue_size": {
       "name": "Transaction Queue Size",
       "description": "Parity will keep/relay at most {} transactions in queue.",
