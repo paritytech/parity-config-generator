@@ -67,9 +67,9 @@ class Editor extends Component {
           { this.number('rpc', 'port', !settings.rpc.disable) }
           { this.text('rpc', 'interface', !settings.rpc.disable) }
           { this.text('rpc', 'cors', !settings.rpc.disable) }
-          { this.number('ws', 'port', !settings.ws.disable) }
-          { this.text('ws', 'interface', !settings.ws.disable) }
-          { this.text('ws', 'origins', !settings.ws.disable) }
+          { this.number('websockets', 'port', !settings.websockets.disable) }
+          { this.text('websockets', 'interface', !settings.websockets.disable) }
+          { this.text('websockets', 'origins', !settings.websockets.disable) }
         </Section>
         <Section title={data.network.section} description={data.network.description}>
           { this.number('network', 'min_peers', !isOffline) }
@@ -144,13 +144,13 @@ class Editor extends Component {
           { this.list('rpc', 'hosts', !settings.rpc.disable) }
           { this.multiselect('rpc', 'apis', !settings.rpc.disable) }
         </Section>
-        <Section title={data.ws.section} description={data.ws.description}>
-          { this.flag('ws', 'disable') }
-          { this.number('ws', 'port', !settings.ws.disable) }
-          { this.text('ws', 'interface', !settings.ws.disable) }
-          { this.text('ws', 'origins', !settings.ws.disable) }
-          { this.list('ws', 'hosts', !settings.ws.disable) }
-          { this.multiselect('ws', 'apis', !settings.ws.disable) }
+        <Section title={data.websockets.section} description={data.websockets.description}>
+          { this.flag('websockets', 'disable') }
+          { this.number('websockets', 'port', !settings.websockets.disable) }
+          { this.text('websockets', 'interface', !settings.websockets.disable) }
+          { this.text('websockets', 'origins', !settings.websockets.disable) }
+          { this.list('websockets', 'hosts', !settings.websockets.disable) }
+          { this.multiselect('websockets', 'apis', !settings.websockets.disable) }
         </Section>
         <Section title={data.ipc.section} description={data.ipc.description}>
           { this.flag('ipc', 'disable') }

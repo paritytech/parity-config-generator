@@ -331,7 +331,7 @@
       ]
     }
   },
-  "ws": {
+  "websockets": {
     "section": "WebSockets (since 1.7)",
     "description": "Expose JSON-RPC APIs over WebSockets.",
     "disable": {
