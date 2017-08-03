@@ -11,11 +11,11 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
-    "getmdl-select": "^1.0.4",
+    "getmdl-select": "^1.1.0",
     "lodash.isequal": "^4.5.0",
-    "material-design-lite": "^1.2.1",
-    "react": "^15.3.2",
-    "react-dom": "^15.3.2"
+    "material-design-lite": "^1.3.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
   },
   "scripts": {
     "start": "react-scripts start",

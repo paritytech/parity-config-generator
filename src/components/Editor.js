@@ -7,6 +7,14 @@ import Select from './controls/Select';
 import { localPath, basePath, joinPath } from '../system';
 import data from '../data.json';
 
+const styles = {
+  visible: {},
+  hidden: {
+    visibility: 'hidden',
+    height: 0
+  }
+};
+
 class Editor extends Component {
 
   static propTypes = {
@@ -27,23 +35,24 @@ class Editor extends Component {
     const base = settings.parity.base_path !== '$BASE' ? settings.parity.base_path : basePath(platform);
 
     const isOffline = settings.parity.mode === 'off';
-    const config = () => {
-      if (configMode === 'simple') {
-        return this.renderSimple(settings, platform, base, isOffline);
-      }
-      return this.renderConfig(settings, platform, base, isOffline);
-    };
+    const isSimple = configMode === 'simple';
 
     return (
       <div>
         { this.select('__internal', 'platform') }
         { this.select('__internal', 'configMode') }
-        { config() }
+        <div style={isSimple ? styles.visible : styles.hidden}>
+          { this.renderSimple(settings, platform, base, isOffline) }
+        </div>
+        <div style={!isSimple ? styles.visible : styles.hidden}>
+          { this.renderConfig(settings, platform, base, isOffline) }
+        </div>
       </div>
     );
   }
 
   renderSimple (settings, platform, base, isOffline) {
+    this.configMode = 'simple';
     return (
       <div>
         <h5>{data.parity.section}</h5>
@@ -90,6 +99,7 @@ class Editor extends Component {
   }
 
   renderConfig (settings, platform, base, isOffline) {
+    this.configMode = 'advanced';
     return (
       <div>
         <Section title={data.parity.section} description={data.parity.description}>
@@ -247,6 +257,10 @@ class Editor extends Component {
 
   select (section, prop, isEnabled = true) {
     check(section, prop);
+
+    // TODO [ToDr] hacky
+    const {configMode} = this;
+
     const {settings} = this.props;
     const value = or(settings[section][prop], data[section][prop].default);
     const description = fillDescription(data[section][prop].description[value], value, `${section}.${prop}`);
@@ -261,7 +275,7 @@ class Editor extends Component {
           onChange={this.change(settings[section], prop)}
           value={value}
           values={data[section][prop].values.map(val)}
-          id={prop}
+          id={`${configMode}_${prop}`}
           disabled={!isEnabled}
         />
       </Item>
@@ -270,6 +284,10 @@ class Editor extends Component {
 
   multiselect (section, prop, isEnabled = true) {
     check(section, prop);
+
+    // TODO [ToDr] hacky
+    const {configMode} = this;
+
     const {settings} = this.props;
     const current = settings[section][prop] || [];
     const description = fillDescription(data[section][prop].description, current);
@@ -295,19 +313,23 @@ class Editor extends Component {
         disabled={!isEnabled}
         large
         >
-        {data[section][prop].values.map(val).map(value => (
-          <label className='mdl-switch mdl-js-switch' htmlFor={`${section}.${prop}.${value.value}`} key={value.name}>
-            <input
-              type='checkbox'
-              id={`${section}.${prop}.${value.value}`}
-              className='mdl-switch__input'
-              checked={current.indexOf(value.value) !== -1}
-              disabled={!isEnabled}
-              onChange={change(value.value)}
-              />
-            <span className='mdl-switch__label'>{value.name}</span>
-          </label>
-        ))}
+        {data[section][prop].values.map(val).map(value => {
+          const id = `${configMode}_${section}_${prop}_${value.value}`;
+
+          return (
+            <label className='mdl-switch mdl-js-switch' htmlFor={id} key={value.name}>
+              <input
+                type='checkbox'
+                id={id}
+                className='mdl-switch__input'
+                checked={current.indexOf(value.value) !== -1}
+                disabled={!isEnabled}
+                onChange={change(value.value)}
+                />
+              <span className='mdl-switch__label'>{value.name}</span>
+            </label>
+          );
+        })}
       </Item>
     );
   }
@@ -381,9 +403,14 @@ class Editor extends Component {
 
   flag (section, prop, isEnabled = true) {
     check(section, prop);
+
+    // TODO [ToDr] hacky
+    const {configMode} = this;
+
     const {settings} = this.props;
     const value = or(settings[section][prop], data[section][prop].default);
     const description = fillDescription(data[section][prop].description, value);
+    const id = `${configMode}_${section}_${prop}`;
 
     return (
       <Item
@@ -391,10 +418,10 @@ class Editor extends Component {
         description={description}
         disabled={!isEnabled}
         >
-        <label className='mdl-switch mdl-js-switch' htmlFor={`${section}.${prop}`}>
+        <label className='mdl-switch mdl-js-switch' htmlFor={id}>
           <input
             type='checkbox'
-            id={`${section}.${prop}`}
+            id={id}
             className='mdl-switch__input'
             checked={value}
             disabled={!isEnabled}

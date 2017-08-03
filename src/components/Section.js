@@ -2,6 +2,14 @@ import React, { Component, PropTypes } from 'react';
 
 import './Section.css';
 
+const styles = {
+  sectionVisible: {},
+  sectionHidden: {
+    visibility: 'hidden',
+    height: 0
+  }
+};
+
 class Section extends Component {
 
   state = {
@@ -45,11 +53,9 @@ class Section extends Component {
           {title}
         </h5>
         <p>{description}</p>
-        {collapsed ? '' : (
-          <ul className='mdl-list section-list'>
-            {children}
-          </ul>
-        )}
+        <ul className='mdl-list section-list' style={collapsed ? styles.sectionHidden : styles.sectionVisible}>
+          {children}
+        </ul>
       </div>
     );
   }
