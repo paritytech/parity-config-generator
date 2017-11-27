@@ -78,7 +78,7 @@ class Editor extends Component {
           { this.text('rpc', 'cors', !settings.rpc.disable) }
           { this.number('websockets', 'port', !settings.websockets.disable) }
           { this.text('websockets', 'interface', !settings.websockets.disable) }
-          { this.text('websockets', 'origins', !settings.websockets.disable) }
+          { this.list('websockets', 'origins', !settings.websockets.disable) }
         </Section>
         <Section title={data.network.section} description={data.network.description}>
           { this.number('network', 'min_peers', !isOffline) }
@@ -158,7 +158,7 @@ class Editor extends Component {
           { this.flag('websockets', 'disable') }
           { this.number('websockets', 'port', !settings.websockets.disable) }
           { this.text('websockets', 'interface', !settings.websockets.disable) }
-          { this.text('websockets', 'origins', !settings.websockets.disable) }
+          { this.list('websockets', 'origins', !settings.websockets.disable) }
           { this.list('websockets', 'hosts', !settings.websockets.disable) }
           { this.multiselect('websockets', 'apis', !settings.websockets.disable) }
         </Section>
