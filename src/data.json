@@ -352,7 +352,7 @@
     "origins": {
       "name": "Origins",
       "description": "Allows connecting from Origin '{}'.",
-      "default": "chrome-extension://*"
+      "default": ["chrome-extension://*"]
     },
     "hosts": {
       "name": "Allowed Hosts",
