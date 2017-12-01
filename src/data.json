@@ -362,10 +362,11 @@
     "apis": {
       "name": "Exposed APIs",
       "description": "Only selected APIs will be exposed over this interface.",
-      "default": ["web3", "eth", "net", "parity", "parity_pubsub", "traces", "rpc", "secretstore"],
+      "default": ["web3", "eth", "pubsub", "net", "parity", "parity_pubsub", "traces", "rpc", "secretstore"],
       "values": [
         "Web3 [web3]",
         "Eth [eth]",
+        "PUB-SUB [pubsub]",
         "Net [net]",
         "Personal [personal]",
         "Parity [parity]",
@@ -395,10 +396,11 @@
     "apis": {
       "name": "Exposed APIs",
       "description": "Only selected APIs will be exposed over this interface.",
-      "default": ["web3", "eth", "net", "parity", "parity_accounts", "parity_pubsub", "traces", "rpc", "secretstore"],
+      "default": ["web3", "eth", "pubsub", "net", "parity", "parity_accounts", "parity_pubsub", "traces", "rpc", "secretstore"],
       "values": [
         "Web3 [web3]",
         "Eth [eth]",
+        "PUB-SUB [pubsub]",
         "Net [net]",
         "Personal [personal]",
         "Parity [parity]",
