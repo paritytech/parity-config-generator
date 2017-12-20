@@ -769,7 +769,7 @@
     },
     "scale_verifiers": {
       "name": "Autoscale Verifiers Threads",
-      "description": "Number of threads will vary dependning on the workload. Not guaranteed to be faster.",
+      "description": "Number of threads will vary depending on the workload. Not guaranteed to be faster.",
       "default": false
     },
     "num_verifiers": {
