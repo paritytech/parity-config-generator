@@ -64,7 +64,7 @@
       "values": ["all", "critical", "none"]
     },
     "release_track": {
-      "name": "Auto Update Relese Track",
+      "name": "Auto Update Release Track",
       "description": {
         "beta": "Beta",
         "nightly": "Nightly (Unstable)",
