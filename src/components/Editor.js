@@ -140,7 +140,7 @@ class Editor extends Component {
           { this.number('network', 'id', !isOffline) }
           { this.list('network', 'bootnodes', !isOffline) }
           { this.flag('network', 'discovery', !isOffline) }
-          { this.list('network', 'reserved_peers', !isOffline) }
+          { this.path('network', 'reserved_peers', base, platform, !isOffline) }
           { this.flag('network', 'reserved_only', !isOffline) }
           { this.select('network', 'allow_ips', !isOffline) }
           { this.flag('network', 'no_ancient_blocks', !isOffline) }

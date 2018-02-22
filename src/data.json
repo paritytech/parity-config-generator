@@ -252,7 +252,7 @@
     "reserved_peers": {
       "name": "Reserved Peers Path",
       "description": "Specify a path to a file with peers' enodes to be always connected to.",
-      "default": [""]
+      "default": ""
     },
     "reserved_only": {
       "name": "Reserved Only", 
