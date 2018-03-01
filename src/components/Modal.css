@@ -1,0 +1,6 @@
+dialog.mdl-dialog {
+    width: 60%;
+    z-index: 10;
+    top: 50%;
+    transform: translateY(-50%);
+}
