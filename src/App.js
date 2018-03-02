@@ -54,12 +54,19 @@ function loadSettings () {
       Object.keys(defaultSettings).forEach(key => {
         settings[key] = settings[key] || {};
         Object.keys(defaultSettings[key]).forEach(prop => {
-          if (settings[key][prop] === undefined) {
-            settings[key][prop] = defaultSettings[key][prop];
-          } else if (typeof settings[key][prop] !== typeof defaultSettings[key][prop]) {
-            errors.push({section: key, prop, value: settings[key][prop], type: typeof settings[key][prop], expected: typeof defaultSettings[key][prop]});
-            console.error(`Incorrect type for config item ${key}.${prop} with value ${JSON.stringify(settings[key][prop])} (found ${typeof settings[key][prop]}, expected ${typeof defaultSettings[key][prop]})`);
-            settings[key][prop] = defaultSettings[key][prop];
+          let settingsValue = settings[key][prop];
+          let defaultSettingsValue = defaultSettings[key][prop];
+          if (settingsValue === undefined) {
+            settings[key][prop] = defaultSettingsValue;
+          } else if (typeof settingsValue !== typeof defaultSettingsValue) {
+            errors.push({
+              section: key,
+              prop,
+              value: settingsValue,
+              type: typeof settingsValue,
+              expected: typeof defaultSettingsValue});
+            console.error(`Incorrect type for config item ${key}.${prop} with value ${JSON.stringify(settingsValue)} (found ${typeof settingsValue}, expected ${typeof defaultSettingsValue})`);
+            settings[key][prop] = defaultSettingsValue;
           }
         });
       });

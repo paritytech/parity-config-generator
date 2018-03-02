@@ -28,7 +28,8 @@ class Modal extends Component {
     }
 
     if (this.props.title) {
-      setTimeout(this.show.bind(this), 100);
+      // Delay is a workaround for paint issue (modal overlay not showing up)
+      setTimeout(() => { this.show(); }, 100);
     }
   }
 
