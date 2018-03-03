@@ -113,11 +113,12 @@ class App extends Component {
 
     let modal;
     if (!errors.length) {
-      modal = {};
+      modal = {visible: false};
     } else {
       let lis = errors.map(({section, prop, value, type, expected}, i) =>
         (<li key={i}><em>{section}.{prop}</em> has value <em>{JSON.stringify(value)}</em> of type <em>{type}</em>; expected type <em>{expected}</em></li>));
       modal = {
+        visible: true,
         title: 'Warning',
         content: (
           <Fragment>
@@ -169,7 +170,7 @@ class App extends Component {
             </div>
           </div>
         </main>
-        <Modal title={modal.title} reset={() => this.setState({modal: {}})}>
+        <Modal title={modal.title} isOpen={modal.visible} onClose={() => this.setState({modal: {visible: false}})}>
           {modal.content}
         </Modal>
       </div>

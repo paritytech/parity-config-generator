@@ -8,8 +8,9 @@ import './Modal.css';
 class Modal extends Component {
 
   static propTypes = {
+    isOpen: PropTypes.bool,
     title: PropTypes.string,
-    reset: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
     children: PropTypes.object
   };
 
@@ -27,16 +28,16 @@ class Modal extends Component {
       dialogPolyfill.registerDialog(dialog);
     }
 
-    if (this.props.title) {
+    if (this.props.isOpen) {
       // Delay is a workaround for paint issue (modal overlay not showing up)
       setTimeout(() => { this.show(); }, 100);
     }
   }
 
   componentDidUpdate (prevProps) {
-    if (prevProps.title && !this.props.title) {
+    if (prevProps.isOpen && !this.props.isOpen) {
       this.close();
-    } else if (!prevProps.title && this.props.title) {
+    } else if (!prevProps.isOpen && this.props.isOpen) {
       this.show();
     }
   }
@@ -49,7 +50,7 @@ class Modal extends Component {
           {this.props.children}
         </div>
         <div className='mdl-dialog__actions'>
-          <button type='button' className='mdl-button close' onClick={this.props.reset}>OK</button>
+          <button type='button' className='mdl-button close' onClick={this.props.onClose}>OK</button>
         </div>
       </dialog>
     );
