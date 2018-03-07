@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import isEqual from 'lodash.isequal';
 
 import TopBar from './components/TopBar';
+import Modal from './components/Modal';
 import Editor from './components/Editor';
 import Preview from './components/Preview';
 import Presets from './components/Presets';
@@ -49,22 +50,34 @@ function loadSettings () {
     }
     if (settings && typeof settings === 'object') {
       // make sure the sections are always created
+      const errors = [];
       Object.keys(defaultSettings).forEach(key => {
         settings[key] = settings[key] || {};
         Object.keys(defaultSettings[key]).forEach(prop => {
-          if (settings[key][prop] === undefined) {
-            settings[key][prop] = defaultSettings[key][prop];
+          let settingsValue = settings[key][prop];
+          let defaultSettingsValue = defaultSettings[key][prop];
+          if (settingsValue === undefined) {
+            settings[key][prop] = defaultSettingsValue;
+          } else if (typeof settingsValue !== typeof defaultSettingsValue) {
+            errors.push({
+              section: key,
+              prop,
+              value: settingsValue,
+              type: typeof settingsValue,
+              expected: typeof defaultSettingsValue});
+            console.error(`Incorrect type for config item ${key}.${prop} with value ${JSON.stringify(settingsValue)} (found ${typeof settingsValue}, expected ${typeof defaultSettingsValue})`);
+            settings[key][prop] = defaultSettingsValue;
           }
         });
       });
-      return settings;
+      return {settings, errors};
     }
   } catch (e) {
     console.warn(e);
   }
 
   defaultSettings.parity.chain = 'kovan';
-  return defaultSettings;
+  return {settings: defaultSettings, errors: []};
 }
 
 function saveSettings (settings) {
@@ -93,11 +106,36 @@ function saveSettings (settings) {
 
 class App extends Component {
 
-  state = {
-    preset: undefined,
-    settings: loadSettings(),
-    defaults: generateDefaults(data)
-  };
+  constructor (props) {
+    super(props);
+
+    const {settings, errors} = loadSettings();
+
+    let modal;
+    if (!errors.length) {
+      modal = {visible: false};
+    } else {
+      let lis = errors.map(({section, prop, value, type, expected}, i) =>
+        (<li key={i}><em>{section}.{prop}</em> has value <em>{JSON.stringify(value)}</em> of type <em>{type}</em>; expected type <em>{expected}</em></li>));
+      modal = {
+        visible: true,
+        title: 'Warning',
+        content: (
+          <Fragment>
+            <p>{lis.length > 1 ? 'Some items' : 'An item'} couldn't be parsed from the loaded config:</p>
+            <ul>{lis}</ul>
+          </Fragment>
+        )
+      };
+    }
+
+    this.state = {
+      preset: undefined,
+      settings,
+      defaults: generateDefaults(data),
+      modal
+    };
+  }
 
   handleChange = (settings) => {
     saveSettings(settings);
@@ -116,7 +154,8 @@ class App extends Component {
   };
 
   render () {
-    const {settings, defaults, preset} = this.state;
+    const {settings, defaults, preset, modal} = this.state;
+
     return (
       <div className='mdl-layout mdl-js-layout mdl-layout--fixed-header'>
         <TopBar />
@@ -131,6 +170,9 @@ class App extends Component {
             </div>
           </div>
         </main>
+        <Modal title={modal.title} isOpen={modal.visible} onClose={() => this.setState({modal: {visible: false}})}>
+          {modal.content}
+        </Modal>
       </div>
     );
   }
