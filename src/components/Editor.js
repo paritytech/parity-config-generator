@@ -6,7 +6,7 @@ import Item from './Item';
 import Select from './controls/Select';
 
 import { localPath, basePath, joinPath } from '../system';
-import data from '../data.json';
+import data from '../data.compiled.json';
 
 const styles = {
   visible: {},
@@ -35,7 +35,7 @@ class Editor extends Component {
     const {configMode, platform} = settings.__internal;
     const base = settings.parity.base_path !== '$BASE' ? settings.parity.base_path : basePath(platform);
 
-    const isOffline = settings.parity.mode === 'off';
+    const isOffline = settings.parity.mode === 'offline';
     const isSimple = configMode === 'simple';
 
     return (
@@ -63,6 +63,7 @@ class Editor extends Component {
         { this.select('parity', 'auto_update') }
         { this.select('parity', 'release_track', settings.parity.auto_update !== 'none') }
         { this.path('parity', 'base_path', base, platform) }
+        { this.flag('parity', 'no_persistent_txqueue') }
         <h5>{data.footprint.section}</h5>
         <p>{data.footprint.description}</p>
         { this.select('footprint', 'db_compaction') }
@@ -89,7 +90,6 @@ class Editor extends Component {
         <Section title={data.mining.section} description={data.mining.description}>
           { this.text('mining', 'author') }
           { this.number('mining', 'usd_per_tx') }
-          { this.flag('mining', 'no_persistent_txqueue') }
         </Section>
         <Section title={data.misc.section} description={data.misc.description}>
           { this.text('misc', 'logging') }
@@ -112,15 +112,21 @@ class Editor extends Component {
           { this.select('parity', 'release_track', settings.parity.auto_update !== 'none') }
           { this.flag('parity', 'no_download') }
           { this.flag('parity', 'no_consensus') }
+          { this.flag('parity', 'light') }
           { this.path('parity', 'base_path', base, platform) }
           { this.path('parity', 'db_path', base, platform) }
           { this.path('parity', 'keys_path', base, platform) }
           { this.text('parity', 'identity') }
+          { this.flag('parity', 'public_node') }
+          { this.flag('parity', 'no_persistent_txqueue') }
         </Section>
         <Section title={data.account.section} description={data.account.description}>
           { this.list('account', 'unlock') }
           { this.text('account', 'password') }
           { this.number('account', 'keys_iterations') }
+          { this.number('account', 'refresh_time') }
+          { this.flag('account', 'disable_hardware') }
+          { this.flag('account', 'fast_unlock') }
         </Section>
         <Section title={data.ui.section} description={data.ui.description}>
           { this.flag('ui', 'disable') }
@@ -128,10 +134,10 @@ class Editor extends Component {
           { this.number('ui', 'port', !settings.ui.disable) }
           { this.text('ui', 'interface', !settings.ui.disable) }
           { this.path('ui', 'path', base, platform, !settings.ui.disable) }
+          { this.list('ui', 'hosts', !settings.ui.disable) }
         </Section>
         <Section title={data.network.section} description={data.network.description}>
           { this.flag('network', 'warp', !isOffline) }
-          { this.flag('network', 'no_warp', !isOffline) }
           { this.number('network', 'port', !isOffline) }
           { this.number('network', 'min_peers', !isOffline) }
           { this.number('network', 'max_peers', !isOffline) }
@@ -144,8 +150,8 @@ class Editor extends Component {
           { this.path('network', 'reserved_peers', base, platform, !isOffline) }
           { this.flag('network', 'reserved_only', !isOffline) }
           { this.select('network', 'allow_ips', !isOffline) }
-          { this.flag('network', 'no_ancient_blocks', !isOffline) }
           { this.flag('network', 'no_serve_light', !isOffline) }
+          { this.text('network', 'node_key', !isOffline) }
         </Section>
         <Section title={data.rpc.section} description={data.rpc.description}>
           { this.flag('rpc', 'disable') }
@@ -154,6 +160,8 @@ class Editor extends Component {
           { this.text('rpc', 'cors', !settings.rpc.disable) }
           { this.list('rpc', 'hosts', !settings.rpc.disable) }
           { this.multiselect('rpc', 'apis', !settings.rpc.disable) }
+          { this.number('rpc', 'server_threads', !settings.rpc.disable) }
+          { this.number('rpc', 'processing_threads', !settings.rpc.disable) }
         </Section>
         <Section title={data.websockets.section} description={data.websockets.description}>
           { this.flag('websockets', 'disable') }
@@ -171,15 +179,16 @@ class Editor extends Component {
         <Section title={data.dapps.section} description={data.dapps.description}>
           { this.flag('dapps', 'disable') }
           { this.number('dapps', 'port', !settings.dapps.disable) }
-          { this.text('dapps', 'interface', !settings.dapps.disable) }
-          { this.list('dapps', 'hosts', !settings.dapps.disable) }
           { this.path('dapps', 'path', base, platform, !settings.dapps.disable) }
-          { this.text('dapps', 'user', !settings.dapps.disable) }
-          { this.text('dapps', 'password', settings.dapps.user && !settings.dapps.disable) }
         </Section>
         <Section title={data.secretstore.section} description={data.secretstore.description}>
           { this.flag('secretstore', 'disable') }
-          { this.text('secretstore', 'secret', !settings.secretstore.disable) }
+          { this.flag('secretstore', 'disable_http', !settings.secretstore.disable) }
+          { this.flag('secretstore', 'disable_acl_check', !settings.secretstore.disable) }
+          { this.flag('secretstore', 'disable_auto_migrate', !settings.secretstore.disable) }
+          { this.text('secretstore', 'service_contract', !settings.secretstore.disable) }
+          { this.text('secretstore', 'admin_public', !settings.secretstore.disable) }
+          { this.text('secretstore', 'self_secret', !settings.secretstore.disable) }
           { this.list('secretstore', 'nodes', !settings.dapps.disable) }
           { this.number('secretstore', 'port', !settings.secretstore.disable) }
           { this.text('secretstore', 'interface', !settings.secretstore.disable) }
@@ -187,12 +196,16 @@ class Editor extends Component {
           { this.text('secretstore', 'http_interface', !settings.secretstore.disable) }
           { this.path('secretstore', 'path', base, platform, !settings.secretstore.disable) }
         </Section>
+        <Section title={data.whisper.section} description={data.whisper.description}>
+          { this.flag('whisper', 'enabled') }
+          { this.number('whisper', 'pool_size', settings.whisper.enabled) }
+        </Section>
         <Section title={data.ipfs.section} description={data.ipfs.description}>
-          { this.flag('ipfs', 'disable') }
-          { this.number('ipfs', 'port', !settings.ipfs.disable) }
-          { this.text('ipfs', 'interface', !settings.ipfs.disable) }
-          { this.text('ipfs', 'cors', !settings.ipfs.disable) }
-          { this.list('ipfs', 'hosts', !settings.ipfs.disable) }
+          { this.flag('ipfs', 'enable') }
+          { this.number('ipfs', 'port', settings.ipfs.enable) }
+          { this.text('ipfs', 'interface', settings.ipfs.enable) }
+          { this.text('ipfs', 'cors', settings.ipfs.enable) }
+          { this.list('ipfs', 'hosts', settings.ipfs.enable) }
         </Section>
         <Section title={data.mining.section} description={data.mining.description}>
           { this.text('mining', 'author') }
@@ -200,7 +213,9 @@ class Editor extends Component {
           { this.text('mining', 'extra_data') }
           { this.flag('mining', 'force_sealing') }
           { this.select('mining', 'reseal_on_txs') }
+          { this.flag('mining', 'reseal_on_uncle') }
           { this.number('mining', 'reseal_min_period') }
+          { this.number('mining', 'reseal_max_period') }
           { this.number('mining', 'work_queue_size') }
           { this.flag('mining', 'remove_solved') }
           { this.select('mining', 'relay_set') }
@@ -208,16 +223,20 @@ class Editor extends Component {
           { this.text('mining', 'usd_per_eth') }
           { this.text('mining', 'price_update_period') }
           { this.number('mining', 'gas_floor_target') }
+          { this.number('mining', 'gas_price_percentile') }
+          { this.number('mining', 'min_gas_price') }
           { this.number('mining', 'gas_cap') }
           { this.number('mining', 'tx_gas_limit') }
           { this.number('mining', 'tx_time_limit') }
           { this.number('mining', 'tx_queue_size') }
           { this.select('mining', 'tx_queue_strategy') }
+          { this.number('mining', 'tx_queue_mem_limit') }
+          { this.text('mining', 'tx_queue_gas') }
           { this.number('mining', 'tx_queue_ban_count') }
           { this.number('mining', 'tx_queue_ban_time') }
-          { this.flag('mining', 'no_persistent_txqueue') }
           { this.list('mining', 'notify_work') }
           { this.flag('mining', 'refuse_service_transactions') }
+          { this.flag('mining', 'infinite_pending_block') }
         </Section>
         <Section title={data.stratum.section} description={data.stratum.description}>
           { this.flag('stratum', 'enable') }
@@ -248,6 +267,9 @@ class Editor extends Component {
           { this.flag('vm', 'jit') }
         </Section>
         <Section title={data.misc.section} description={data.misc.description}>
+          { this.list('misc', 'ntp_servers') }
+          { this.number('misc', 'ports_shift') }
+          { this.flag('misc', 'unsafe_expose') }
           { this.text('misc', 'logging') }
           { this.text('misc', 'log_file') }
           { this.flag('misc', 'color') }

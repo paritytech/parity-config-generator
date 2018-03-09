@@ -24,7 +24,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "semistandard --verbose | snazzy"
+    "lint": "semistandard --verbose | snazzy",
+    "generate-data": "node scripts/generate-config-data.js"
   },
   "semistandard": {
     "parser": "babel-eslint"

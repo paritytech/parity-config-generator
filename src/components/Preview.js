@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './Preview.css';
 
 import { joinPath, basePath } from '../system';
-import data from '../data.json';
+import data from '../data.compiled.json';
 // TODO [ToDr] move to some common?
 import {fillDescription} from './Editor';
 

@@ -5,9 +5,6 @@
   "dapps": {
     "disable": true
   },
-  "signer": {
-    "disable": true
-  },
   "ipc": {
     "disable": true
   },
