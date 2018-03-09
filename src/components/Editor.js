@@ -102,22 +102,21 @@ class Editor extends Component {
   renderConfig (settings, platform, base, isOffline) {
     this.configMode = 'advanced';
 
-    const sections = Object.keys(data).filter(section => section !== "__internal").map(sectionName => {
+    const sections = Object.keys(data).filter(section => section !== '__internal').map(sectionName => {
+      const section = data[sectionName];
 
-        const section = data[sectionName];
-
-        let sectionCondition = true;
-        if ('condition' in section) {
+      let sectionCondition = true;
+      if ('condition' in section) {
           // eslint-disable-next-line no-eval
-          sectionCondition = eval(section.condition);
-        }
+        sectionCondition = eval(section.condition);
+      }
 
-        let items = Object.keys(section)
-          .filter(key => key !== "section" && key !== "description" && key !== "condition")
+      let items = Object.keys(section)
+          .filter(key => key !== 'section' && key !== 'description' && key !== 'condition')
           .filter(propName => !section[propName].deprecated)
           .map(propName => {
             const prop = section[propName];
-            
+
             let condition = sectionCondition;
             if ('disable' in section && propName !== 'disable') {
               condition = condition && !settings[sectionName].disable;
@@ -138,8 +137,7 @@ class Editor extends Component {
             } else if ('values' in prop) {
               if (prop.type === 'string[]') {
                 item = this.multiselect(sectionName, propName, condition);
-              }
-              else {
+              } else {
                 item = this.select(sectionName, propName, condition);
               }
             } else if (prop.type === 'path') {
@@ -153,18 +151,18 @@ class Editor extends Component {
             }
 
             return (
-            <Fragment key={`${sectionName}.${propName}`}>
-              {item}
-            </Fragment>
-            )
-        });
+              <Fragment key={`${sectionName}.${propName}`}>
+                {item}
+              </Fragment>
+            );
+          });
 
-        return (
-          <Section key={section.section} title={section.section} description={section.description}>
-            { items }
-          </Section>
-        )
-      });
+      return (
+        <Section key={section.section} title={section.section} description={section.description}>
+          { items }
+        </Section>
+      );
+    });
 
     return (<div>{sections}</div>);
   }

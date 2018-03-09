@@ -30,6 +30,33 @@
   "parity": {
     "section": "Parity",
     "description": "Basic parameters regarding Parity operation.",
+    "chain": {
+      "name": "Chain",
+      "description": {
+        "foundation": "Main Network",
+        "kovan": "Kovan Test Network",
+        "dev": "Local Development Chain",
+        "ropsten": "Ropsten Test Network",
+        "classic": "Ethereum Classic",
+        "classic-testnet": "Ethereum Classic Test Network",
+        "expanse": "Expanse Network",
+        "olympic": "Olympic Network",
+        "musicoin": "Musicoin Network",
+        "ellaism": "Ellaism Network"
+      },
+      "values": [
+        "foundation",
+        "kovan",
+        "dev",
+        "ropsten",
+        "classic",
+        "classic-testnet",
+        "expanse",
+        "olympic",
+        "musicoin",
+        "ellaism"
+      ]
+    },
     "mode": {
       "name": "Operating Mode",
       "description": {
@@ -99,33 +126,6 @@
     "no_consensus": {
       "name": "No Consensus",
       "description": "Forces Parity to run even if there are known issues regarding consensus. Not recommended."
-    },
-    "chain": {
-      "name": "Chain",
-      "description": {
-        "foundation": "Main Network",
-        "kovan": "Kovan Test Network",
-        "dev": "Local Development Chain",
-        "ropsten": "Ropsten Test Network",
-        "classic": "Ethereum Classic",
-        "classic-testnet": "Ethereum Classic Test Network",
-        "expanse": "Expanse Network",
-        "olympic": "Olympic Network",
-        "musicoin": "Musicoin Network",
-        "ellaism": "Ellaism Network"
-      },
-      "values": [
-        "foundation",
-        "kovan",
-        "dev",
-        "ropsten",
-        "classic",
-        "classic-testnet",
-        "expanse",
-        "olympic",
-        "musicoin",
-        "ellaism"
-      ]
     },
     "base_path": {
       "name": "Base Path",
@@ -669,6 +669,19 @@
   "footprint": {
     "section": "Footprint",
     "description": "Tune Parity CPU, Memory and Disk usage.",
+    "tracing": {
+      "name": "Tracing",
+      "description": {
+        "on": "Compute and Store tracing data. (Enables trace_* APIs).",
+        "off": "Disable tracing.",
+        "auto": "Disable tracing unless it was enable previously for that DB."
+      },
+      "values": [
+        "on",
+        "off",
+        "auto"
+      ]
+    },
     "pruning": {
       "name": "Pruning",
       "description": {
@@ -695,19 +708,6 @@
       "min": 0,
       "max": 32000,
       "condition": "settings.footprint.pruning !== 'archive'"
-    },
-    "tracing": {
-      "name": "Tracing",
-      "description": {
-        "on": "Compute and Store tracing data. (Enables trace_* APIs).",
-        "off": "Disable tracing.",
-        "auto": "Disable tracing unless it was enable previously for that DB."
-      },
-      "values": [
-        "on",
-        "off",
-        "auto"
-      ]
     },
     "fat_db": {
       "name": "Fat DB",

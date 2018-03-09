@@ -155,10 +155,12 @@ function hydrateConfigWithCli (config, cliConfig) {
 
 function augment (data, extra) {
   const dataAugmented = Object.assign({}, data);
+  const overwritten = [];
 
   for (const section in extra) {
     if (!(section in dataAugmented)) {
       dataAugmented[section] = extra[section];
+      overwritten.push(section);
       continue;
     }
 
@@ -168,11 +170,43 @@ function augment (data, extra) {
         continue;
       }
 
+      overwritten.push(`${section}.${prop}`);
       dataAugmented[section][prop] = {...dataAugmented[section][prop], ...extra[section][prop]};
     }
   }
 
-  return dataAugmented;
+  // Quick hack to retain the key order of data.extra.json
+  // (make new object and insert data.extra.json props first)
+
+  const dataAugmentedOrdered = {};
+
+  overwritten.forEach(id => {
+    if (!id.includes('.')) {
+      dataAugmentedOrdered[id] = dataAugmented[id];
+    } else {
+      const [section, prop] = id.split('.');
+      dataAugmentedOrdered[section] = dataAugmentedOrdered[section] || {};
+      dataAugmentedOrdered[section][prop] = dataAugmented[section][prop];
+    }
+  });
+
+  for (const section in dataAugmented) {
+    if (overwritten.includes(section)) {
+      continue;
+    }
+
+    dataAugmentedOrdered[section] = dataAugmentedOrdered[section] || {};
+
+    for (const prop in dataAugmented[section]) {
+      if (overwritten.includes(`${section}.${prop}`)) {
+        continue;
+      }
+      
+      dataAugmentedOrdered[section][prop] = dataAugmented[section][prop];
+    }
+  }
+
+  return dataAugmentedOrdered;
 }
 
 (async function () {
@@ -190,8 +224,9 @@ function augment (data, extra) {
         name: section,
         name_friendly: sectionStructName,
         props: getStructFields(sectionStructName, source).map(prop => {
-          prop.type = prop.type.toLowerCase().replace(/vec<(.+)>/,"$1[]").replace(/u16|u32|u64|usize/,"number");
-          return prop; })
+          prop.type = prop.type.toLowerCase().replace(/vec<(.+)>/, '$1[]').replace(/u16|u32|u64|usize/, 'number');
+          return prop;
+        })
       })
   );
 
