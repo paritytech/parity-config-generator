@@ -123,7 +123,7 @@ function hydrateConfigWithCli (config, cliConfig) {
     for (const prop of section.props) {
       data[section.name][prop.name] = {};
       data[section.name][prop.name].name = prop.name.replace(/_/g, ' ').replace(/^./, a => a.toUpperCase());
-      // data[section.name][prop.name].type = prop.type;
+      data[section.name][prop.name].type = prop.type;
 
       // If the config prop is linked to a CLI command
       if (section.name in cliConfig &&
@@ -163,7 +163,7 @@ function augment (data, extra) {
     }
 
     for (const prop in extra[section]) {
-      if (prop === 'section' || prop === 'description') {
+      if (prop === 'section' || prop === 'description' || prop === 'condition') {
         dataAugmented[section][prop] = extra[section][prop];
         continue;
       }
@@ -189,7 +189,9 @@ function augment (data, extra) {
       ({
         name: section,
         name_friendly: sectionStructName,
-        props: getStructFields(sectionStructName, source)
+        props: getStructFields(sectionStructName, source).map(prop => {
+          prop.type = prop.type.toLowerCase().replace(/vec<(.+)>/,"$1[]").replace(/u16|u32|u64|usize/,"number");
+          return prop; })
       })
   );
 

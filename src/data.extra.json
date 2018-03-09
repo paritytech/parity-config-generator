@@ -51,13 +51,15 @@
       "name": "Mode Timeout",
       "description": "Parity will move to inactive mode after {} seconds.",
       "min": 0,
-      "max": 10000
+      "max": 10000,
+      "condition": "settings.parity.mode !== 'active' && !isOffline"
     },
     "mode_alarm": {
       "name": "Mode Alarm",
       "description": "Parity will automatically wake-up every {} seconds.",
       "min": 0,
-      "max": 600000
+      "max": 600000,
+      "condition": "settings.parity.mode === 'passive'"
     },
     "auto_update": {
       "name": "Auto Update",
@@ -87,7 +89,8 @@
         "nightly",
         "testing",
         "current"
-      ]
+      ],
+      "condition": "settings.parity.auto_update !== 'none'"
     },
     "no_download": {
       "name": "Don't Download Updates",
@@ -127,16 +130,19 @@
     "base_path": {
       "name": "Base Path",
       "description": "Blockchain and settings will be stored in {}.",
-      "default": "$BASE"
+      "default": "$BASE",
+      "type": "path"
     },
     "db_path": {
       "name": "Database Path",
       "description": "Parity databases will be stored in {}.",
-      "default": "$LOCAL/chains"
+      "default": "$LOCAL/chains",
+      "type": "path"
     },
     "keys_path": {
       "name": "Keys Path",
-      "description": "Your encrypted private keys will be stored in {}."
+      "description": "Your encrypted private keys will be stored in {}.",
+      "type": "path"
     },
     "identity": {
       "name": "Identity",
@@ -156,7 +162,8 @@
     "password": {
       "name": "Password File",
       "description": "File at {} should contain passwords to unlock your accounts. One password per line.",
-      "default": ""
+      "default": "",
+      "type": "string"
     },
     "keys_iterations": {
       "name": "Keys deriving iterations",
@@ -186,12 +193,14 @@
     },
     "path": {
       "name": "Path",
-      "description": "Wallet configuration will be stored at {}."
+      "description": "Wallet configuration will be stored at {}.",
+      "type": "path"
     }
   },
   "network": {
     "section": "Networking",
     "description": "Network and peer-related settings. Network is not available if Parity is in offline mode.",
+    "condition": "!isOffline",
     "warp": {
       "name": "Warp Sync",
       "description": "Parity will sync by downloading latest state first. Node will be operational in couple minutes."
@@ -263,7 +272,8 @@
     "reserved_peers": {
       "name": "Reserved Peers Path",
       "description": "Specify a path to a file with peers' enodes to be always connected to.",
-      "default": ""
+      "default": "",
+      "type": "path"
     },
     "reserved_only": {
       "name": "Reserved Only",
@@ -305,7 +315,7 @@
     "cors": {
       "name": "CORS",
       "description": "Allows Cross-Origin Requests from domain '{}'.",
-      "default": "null"
+      "default": []
     },
     "hosts": {
       "name": "Allowed Hosts",
@@ -393,7 +403,8 @@
     "path": {
       "name": "Path",
       "description": "Parity will create an IPC socket at {}.",
-      "default": "$HOME/.local/share/io.parity.ethereum/jsonrpc.ipc"
+      "default": "$HOME/.local/share/io.parity.ethereum/jsonrpc.ipc",
+      "type": "path"
     },
     "apis": {
       "name": "Exposed APIs",
@@ -446,7 +457,8 @@
     },
     "path": {
       "name": "Path",
-      "description": "Encrypted secrets will be stored in {}."
+      "description": "Encrypted secrets will be stored in {}.",
+      "type": "path"
     }
   },
   "ipfs": {
@@ -463,7 +475,7 @@
     "cors": {
       "name": "CORS",
       "description": "Allows Cross-Origin Requests from domain '{}'.",
-      "default": "null"
+      "default": []
     },
     "hosts": {
       "name": "Allowed Hosts",
@@ -472,7 +484,29 @@
   },
   "dapps": {
     "section": "Dapps Server",
-    "description": "Run and customize the web Dapps Server."
+    "description": "Run and customize the web Dapps Server.",
+    "path": {
+      "name": "Dapps Path",
+      "type": "path"
+    },
+    "cors": {
+      "deprecated": true
+    },
+    "pass": {
+      "deprecated": true
+    },
+    "interface": {
+      "deprecated": true
+    },
+    "hosts": {
+      "deprecated": true
+    },
+    "user": {
+      "deprecated": true
+    },
+    "password": {
+      "deprecated": true
+    }
   },
   "mining": {
     "section": "Mining",
@@ -623,11 +657,6 @@
   "stratum": {
     "section": "Stratum (since 1.6)",
     "description": "Stratum Server for miner push notifications.",
-    "enable": {
-      "name": "Enable Stratum",
-      "description": "Stratum server will be enabled",
-      "default": false
-    },
     "port": {
       "name": "Port",
       "description": "Stratum Server will be running on port {}."
@@ -657,13 +686,15 @@
       "name": "Pruning History",
       "description": "Will keep up to {} old state entries.",
       "min": 0,
-      "max": 32000
+      "max": 32000,
+      "condition": "settings.footprint.pruning !== 'archive'"
     },
     "pruning_memory": {
       "name": "Pruning Memory",
       "description": "Will keep up to {} MB old state entries.",
       "min": 0,
-      "max": 32000
+      "max": 32000,
+      "condition": "settings.footprint.pruning !== 'archive'"
     },
     "tracing": {
       "name": "Tracing",
@@ -698,7 +729,8 @@
     "num_verifiers": {
       "name": "Number of Verifiers Threads",
       "description": "Initial number of verifier threads",
-      "default": 8
+      "default": 8,
+      "condition": "settings.footprint.scale_verifiers"
     },
     "db_compaction": {
       "name": "DB Compaction Profile",
@@ -717,25 +749,29 @@
       "name": "Database Cache",
       "description": "Will keep up to {}MB data in Database cache.",
       "min": 0,
-      "max": 32000
+      "max": 32000,
+      "condition": "!settings.footprint.cache_size"
     },
     "cache_size_blocks": {
       "name": "Blockchain Cache",
       "description": "Will keep up to {}MB data in Blockchain cache.",
       "min": 0,
-      "max": 32000
+      "max": 32000,
+      "condition": "!settings.footprint.cache_size"
     },
     "cache_size_queue": {
       "name": "Import Queue Cache",
       "description": "Will keep up to {}MB of blocks in block import queue.",
       "min": 0,
-      "max": 32000
+      "max": 32000,
+      "condition": "!settings.footprint.cache_size"
     },
     "cache_size_state": {
       "name": "State Cache",
       "description": "Will keep up to {}MB data in State cache.",
       "min": 0,
-      "max": 32000
+      "max": 32000,
+      "condition": "!settings.footprint.cache_size"
     },
     "cache_size": {
       "name": "Total Cache Size",
