@@ -55,7 +55,8 @@
         "olympic",
         "musicoin",
         "ellaism"
-      ]
+      ],
+      "simple": true
     },
     "mode": {
       "name": "Operating Mode",
@@ -72,7 +73,8 @@
         "Passive [passive]",
         "Dark Mode [dark]",
         "Offline [offline]"
-      ]
+      ],
+      "simple": true
     },
     "mode_timeout": {
       "name": "Mode Timeout",
@@ -99,7 +101,8 @@
         "all",
         "critical",
         "none"
-      ]
+      ],
+      "simple": true
     },
     "release_track": {
       "name": "Auto Update Release Track",
@@ -117,7 +120,8 @@
         "testing",
         "current"
       ],
-      "condition": "settings.parity.auto_update !== 'none'"
+      "condition": "settings.parity.auto_update !== 'none'",
+      "simple": true
     },
     "no_download": {
       "name": "Don't Download Updates",
@@ -131,7 +135,8 @@
       "name": "Base Path",
       "description": "Blockchain and settings will be stored in {}.",
       "default": "$BASE",
-      "type": "path"
+      "type": "path",
+      "simple": true
     },
     "db_path": {
       "name": "Database Path",
@@ -147,6 +152,9 @@
     "identity": {
       "name": "Identity",
       "description": "You will be identified as '{}' amongst other nodes.."
+    },
+    "no_persistent_txqueue": {
+      "simple": true
     }
   },
   "account": {
@@ -185,11 +193,13 @@
     },
     "port": {
       "name": "Port",
-      "description": "Wallet will be accessible on port {}."
+      "description": "Wallet will be accessible on port {}.",
+      "simple": true
     },
     "interface": {
       "name": "Interface",
-      "description": " Wallet will listen for connections on IP {}."
+      "description": " Wallet will listen for connections on IP {}.",
+      "simple": true
     },
     "path": {
       "name": "Path",
@@ -213,13 +223,15 @@
       "name": "Min Peers",
       "description": "Parity will try to maintain connection to at least {} peers.",
       "min": 0,
-      "max": 100000
+      "max": 100000,
+      "simple": true
     },
     "max_peers": {
       "name": "Max Peers",
       "description": "Parity will maintain at most {} peers.",
       "min": 0,
-      "max": 100000
+      "max": 100000,
+      "simple": true
     },
     "snapshot_peers": {
       "name": "Snapshot Sync Peers",
@@ -246,7 +258,8 @@
         "None [none]",
         "UPNP [upnp]",
         "External IP [extip:]"
-      ]
+      ],
+      "simple": true
     },
     "id": {
       "name": "Network ID",
@@ -306,16 +319,19 @@
     },
     "port": {
       "name": "Port",
-      "description": "JSON-RPC over HTTP will be accessible on port {}."
+      "description": "JSON-RPC over HTTP will be accessible on port {}.",
+      "simple": true
     },
     "interface": {
       "name": "Interface",
-      "description": " JSON-RPC will be listening for connections on IP {}."
+      "description": " JSON-RPC will be listening for connections on IP {}.",
+      "simple": true
     },
     "cors": {
       "name": "CORS",
       "description": "Allows Cross-Origin Requests from domain '{}'.",
-      "default": []
+      "default": [],
+      "simple": true
     },
     "hosts": {
       "name": "Allowed Hosts",
@@ -357,15 +373,18 @@
     },
     "port": {
       "name": "Port",
-      "description": "JSON-RPC over WebSockets will be accessible on port {}."
+      "description": "JSON-RPC over WebSockets will be accessible on port {}.",
+      "simple": true
     },
     "interface": {
       "name": "Interface",
-      "description": " JSON-RPC will be listening for connections on IP {}."
+      "description": " JSON-RPC will be listening for connections on IP {}.",
+      "simple": true
     },
     "origins": {
       "name": "Origins",
-      "description": "Allows connecting from Origin '{}'."
+      "description": "Allows connecting from Origin '{}'.",
+      "simple": true
     },
     "hosts": {
       "name": "Allowed Hosts",
@@ -514,7 +533,8 @@
     "author": {
       "name": "Author (Coinbase)",
       "description": "Account address to receive reward when block is mined.",
-      "default": ""
+      "default": "",
+      "simple": true
     },
     "engine_signer": {
       "name": "Engine Signer",
@@ -568,7 +588,8 @@
     "usd_per_tx": {
       "name": "USD per Transaction",
       "description": "You will be paid ${} for a basic transaction - Minimum gas price will be set accordingly.",
-      "default": 0.0001
+      "default": 0.0001,
+      "simple": true
     },
     "usd_per_eth": {
       "name": "USD per Eth",
@@ -680,7 +701,22 @@
         "on",
         "off",
         "auto"
-      ]
+      ],
+      "simple": true
+    },
+    "db_compaction": {
+      "name": "DB Compaction Profile",
+      "description": {
+        "hdd": "Increase performance on HDD.",
+        "ssd": "Increase performance on SSD.",
+        "auto": "Determine automatically."
+      },
+      "values": [
+        "HDD [hdd]",
+        "SSD [ssd]",
+        "Auto [auto]"
+      ],
+      "simple": true
     },
     "pruning": {
       "name": "Pruning",
@@ -693,7 +729,8 @@
         "fast",
         "archive",
         "auto"
-      ]
+      ],
+      "simple": true
     },
     "pruning_history": {
       "name": "Pruning History",
@@ -707,7 +744,8 @@
       "description": "Will keep up to {} MB old state entries.",
       "min": 0,
       "max": 32000,
-      "condition": "settings.footprint.pruning !== 'archive'"
+      "condition": "settings.footprint.pruning !== 'archive'",
+      "simple": true
     },
     "fat_db": {
       "name": "Fat DB",
@@ -720,7 +758,8 @@
         "on",
         "off",
         "auto"
-      ]
+      ],
+      "simple": true
     },
     "scale_verifiers": {
       "name": "Autoscale Verifiers Threads",
@@ -732,25 +771,13 @@
       "default": 8,
       "condition": "settings.footprint.scale_verifiers"
     },
-    "db_compaction": {
-      "name": "DB Compaction Profile",
-      "description": {
-        "hdd": "Increase performance on HDD.",
-        "ssd": "Increase performance on SSD.",
-        "auto": "Determine automatically."
-      },
-      "values": [
-        "HDD [hdd]",
-        "SSD [ssd]",
-        "Auto [auto]"
-      ]
-    },
     "cache_size_db": {
       "name": "Database Cache",
       "description": "Will keep up to {}MB data in Database cache.",
       "min": 0,
       "max": 32000,
-      "condition": "!settings.footprint.cache_size"
+      "condition": "!settings.footprint.cache_size",
+      "simple": true
     },
     "cache_size_blocks": {
       "name": "Blockchain Cache",
@@ -811,12 +838,14 @@
     "logging": {
       "name": "Logging",
       "description": "Logging pattern (`<module>=<level>`, e.g. `own_tx=trace`).",
-      "default": ""
+      "default": "",
+      "simple": true
     },
     "log_file": {
       "name": "Log File",
       "description": "Logs will be stored at {}.",
-      "default": ""
+      "default": "",
+      "simple": true
     },
     "color": {
       "name": "Enable Colors",

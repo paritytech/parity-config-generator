@@ -201,7 +201,7 @@ function augment (data, extra) {
       if (overwritten.includes(`${section}.${prop}`)) {
         continue;
       }
-      
+
       dataAugmentedOrdered[section][prop] = dataAugmented[section][prop];
     }
   }

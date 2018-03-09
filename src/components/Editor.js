@@ -8,14 +8,6 @@ import Select from './controls/Select';
 import { localPath, basePath, joinPath } from '../system';
 import data from '../data.compiled.json';
 
-const styles = {
-  visible: {},
-  hidden: {
-    visibility: 'hidden',
-    height: 0
-  }
-};
-
 class Editor extends Component {
 
   static propTypes = {
@@ -42,126 +34,85 @@ class Editor extends Component {
       <div>
         { this.select('__internal', 'platform') }
         { this.select('__internal', 'configMode') }
-        <div style={isSimple ? styles.visible : styles.hidden}>
-          { this.renderSimple(settings, platform, base, isOffline) }
-        </div>
-        <div style={!isSimple ? styles.visible : styles.hidden}>
-          { this.renderConfig(settings, platform, base, isOffline) }
+        <div>
+          { this.renderConfig(isSimple, settings, platform, base, isOffline) }
         </div>
       </div>
     );
   }
 
-  renderSimple (settings, platform, base, isOffline) {
-    this.configMode = 'simple';
-    return (
-      <div>
-        <h5>{data.parity.section}</h5>
-        <p>{data.parity.description}</p>
-        { this.select('parity', 'chain') }
-        { this.select('parity', 'mode') }
-        { this.select('parity', 'auto_update') }
-        { this.select('parity', 'release_track', settings.parity.auto_update !== 'none') }
-        { this.path('parity', 'base_path', base, platform) }
-        { this.flag('parity', 'no_persistent_txqueue') }
-        <h5>{data.footprint.section}</h5>
-        <p>{data.footprint.description}</p>
-        { this.select('footprint', 'db_compaction') }
-        { this.select('footprint', 'pruning') }
-        { this.number('footprint', 'pruning_memory', settings.footprint.pruning !== 'archive') }
-        { this.select('footprint', 'fat_db') }
-        { this.select('footprint', 'tracing') }
-        { this.number('footprint', 'cache_size') }
-        <Section title={'Servers'} description={'Parity RPC servers configuration'}>
-          { this.number('ui', 'port', !settings.ui.disable) }
-          { this.text('ui', 'interface', !settings.ui.disable) }
-          { this.number('rpc', 'port', !settings.rpc.disable) }
-          { this.text('rpc', 'interface', !settings.rpc.disable) }
-          { this.text('rpc', 'cors', !settings.rpc.disable) }
-          { this.number('websockets', 'port', !settings.websockets.disable) }
-          { this.text('websockets', 'interface', !settings.websockets.disable) }
-          { this.list('websockets', 'origins', !settings.websockets.disable) }
-        </Section>
-        <Section title={data.network.section} description={data.network.description}>
-          { this.number('network', 'min_peers', !isOffline) }
-          { this.number('network', 'max_peers', !isOffline) }
-          { this.select('network', 'nat', !isOffline) }
-        </Section>
-        <Section title={data.mining.section} description={data.mining.description}>
-          { this.text('mining', 'author') }
-          { this.number('mining', 'usd_per_tx') }
-        </Section>
-        <Section title={data.misc.section} description={data.misc.description}>
-          { this.text('misc', 'logging') }
-          { this.text('misc', 'log_file') }
-        </Section>
-      </div>
-    );
-  }
-
-  renderConfig (settings, platform, base, isOffline) {
+  renderConfig (simple, settings, platform, base, isOffline) {
     this.configMode = 'advanced';
 
-    const sections = Object.keys(data).filter(section => section !== '__internal').map(sectionName => {
-      const section = data[sectionName];
+    const sections = Object.keys(data)
+      .filter(sectionName => sectionName !== '__internal')
+      .filter(sectionName => !simple ||
+          Object.keys(data[sectionName]).some(propName => {
+            const prop = data[sectionName][propName];
+            return typeof prop === 'object' && prop.simple;
+          })
+        )
+      .map(sectionName => {
+        const section = data[sectionName];
 
-      let sectionCondition = true;
-      if ('condition' in section) {
-          // eslint-disable-next-line no-eval
-        sectionCondition = eval(section.condition);
-      }
+        let sectionCondition = true;
+        if ('condition' in section) {
+            // eslint-disable-next-line no-eval
+          sectionCondition = eval(section.condition);
+        }
 
-      let items = Object.keys(section)
-          .filter(key => key !== 'section' && key !== 'description' && key !== 'condition')
-          .filter(propName => !section[propName].deprecated)
-          .map(propName => {
-            const prop = section[propName];
+        let items = Object.keys(section)
+            .filter(key => key !== 'section' && key !== 'description' && key !== 'condition')
+            .filter(propName => !section[propName].deprecated)
+            .filter(propName => !simple || section[propName].simple)
+            .map(propName => {
+              const prop = section[propName];
 
-            let condition = sectionCondition;
-            if ('disable' in section && propName !== 'disable') {
-              condition = condition && !settings[sectionName].disable;
-            } else if ('enable' in section && propName !== 'enable') {
-              condition = condition && settings[sectionName].enable;
-            } else if ('enabled' in section && propName !== 'enabled') {
-              condition = condition && settings[sectionName].enabled;
-            }
-
-            if ('condition' in prop) {
-              // eslint-disable-next-line no-eval
-              condition = condition && eval(prop.condition);
-            }
-
-            let item;
-            if (prop.type === 'bool') {
-              item = this.flag(sectionName, propName, condition);
-            } else if ('values' in prop) {
-              if (prop.type === 'string[]') {
-                item = this.multiselect(sectionName, propName, condition);
-              } else {
-                item = this.select(sectionName, propName, condition);
+              let condition = sectionCondition;
+              if ('disable' in section && propName !== 'disable') {
+                condition = condition && !settings[sectionName].disable;
+              } else if ('enable' in section && propName !== 'enable') {
+                condition = condition && settings[sectionName].enable;
+              } else if ('enabled' in section && propName !== 'enabled') {
+                condition = condition && settings[sectionName].enabled;
               }
-            } else if (prop.type === 'path') {
-              item = this.path(sectionName, propName, base, platform, condition);
-            } else if (prop.type === 'string[]') {
-              item = this.list(sectionName, propName, condition);
-            } else if (prop.type === 'string') {
-              item = this.text(sectionName, propName, condition);
-            } else if (prop.type === 'number') {
-              item = this.number(sectionName, propName, condition);
-            }
 
-            return (
-              <Fragment key={`${sectionName}.${propName}`}>
-                {item}
-              </Fragment>
-            );
-          });
+              if ('condition' in prop) {
+                // eslint-disable-next-line no-eval
+                condition = condition && eval(prop.condition);
+              }
 
-      return (
-        <Section key={section.section} title={section.section} description={section.description}>
-          { items }
-        </Section>
-      );
+              let item;
+              if (prop.type === 'bool') {
+                item = this.flag(sectionName, propName, condition);
+              } else if ('values' in prop) {
+                if (prop.type === 'string[]') {
+                  item = this.multiselect(sectionName, propName, condition);
+                } else {
+                  item = this.select(sectionName, propName, condition);
+                }
+              } else if (prop.type === 'path') {
+                item = this.path(sectionName, propName, base, platform, condition);
+              } else if (prop.type === 'string[]') {
+                item = this.list(sectionName, propName, condition);
+              } else if (prop.type === 'string') {
+                item = this.text(sectionName, propName, condition);
+              } else if (prop.type === 'number') {
+                item = this.number(sectionName, propName, condition);
+              }
+
+              return (
+                <Fragment key={`${simple}.${sectionName}.${propName}`}>
+                  {item}
+                </Fragment>
+              );
+            });
+
+        return (
+          <Section key={`${simple}.${section.section}`} title={section.section} description={section.description}>
+            { items }
+          </Section>
+        );
     });
 
     return (<div>{sections}</div>);
