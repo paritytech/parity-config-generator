@@ -8,6 +8,8 @@ import Select from './controls/Select';
 import { localPath, basePath, joinPath } from '../system';
 import data from '../data.compiled.json';
 
+import 'material-design-lite';
+
 class Editor extends Component {
 
   static propTypes = {
@@ -17,10 +19,14 @@ class Editor extends Component {
 
   change = (data, name) => {
     return value => {
-      data[name] = value;
+      data[name] = value; // TODO Mutating in place; mutates componentDidUpdate prevProps
       this.props.onChange({...this.props.settings});
     };
   };
+
+  componentDidUpdate () {
+    window.componentHandler.upgradeDom();
+  }
 
   render () {
     const {settings} = this.props;
@@ -113,7 +119,7 @@ class Editor extends Component {
             { items }
           </Section>
         );
-    });
+      });
 
     return (<div>{sections}</div>);
   }
