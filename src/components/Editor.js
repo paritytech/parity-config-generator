@@ -17,15 +17,22 @@ class Editor extends Component {
     onChange: PropTypes.func.isRequired
   };
 
-  change = (data, name) => {
+  change = (section, prop) => {
     return value => {
-      data[name] = value; // TODO Mutating in place; mutates componentDidUpdate prevProps
-      this.props.onChange({...this.props.settings});
+      this.props.onChange({
+        ...this.props.settings,
+        [section]: {
+          ...this.props.settings[section],
+          [prop]: value
+        }
+      });
     };
   };
 
-  componentDidUpdate () {
-    window.componentHandler.upgradeDom();
+  componentDidUpdate (prevProps) {
+    if (prevProps.settings.__internal.configMode !== this.props.settings.__internal.configMode) {
+      window.componentHandler.upgradeDom();
+    }
   }
 
   render () {
@@ -141,7 +148,7 @@ class Editor extends Component {
         disabled={!isEnabled}
         >
         <Select
-          onChange={this.change(settings[section], prop)}
+          onChange={this.change(section, prop)}
           value={value}
           values={data[section][prop].values.map(val)}
           id={`${configMode}_${prop}`}
@@ -172,7 +179,7 @@ class Editor extends Component {
         newValue.splice(idx, 1);
       }
 
-      this.change(settings[section], prop)(newValue);
+      this.change(section, prop)(newValue);
     };
 
     return (
@@ -220,7 +227,7 @@ class Editor extends Component {
             className='mdl-textfield__input'
             type='number'
             value={value || 0}
-            onChange={(ev) => this.change(settings[section], prop)(Number(ev.target.value))}
+            onChange={(ev) => this.change(section, prop)(Number(ev.target.value))}
             min={data[section][prop].min}
             max={data[section][prop].max}
             disabled={!isEnabled}
@@ -262,7 +269,7 @@ class Editor extends Component {
             className='mdl-textfield__input'
             type='text'
             value={value || ''}
-            onChange={(ev) => this.change(settings[section], prop)(ev.target.value)}
+            onChange={(ev) => this.change(section, prop)(ev.target.value)}
             disabled={!isEnabled}
             />
         </div>
@@ -294,7 +301,7 @@ class Editor extends Component {
             className='mdl-switch__input'
             checked={value}
             disabled={!isEnabled}
-            onChange={(ev) => this.change(settings[section], prop)(ev.target.checked)}
+            onChange={(ev) => this.change(section, prop)(ev.target.checked)}
             />
           <span className='mdl-switch__label' />
         </label>
@@ -329,7 +336,7 @@ class Editor extends Component {
                 } else {
                   delete newValue[idx];
                 }
-                this.change(settings[section], prop)(newValue);
+                this.change(section, prop)(newValue);
               }}
               />
           ))}
@@ -337,7 +344,7 @@ class Editor extends Component {
           <button
             style={{bottom: 0, right: 0, zIndex: 10, transform: 'scale(0.5)'}}
             className='mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect'
-            onClick={() => this.change(settings[section], prop)(value.concat(['']))}
+            onClick={() => this.change(section, prop)(value.concat(['']))}
             disabled={!isEnabled}
             >
             <i className='material-icons'>add</i>
