@@ -44,7 +44,7 @@
         "ellaism": "Ellaism Network"
       },
       "default": "foundation",
-      "values": [
+      "suggestions": [
         "foundation",
         "kovan",
         "dev",
