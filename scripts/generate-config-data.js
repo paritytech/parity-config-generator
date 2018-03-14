@@ -1,14 +1,30 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const bl = require('bl');
+
+const CONFIG_IS = {
+  SAME: 'same',
+  OPPOSITE: 'opposite',
+  ARRAY_OF: 'array_of',
+  NONE: 'none',
+  UNKNOWN: 'unknown'
+};
 
 function fetchSource () {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     https.get('https://raw.githubusercontent.com/paritytech/parity/master/parity/cli/mod.rs', res => {
-      res.setEncoding('utf8');
-      let body = '';
-      res.on('data', data => { body += data; });
-      res.on('end', () => { resolve(body); });
+      if (res.statusCode !== 200) {
+        reject(new Error(`Failed to load source code, status code: ${res.statusCode}`));
+      }
+
+      res.pipe(bl(function (err, data) {
+        if (err) {
+          reject(new Error(err));
+        }
+
+        resolve(data.toString());
+      }));
     });
   });
 }
@@ -57,20 +73,20 @@ function parseDefaultValue (defaultValue) {
 function parseConfigCallback (configCallback) {
   const regexToConfigIs = [
     [
-      /^\|c: &Config\| c.([a-zA-Z_]+).as_ref\(\)\?\.([a-zA-Z_]+)(?:\.clone\(\))?$/,
-      'same'
+      /^\|c: &Config\| c\.([a-zA-Z_]+)\.as_ref\(\)\?\.([a-zA-Z_]+)(?:\.clone\(\))?$/,
+      CONFIG_IS.SAME
     ],
     [
-      /^\|c: &Config\| c.([a-zA-Z_]+).as_ref\(\)\?\.([a-zA-Z_]+)(?:\.clone\(\))?\.map\(\|([a-zA-Z_]+)\| !\3\)(\.clone\(\))?$/,
-      'opposite'
+      /^\|c: &Config\| c\.([a-zA-Z_]+)\.as_ref\(\)\?\.([a-zA-Z_]+)(?:\.clone\(\))?\.map\(\|([a-zA-Z_]+)\| !\3\)(\.clone\(\))?$/,
+      CONFIG_IS.OPPOSITE
     ],
     [
-      /^\|c: &Config\| c.([a-zA-Z_]+).as_ref\(\)\?\.([a-zA-Z_]+)(?:\.clone\(\)|\.as_ref\(\))?\.map\(\|vec\| vec.join\(","\)\)?$/,
-      'array_of'
+      /^\|c: &Config\| c\.([a-zA-Z_]+)\.as_ref\(\)\?\.([a-zA-Z_]+)(?:\.clone\(\)|\.as_ref\(\))?\.map\(\|vec\| vec\.join\(","\)\)?$/,
+      CONFIG_IS.ARRAY_OF
     ],
     [
       /^\|_\| None$/,
-      'none'
+      CONFIG_IS.UNKNOWN
     ]
   ];
 
@@ -83,13 +99,12 @@ function parseConfigCallback (configCallback) {
   }
 
   console.warn('Warning: Failed to recognize callback', configCallback);
-  return {configIs: 'unknown'};
+  return {configIs: CONFIG_IS.UNKNOWN};
 }
 
 function makeCliConfigTree (parsedCliOptions) {
-  const configCliOptions = parsedCliOptions.filter(({configIs}) =>
-        configIs !== 'none' && configIs !== 'unknown'
-    );
+  const configCliOptions = parsedCliOptions
+    .filter(({configIs}) => configIs !== CONFIG_IS.NONE && configIs !== CONFIG_IS.UNKNOWN);
 
   const tree = {};
   configCliOptions.forEach(({configSection, configProp, ...rest}) => {
@@ -131,18 +146,24 @@ function hydrateConfigWithCli (config, cliConfig) {
         const cliConfigProp = cliConfig[section.name][prop.name];
         const dataProp = data[section.name][prop.name];
 
-        if (cliConfigProp.configIs === 'same') {
-          dataProp.description = cliConfigProp.help;
-          dataProp.default = cliConfigProp.defaultValue;
-        } else if (cliConfigProp.configIs === 'array_of') {
-          dataProp.description = cliConfigProp.help;
-          if (cliConfigProp.defaultValue !== null) {
-            dataProp.default = cliConfigProp.defaultValue.split(',');
-          }
-        } else if (cliConfigProp.configIs === 'opposite') {
-          dataProp.default = !cliConfigProp.defaultValue;
-        } else {
-          console.error("Error: Unreachable: configIs can be 'same', 'array_of', 'opposite', 'none', 'unknown'; is none of the first three; last two are pruned in makeCliConfigTree; qed.");
+        switch (cliConfigProp.configIs) {
+          case CONFIG_IS.SAME:
+            dataProp.description = cliConfigProp.help;
+            dataProp.default = cliConfigProp.defaultValue;
+            break;
+          case CONFIG_IS.ARRAY_OF:
+            dataProp.description = cliConfigProp.help;
+            if (cliConfigProp.defaultValue !== null) {
+              dataProp.default = cliConfigProp.defaultValue.split(',');
+            } else {
+              dataProp.default = [];
+            }
+            break;
+          case CONFIG_IS.OPPOSITE:
+            dataProp.default = !cliConfigProp.defaultValue;
+            break;
+          default:
+            throw new Error(`Error: Unreachable: configIs with value '${cliConfigProp.configIs}' can be 'same', 'array_of', 'opposite', 'none', 'unknown'; is none of the first three; last two are pruned in makeCliConfigTree; qed.`);
         }
       } else {
         console.warn('Warning: Config option %s.%s is not linked to any CLI option.', section.name, prop.name);
@@ -190,21 +211,17 @@ function augment (data, extra) {
     }
   });
 
-  for (const section in dataAugmented) {
-    if (overwritten.includes(section)) {
-      continue;
-    }
+  Object.keys(dataAugmented)
+    .filter(section => !overwritten.includes(section))
+    .forEach(section => {
+      dataAugmentedOrdered[section] = dataAugmentedOrdered[section] || {};
 
-    dataAugmentedOrdered[section] = dataAugmentedOrdered[section] || {};
-
-    for (const prop in dataAugmented[section]) {
-      if (overwritten.includes(`${section}.${prop}`)) {
-        continue;
-      }
-
-      dataAugmentedOrdered[section][prop] = dataAugmented[section][prop];
-    }
-  }
+      Object.keys(dataAugmented[section])
+        .filter(prop => !overwritten.includes(`${section}.${prop}`))
+        .forEach(prop => {
+          dataAugmentedOrdered[section][prop] = dataAugmented[section][prop];
+        });
+    });
 
   return dataAugmentedOrdered;
 }
@@ -239,7 +256,26 @@ function augment (data, extra) {
   const extra = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../src/data.extra.json'), 'UTF-8'));
   const dataAugmented = augment(data, extra);
 
+  // Make sure that config items with unrecognized default values
+  // were set a default value in data.extra.json
+
+  Object.keys(dataAugmented).forEach(section => {
+    const undefinedDefaults = Object.keys(dataAugmented[section])
+        .filter(prop => {
+          const item = dataAugmented[section][prop];
+          return typeof item === 'object' && typeof item.default === 'undefined';
+        })
+        .map(prop => `${section}.${prop}`);
+
+    if (undefinedDefaults.length) {
+      throw new Error(`Couldn't parse the default CLI value for the following config items: ${undefinedDefaults.join(', ')}. Please set a default value for them in data.extra.json.`);
+    }
+  });
+
   // Write to file
 
   fs.writeFileSync(path.resolve(__dirname, '../src/data.compiled.json'), JSON.stringify(dataAugmented, null, 2));
-})();
+})().catch(e => {
+  console.error(e);
+  process.exit(1);
+});

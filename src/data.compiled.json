@@ -773,6 +773,7 @@
       "name": "Hosts",
       "type": "string[]",
       "description": "Dapps server is merged with RPC server. Use --jsonrpc-hosts.",
+      "default": [],
       "deprecated": true
     },
     "user": {
@@ -780,9 +781,6 @@
       "type": "string",
       "description": "Dapps server authentication has been removed.",
       "default": null,
-      "deprecated": true
-    },
-    "password": {
       "deprecated": true
     },
     "section": "Dapps Server",
@@ -1151,8 +1149,7 @@
       "default": 128,
       "min": 0,
       "max": 32000,
-      "condition": "!settings.footprint.cache_size",
-      "simple": true
+      "condition": "!settings.footprint.cache_size"
     },
     "cache_size_blocks": {
       "name": "Blockchain Cache",
@@ -1187,7 +1184,8 @@
       "description": "If defined will never use more then {}MB for all caches. (Overrides other cache settings).",
       "default": 0,
       "min": 0,
-      "max": 32000
+      "max": 32000,
+      "simple": true
     },
     "fast_and_loose": {
       "name": "Fast And Loose",

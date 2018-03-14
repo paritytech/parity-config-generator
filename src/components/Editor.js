@@ -55,7 +55,7 @@ class Editor extends Component {
   }
 
   renderConfig (simple, settings, platform, base, isOffline) {
-    this.configMode = 'advanced';
+    this.configMode = simple ? 'simple' : 'advanced';
 
     const sections = Object.keys(data)
       .filter(sectionName => sectionName !== '__internal')

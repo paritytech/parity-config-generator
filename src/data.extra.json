@@ -523,7 +523,7 @@
     "user": {
       "deprecated": true
     },
-    "password": {
+    "pass": {
       "deprecated": true
     }
   },
@@ -776,8 +776,7 @@
       "description": "Will keep up to {}MB data in Database cache.",
       "min": 0,
       "max": 32000,
-      "condition": "!settings.footprint.cache_size",
-      "simple": true
+      "condition": "!settings.footprint.cache_size"
     },
     "cache_size_blocks": {
       "name": "Blockchain Cache",
@@ -805,7 +804,8 @@
       "description": "If defined will never use more then {}MB for all caches. (Overrides other cache settings).",
       "default": 0,
       "min": 0,
-      "max": 32000
+      "max": 32000,
+      "simple": true
     },
     "fast_and_loose": {
       "name": "Fast And Loose",
