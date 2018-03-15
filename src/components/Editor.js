@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import Section from './Section';
@@ -6,15 +6,9 @@ import Item from './Item';
 import Select from './controls/Select';
 
 import { localPath, basePath, joinPath } from '../system';
-import data from '../data.json';
+import data from '../data.compiled.json';
 
-const styles = {
-  visible: {},
-  hidden: {
-    visibility: 'hidden',
-    height: 0
-  }
-};
+import 'material-design-lite';
 
 class Editor extends Component {
 
@@ -23,237 +17,118 @@ class Editor extends Component {
     onChange: PropTypes.func.isRequired
   };
 
-  change = (data, name) => {
+  change = (section, prop) => {
     return value => {
-      data[name] = value;
-      this.props.onChange({...this.props.settings});
+      this.props.onChange({
+        ...this.props.settings,
+        [section]: {
+          ...this.props.settings[section],
+          [prop]: value
+        }
+      });
     };
   };
+
+  componentDidUpdate (prevProps) {
+    if (prevProps.settings.__internal.configMode !== this.props.settings.__internal.configMode) {
+      window.componentHandler.upgradeDom();
+    }
+  }
 
   render () {
     const {settings} = this.props;
     const {configMode, platform} = settings.__internal;
     const base = settings.parity.base_path !== '$BASE' ? settings.parity.base_path : basePath(platform);
 
-    const isOffline = settings.parity.mode === 'off';
+    const isOffline = settings.parity.mode === 'offline';
     const isSimple = configMode === 'simple';
 
     return (
       <div>
         { this.select('__internal', 'platform') }
         { this.select('__internal', 'configMode') }
-        <div style={isSimple ? styles.visible : styles.hidden}>
-          { this.renderSimple(settings, platform, base, isOffline) }
-        </div>
-        <div style={!isSimple ? styles.visible : styles.hidden}>
-          { this.renderConfig(settings, platform, base, isOffline) }
+        <div>
+          { this.renderConfig(isSimple, settings, platform, base, isOffline) }
         </div>
       </div>
     );
   }
 
-  renderSimple (settings, platform, base, isOffline) {
-    this.configMode = 'simple';
-    return (
-      <div>
-        <h5>{data.parity.section}</h5>
-        <p>{data.parity.description}</p>
-        { this.select('parity', 'chain') }
-        { this.select('parity', 'mode') }
-        { this.select('parity', 'auto_update') }
-        { this.select('parity', 'release_track', settings.parity.auto_update !== 'none') }
-        { this.path('parity', 'base_path', base, platform) }
-        <h5>{data.footprint.section}</h5>
-        <p>{data.footprint.description}</p>
-        { this.select('footprint', 'db_compaction') }
-        { this.select('footprint', 'pruning') }
-        { this.number('footprint', 'pruning_memory', settings.footprint.pruning !== 'archive') }
-        { this.select('footprint', 'fat_db') }
-        { this.select('footprint', 'tracing') }
-        { this.number('footprint', 'cache_size') }
-        <Section title={'Servers'} description={'Parity RPC servers configuration'}>
-          { this.number('ui', 'port', !settings.ui.disable) }
-          { this.text('ui', 'interface', !settings.ui.disable) }
-          { this.number('rpc', 'port', !settings.rpc.disable) }
-          { this.text('rpc', 'interface', !settings.rpc.disable) }
-          { this.text('rpc', 'cors', !settings.rpc.disable) }
-          { this.number('websockets', 'port', !settings.websockets.disable) }
-          { this.text('websockets', 'interface', !settings.websockets.disable) }
-          { this.list('websockets', 'origins', !settings.websockets.disable) }
-        </Section>
-        <Section title={data.network.section} description={data.network.description}>
-          { this.number('network', 'min_peers', !isOffline) }
-          { this.number('network', 'max_peers', !isOffline) }
-          { this.select('network', 'nat', !isOffline) }
-        </Section>
-        <Section title={data.mining.section} description={data.mining.description}>
-          { this.text('mining', 'author') }
-          { this.number('mining', 'usd_per_tx') }
-          { this.flag('mining', 'no_persistent_txqueue') }
-        </Section>
-        <Section title={data.misc.section} description={data.misc.description}>
-          { this.text('misc', 'logging') }
-          { this.text('misc', 'log_file') }
-        </Section>
-      </div>
-    );
-  }
+  renderConfig (simple, settings, platform, base, isOffline) {
+    this.configMode = simple ? 'simple' : 'advanced';
 
-  renderConfig (settings, platform, base, isOffline) {
-    this.configMode = 'advanced';
-    return (
-      <div>
-        <Section title={data.parity.section} description={data.parity.description}>
-          { this.select('parity', 'chain') }
-          { this.select('parity', 'mode') }
-          { this.number('parity', 'mode_timeout', settings.parity.mode !== 'active' && !isOffline) }
-          { this.number('parity', 'mode_alarm', settings.parity.mode === 'passive') }
-          { this.select('parity', 'auto_update') }
-          { this.select('parity', 'release_track', settings.parity.auto_update !== 'none') }
-          { this.flag('parity', 'no_download') }
-          { this.flag('parity', 'no_consensus') }
-          { this.path('parity', 'base_path', base, platform) }
-          { this.path('parity', 'db_path', base, platform) }
-          { this.path('parity', 'keys_path', base, platform) }
-          { this.text('parity', 'identity') }
-        </Section>
-        <Section title={data.account.section} description={data.account.description}>
-          { this.list('account', 'unlock') }
-          { this.text('account', 'password') }
-          { this.number('account', 'keys_iterations') }
-        </Section>
-        <Section title={data.ui.section} description={data.ui.description}>
-          { this.flag('ui', 'disable') }
-          { this.flag('ui', 'force', !settings.ui.disable) }
-          { this.number('ui', 'port', !settings.ui.disable) }
-          { this.text('ui', 'interface', !settings.ui.disable) }
-          { this.path('ui', 'path', base, platform, !settings.ui.disable) }
-        </Section>
-        <Section title={data.network.section} description={data.network.description}>
-          { this.flag('network', 'warp', !isOffline) }
-          { this.flag('network', 'no_warp', !isOffline) }
-          { this.number('network', 'port', !isOffline) }
-          { this.number('network', 'min_peers', !isOffline) }
-          { this.number('network', 'max_peers', !isOffline) }
-          { this.number('network', 'snapshot_peers', !isOffline) }
-          { this.number('network', 'max_pending_peers', !isOffline) }
-          { this.select('network', 'nat', !isOffline) }
-          { this.number('network', 'id', !isOffline) }
-          { this.list('network', 'bootnodes', !isOffline) }
-          { this.flag('network', 'discovery', !isOffline) }
-          { this.path('network', 'reserved_peers', base, platform, !isOffline) }
-          { this.flag('network', 'reserved_only', !isOffline) }
-          { this.select('network', 'allow_ips', !isOffline) }
-          { this.flag('network', 'no_ancient_blocks', !isOffline) }
-          { this.flag('network', 'no_serve_light', !isOffline) }
-        </Section>
-        <Section title={data.rpc.section} description={data.rpc.description}>
-          { this.flag('rpc', 'disable') }
-          { this.number('rpc', 'port', !settings.rpc.disable) }
-          { this.text('rpc', 'interface', !settings.rpc.disable) }
-          { this.text('rpc', 'cors', !settings.rpc.disable) }
-          { this.list('rpc', 'hosts', !settings.rpc.disable) }
-          { this.multiselect('rpc', 'apis', !settings.rpc.disable) }
-        </Section>
-        <Section title={data.websockets.section} description={data.websockets.description}>
-          { this.flag('websockets', 'disable') }
-          { this.number('websockets', 'port', !settings.websockets.disable) }
-          { this.text('websockets', 'interface', !settings.websockets.disable) }
-          { this.list('websockets', 'origins', !settings.websockets.disable) }
-          { this.list('websockets', 'hosts', !settings.websockets.disable) }
-          { this.multiselect('websockets', 'apis', !settings.websockets.disable) }
-        </Section>
-        <Section title={data.ipc.section} description={data.ipc.description}>
-          { this.flag('ipc', 'disable') }
-          { this.path('ipc', 'path', base, platform, !settings.ipc.disable) }
-          { this.multiselect('ipc', 'apis', !settings.ipc.disable) }
-        </Section>
-        <Section title={data.dapps.section} description={data.dapps.description}>
-          { this.flag('dapps', 'disable') }
-          { this.number('dapps', 'port', !settings.dapps.disable) }
-          { this.text('dapps', 'interface', !settings.dapps.disable) }
-          { this.list('dapps', 'hosts', !settings.dapps.disable) }
-          { this.path('dapps', 'path', base, platform, !settings.dapps.disable) }
-          { this.text('dapps', 'user', !settings.dapps.disable) }
-          { this.text('dapps', 'password', settings.dapps.user && !settings.dapps.disable) }
-        </Section>
-        <Section title={data.secretstore.section} description={data.secretstore.description}>
-          { this.flag('secretstore', 'disable') }
-          { this.text('secretstore', 'secret', !settings.secretstore.disable) }
-          { this.list('secretstore', 'nodes', !settings.dapps.disable) }
-          { this.number('secretstore', 'port', !settings.secretstore.disable) }
-          { this.text('secretstore', 'interface', !settings.secretstore.disable) }
-          { this.number('secretstore', 'http_port', !settings.secretstore.disable) }
-          { this.text('secretstore', 'http_interface', !settings.secretstore.disable) }
-          { this.path('secretstore', 'path', base, platform, !settings.secretstore.disable) }
-        </Section>
-        <Section title={data.ipfs.section} description={data.ipfs.description}>
-          { this.flag('ipfs', 'disable') }
-          { this.number('ipfs', 'port', !settings.ipfs.disable) }
-          { this.text('ipfs', 'interface', !settings.ipfs.disable) }
-          { this.text('ipfs', 'cors', !settings.ipfs.disable) }
-          { this.list('ipfs', 'hosts', !settings.ipfs.disable) }
-        </Section>
-        <Section title={data.mining.section} description={data.mining.description}>
-          { this.text('mining', 'author') }
-          { this.text('mining', 'engine_signer') }
-          { this.text('mining', 'extra_data') }
-          { this.flag('mining', 'force_sealing') }
-          { this.select('mining', 'reseal_on_txs') }
-          { this.number('mining', 'reseal_min_period') }
-          { this.number('mining', 'work_queue_size') }
-          { this.flag('mining', 'remove_solved') }
-          { this.select('mining', 'relay_set') }
-          { this.number('mining', 'usd_per_tx') }
-          { this.text('mining', 'usd_per_eth') }
-          { this.text('mining', 'price_update_period') }
-          { this.number('mining', 'gas_floor_target') }
-          { this.number('mining', 'gas_cap') }
-          { this.number('mining', 'tx_gas_limit') }
-          { this.number('mining', 'tx_time_limit') }
-          { this.number('mining', 'tx_queue_size') }
-          { this.select('mining', 'tx_queue_strategy') }
-          { this.number('mining', 'tx_queue_ban_count') }
-          { this.number('mining', 'tx_queue_ban_time') }
-          { this.flag('mining', 'no_persistent_txqueue') }
-          { this.list('mining', 'notify_work') }
-          { this.flag('mining', 'refuse_service_transactions') }
-        </Section>
-        <Section title={data.stratum.section} description={data.stratum.description}>
-          { this.flag('stratum', 'enable') }
-          { this.number('stratum', 'port', settings.stratum.enable) }
-          { this.text('stratum', 'interface', settings.stratum.enable) }
-          { this.text('stratum', 'secret', settings.stratum.enable) }
-        </Section>
-        <Section title={data.footprint.section} description={data.footprint.description}>
-          { this.select('footprint', 'tracing') }
-          { this.select('footprint', 'pruning') }
-          { this.number('footprint', 'pruning_memory', settings.footprint.pruning !== 'archive') }
-          { this.number('footprint', 'pruning_history', settings.footprint.pruning !== 'archive') }
-          { this.select('footprint', 'fat_db') }
-          { this.flag('footprint', 'scale_verifiers') }
-          { this.number('footprint', 'num_verifiers', settings.footprint.scale_verifiers) }
-          { this.select('footprint', 'db_compaction') }
-          { this.number('footprint', 'cache_size') }
-          { this.number('footprint', 'cache_size_db', !settings.footprint.cache_size) }
-          { this.number('footprint', 'cache_size_blocks', !settings.footprint.cache_size) }
-          { this.number('footprint', 'cache_size_queue', !settings.footprint.cache_size) }
-          { this.number('footprint', 'cache_size_state', !settings.footprint.cache_size) }
-          { this.flag('footprint', 'fast_and_loose') }
-        </Section>
-        <Section title={data.snapshots.section} description={data.snapshots.description}>
-          { this.flag('snapshots', 'disable_periodic') }
-        </Section>
-        <Section title={data.vm.section} description={data.vm.description}>
-          { this.flag('vm', 'jit') }
-        </Section>
-        <Section title={data.misc.section} description={data.misc.description}>
-          { this.text('misc', 'logging') }
-          { this.text('misc', 'log_file') }
-          { this.flag('misc', 'color') }
-        </Section>
-      </div>
-    );
+    const sections = Object.keys(data)
+      .filter(sectionName => sectionName !== '__internal')
+      .filter(sectionName => !simple ||
+          Object.keys(data[sectionName]).some(propName => {
+            const prop = data[sectionName][propName];
+            return typeof prop === 'object' && prop.simple;
+          })
+        )
+      .map(sectionName => {
+        const section = data[sectionName];
+
+        let sectionCondition = true;
+        if ('condition' in section) {
+            // eslint-disable-next-line no-eval
+          sectionCondition = eval(section.condition);
+        }
+
+        let items = Object.keys(section)
+            .filter(key => key !== 'section' && key !== 'description' && key !== 'condition')
+            .filter(propName => !section[propName].deprecated)
+            .filter(propName => !simple || section[propName].simple)
+            .map(propName => {
+              const prop = section[propName];
+
+              let condition = sectionCondition;
+              if ('disable' in section && propName !== 'disable') {
+                condition = condition && !settings[sectionName].disable;
+              } else if ('enable' in section && propName !== 'enable') {
+                condition = condition && settings[sectionName].enable;
+              } else if ('enabled' in section && propName !== 'enabled') {
+                condition = condition && settings[sectionName].enabled;
+              }
+
+              if ('condition' in prop) {
+                // eslint-disable-next-line no-eval
+                condition = condition && eval(prop.condition);
+              }
+
+              let item;
+              if (prop.type === 'bool') {
+                item = this.flag(sectionName, propName, condition);
+              } else if ('values' in prop) {
+                if (prop.type === 'string[]') {
+                  item = this.multiselect(sectionName, propName, condition);
+                } else {
+                  item = this.select(sectionName, propName, condition);
+                }
+              } else if (prop.type === 'path') {
+                item = this.path(sectionName, propName, base, platform, condition);
+              } else if (prop.type === 'string[]') {
+                item = this.list(sectionName, propName, condition);
+              } else if (prop.type === 'string') {
+                item = this.text(sectionName, propName, condition);
+              } else if (prop.type === 'number') {
+                item = this.number(sectionName, propName, condition);
+              }
+
+              return (
+                <Fragment key={`${simple}.${sectionName}.${propName}`}>
+                  {item}
+                </Fragment>
+              );
+            });
+
+        return (
+          <Section key={`${simple}.${section.section}`} title={section.section} description={section.description}>
+            { items }
+          </Section>
+        );
+      });
+
+    return (<div>{sections}</div>);
   }
 
   select (section, prop, isEnabled = true) {
@@ -273,7 +148,7 @@ class Editor extends Component {
         disabled={!isEnabled}
         >
         <Select
-          onChange={this.change(settings[section], prop)}
+          onChange={this.change(section, prop)}
           value={value}
           values={data[section][prop].values.map(val)}
           id={`${configMode}_${prop}`}
@@ -304,7 +179,7 @@ class Editor extends Component {
         newValue.splice(idx, 1);
       }
 
-      this.change(settings[section], prop)(newValue);
+      this.change(section, prop)(newValue);
     };
 
     return (
@@ -352,7 +227,7 @@ class Editor extends Component {
             className='mdl-textfield__input'
             type='number'
             value={value || 0}
-            onChange={(ev) => this.change(settings[section], prop)(Number(ev.target.value))}
+            onChange={(ev) => this.change(section, prop)(Number(ev.target.value))}
             min={data[section][prop].min}
             max={data[section][prop].max}
             disabled={!isEnabled}
@@ -394,7 +269,7 @@ class Editor extends Component {
             className='mdl-textfield__input'
             type='text'
             value={value || ''}
-            onChange={(ev) => this.change(settings[section], prop)(ev.target.value)}
+            onChange={(ev) => this.change(section, prop)(ev.target.value)}
             disabled={!isEnabled}
             />
         </div>
@@ -426,7 +301,7 @@ class Editor extends Component {
             className='mdl-switch__input'
             checked={value}
             disabled={!isEnabled}
-            onChange={(ev) => this.change(settings[section], prop)(ev.target.checked)}
+            onChange={(ev) => this.change(section, prop)(ev.target.checked)}
             />
           <span className='mdl-switch__label' />
         </label>
@@ -461,7 +336,7 @@ class Editor extends Component {
                 } else {
                   delete newValue[idx];
                 }
-                this.change(settings[section], prop)(newValue);
+                this.change(section, prop)(newValue);
               }}
               />
           ))}
@@ -469,7 +344,7 @@ class Editor extends Component {
           <button
             style={{bottom: 0, right: 0, zIndex: 10, transform: 'scale(0.5)'}}
             className='mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect'
-            onClick={() => this.change(settings[section], prop)(value.concat(['']))}
+            onClick={() => this.change(section, prop)(value.concat(['']))}
             disabled={!isEnabled}
             >
             <i className='material-icons'>add</i>

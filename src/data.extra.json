@@ -7,7 +7,10 @@
         "advanced": "All available options"
       },
       "default": "simple",
-      "values": ["Quick Configuration [simple]", "Advanced Configuration [advanced]"]
+      "values": [
+        "Quick Configuration [simple]",
+        "Advanced Configuration [advanced]"
+      ]
     },
     "platform": {
       "name": "Platform",
@@ -17,72 +20,16 @@
         "Mac OS": "Config for Mac OS"
       },
       "default": null,
-      "values": ["Windows", "Linux", "Mac OS"]
+      "values": [
+        "Windows",
+        "Linux",
+        "Mac OS"
+      ]
     }
   },
   "parity": {
     "section": "Parity",
     "description": "Basic parameters regarding Parity operation.",
-    "mode": {
-      "name": "Operating Mode",
-      "description": {
-        "active": "Parity continously syncs the chain.",
-        "passive": "Parity syncs initially, then sleeps and wakes regularly to resync",
-        "dark": "Parity syncs only when an external interface is active.",
-        "off": "Syncing is disabled (no network)."
-      },
-      "default": "active",
-      "values": [
-        "Active [active]",
-        "Dark Mode [dark]",
-        "Passive [passive]",
-        "Offline [offline]"
-      ]
-    },
-    "mode_timeout": {
-      "name": "Mode Timeout",
-      "description": "Parity will move to inactive mode after {} seconds.",
-      "default": 300,
-      "min": 0,
-      "max": 10000
-    },
-    "mode_alarm": {
-      "name": "Mode Alarm",
-      "description": "Parity will automatically wake-up every {} seconds.",
-      "default": 3600,
-      "min": 0,
-      "max": 600000
-    },
-    "auto_update": {
-      "name": "Auto Update",
-      "description": {
-        "all": "Auto-updates to every release.",
-        "critical": "Auto-updates only to consensus/security updates.",
-        "none": "No updates will be auto-installed."
-      },
-      "default": "none",
-      "values": ["all", "critical", "none"]
-    },
-    "release_track": {
-      "name": "Auto Update Release Track",
-      "description": {
-        "beta": "Beta",
-        "nightly": "Nightly (Unstable)",
-        "current": "Whatever track this executable was released on"
-      },
-      "default": "current",
-      "values": ["beta", "nightly", "current"]
-    },
-    "no_download": {
-      "name": "Don't Download Updates",
-      "description": "Disables auto downloading of new releases. Not recommended.",
-      "default": false
-    },
-    "no_consensus": {
-      "name": "No Consensus",
-      "description": "Forces Parity to run even if there are known issues regarding consensus. Not recommended.",
-      "default": false
-    },
     "chain": {
       "name": "Chain",
       "description": {
@@ -91,30 +38,123 @@
         "dev": "Local Development Chain",
         "ropsten": "Ropsten Test Network",
         "classic": "Ethereum Classic",
-        "expanse": "Expanse"
+        "classic-testnet": "Ethereum Classic Test Network",
+        "expanse": "Expanse Network",
+        "olympic": "Olympic Network",
+        "musicoin": "Musicoin Network",
+        "ellaism": "Ellaism Network"
       },
-      "default": "foundation",
-      "values": ["foundation", "kovan", "dev", "ropsten", "classic", "expanse"]
+      "values": [
+        "foundation",
+        "kovan",
+        "dev",
+        "ropsten",
+        "classic",
+        "classic-testnet",
+        "expanse",
+        "olympic",
+        "musicoin",
+        "ellaism"
+      ],
+      "simple": true
+    },
+    "mode": {
+      "name": "Operating Mode",
+      "description": {
+        "last": "Uses the last-used mode, active if none",
+        "active": "Parity continously syncs the chain",
+        "passive": "Parity syncs initially, then sleeps and wakes regularly to resync",
+        "dark": "Parity syncs only when the RPC is active",
+        "offline": "Syncing is disabled (no network)"
+      },
+      "values": [
+        "Last [last]",
+        "Active [active]",
+        "Passive [passive]",
+        "Dark Mode [dark]",
+        "Offline [offline]"
+      ],
+      "simple": true
+    },
+    "mode_timeout": {
+      "name": "Mode Timeout",
+      "description": "Parity will move to inactive mode after {} seconds.",
+      "min": 0,
+      "max": 10000,
+      "condition": "settings.parity.mode !== 'active' && !isOffline"
+    },
+    "mode_alarm": {
+      "name": "Mode Alarm",
+      "description": "Parity will automatically wake-up every {} seconds.",
+      "min": 0,
+      "max": 600000,
+      "condition": "settings.parity.mode === 'passive'"
+    },
+    "auto_update": {
+      "name": "Auto Update",
+      "description": {
+        "all": "Auto-updates to every release",
+        "critical": "Auto-updates only to consensus/security updates",
+        "none": "No updates will be auto-installed"
+      },
+      "values": [
+        "all",
+        "critical",
+        "none"
+      ],
+      "simple": true
+    },
+    "release_track": {
+      "name": "Auto Update Release Track",
+      "description": {
+        "stable": "Stable",
+        "beta": "Beta",
+        "nightly": "Nightly (unstable)",
+        "testing": "Testing (do not use)",
+        "current": "Whatever track this executable was released on"
+      },
+      "values": [
+        "stable",
+        "beta",
+        "nightly",
+        "testing",
+        "current"
+      ],
+      "condition": "settings.parity.auto_update !== 'none'",
+      "simple": true
+    },
+    "no_download": {
+      "name": "Don't Download Updates",
+      "description": "Disables auto downloading of new releases. Not recommended."
+    },
+    "no_consensus": {
+      "name": "No Consensus",
+      "description": "Forces Parity to run even if there are known issues regarding consensus. Not recommended."
     },
     "base_path": {
       "name": "Base Path",
       "description": "Blockchain and settings will be stored in {}.",
-      "default": "$BASE"
+      "default": "$BASE",
+      "type": "path",
+      "simple": true
     },
     "db_path": {
       "name": "Database Path",
       "description": "Parity databases will be stored in {}.",
-      "default": "$LOCAL/chains"
+      "default": "$LOCAL/chains",
+      "type": "path"
     },
     "keys_path": {
       "name": "Keys Path",
       "description": "Your encrypted private keys will be stored in {}.",
-      "default": "$BASE/keys"
+      "type": "path"
     },
     "identity": {
       "name": "Identity",
-      "description": "You will be identified as '{}' amongst other nodes..",
-      "default": ""
+      "description": "You will be identified as '{}' amongst other nodes.."
+    },
+    "no_persistent_txqueue": {
+      "simple": true
     }
   },
   "account": {
@@ -123,17 +163,19 @@
     "unlock": {
       "name": "Accounts to unlock",
       "description": "From: [{}] you'll be able to send tranasactions without password.",
-      "default": [""]
+      "default": [
+        ""
+      ]
     },
     "password": {
       "name": "Password File",
       "description": "File at {} should contain passwords to unlock your accounts. One password per line.",
-      "default": ""
+      "default": "",
+      "type": "string"
     },
     "keys_iterations": {
       "name": "Keys deriving iterations",
       "description": "Parity will do {} iterations to derive private keys from passphrase (higher=safer).",
-      "default": 10240,
       "min": 1000,
       "max": 1000000
     }
@@ -143,73 +185,63 @@
     "description": "UI is used to manage your wallet, confirm and sign transactions.",
     "disable": {
       "name": "Disable Wallet",
-      "description": "You will need to unlock accounts manually if Wallet is disabled.",
-      "default": false
+      "description": "You will need to unlock accounts manually if Wallet is disabled."
     },
     "force": {
       "name": "Force Enable Wallet",
-      "description": "Enable Signer even when it would be disabled by other options.",
-      "default": false
+      "description": "Enable Signer even when it would be disabled by other options."
     },
     "port": {
       "name": "Port",
       "description": "Wallet will be accessible on port {}.",
-      "default": 8180
+      "simple": true
     },
     "interface": {
       "name": "Interface",
-      "description":" Wallet will listen for connections on IP {}.",
-      "default": "local"
+      "description": " Wallet will listen for connections on IP {}.",
+      "simple": true
     },
     "path": {
       "name": "Path",
       "description": "Wallet configuration will be stored at {}.",
-      "default": "$HOME/.local/share/io.parity.ethereum/signer"
+      "type": "path"
     }
   },
   "network": {
     "section": "Networking",
     "description": "Network and peer-related settings. Network is not available if Parity is in offline mode.",
+    "condition": "!isOffline",
     "warp": {
-      "name": "Warp Sync (up to 1.5)",
-      "description": "Parity will sync by downloading latest state first. Node will be operational in couple minutes.",
-      "default": false
-    },
-    "no_warp": {
-      "name": "Disable Warp Sync (since 1.6)",
-      "description": "Disable Warp Sync",
-      "default": false
+      "name": "Warp Sync",
+      "description": "Parity will sync by downloading latest state first. Node will be operational in couple minutes."
     },
     "port": {
       "name": "Port",
-      "description": "Parity will listen for connections on port {}.",
-      "default": 30303
+      "description": "Parity will listen for connections on port {}."
     },
     "min_peers": {
       "name": "Min Peers",
       "description": "Parity will try to maintain connection to at least {} peers.",
-      "default": 25,
       "min": 0,
-      "max": 100000
+      "max": 100000,
+      "simple": true
     },
     "max_peers": {
       "name": "Max Peers",
       "description": "Parity will maintain at most {} peers.",
-      "default": 50,
       "min": 0,
-      "max": 100000
+      "max": 100000,
+      "simple": true
     },
     "snapshot_peers": {
       "name": "Snapshot Sync Peers",
       "description": "Parity will maintain additional {} peers for snapshot sync.",
-      "default": 16,
       "min": 0,
       "max": 100000
     },
     "max_pending_peers": {
       "name": "Max Pending Peers",
       "description": "Parity will allow up to {} pending connections.",
-      "default": 64,
       "min": 0,
       "max": 100000
     },
@@ -221,13 +253,13 @@
         "upnp": "Parity will use UPNP to detect your public IP address.",
         "extip:": "Fill up the config manually and provide your public IP address."
       },
-      "default": "any",
       "values": [
         "Any [any]",
         "None [none]",
         "UPNP [upnp]",
         "External IP [extip:]"
-      ]
+      ],
+      "simple": true
     },
     "id": {
       "name": "Network ID",
@@ -237,12 +269,13 @@
     "bootnodes": {
       "name": "Bootnodes",
       "description": "Override the bootnodes from selected chain file.",
-      "default": [""]
+      "default": [
+        ""
+      ]
     },
     "discovery": {
       "name": "Peers Discovery",
-      "description": "Enable or disable new peers discovery.",
-      "default": true
+      "description": "Enable or disable new peers discovery."
     },
     "node_key": {
       "name": "Node Key",
@@ -252,12 +285,12 @@
     "reserved_peers": {
       "name": "Reserved Peers Path",
       "description": "Specify a path to a file with peers' enodes to be always connected to.",
-      "default": ""
+      "default": "",
+      "type": "path"
     },
     "reserved_only": {
-      "name": "Reserved Only", 
-      "description": "Connect only to reserved nodes.",
-      "default": false
+      "name": "Reserved Only",
+      "description": "Connect only to reserved nodes."
     },
     "allow_ips": {
       "name": "Allow Connections",
@@ -266,22 +299,15 @@
         "private": "Parity will connect only to private network IP addresses.",
         "public": "Parity will connect only to public network IP addresses."
       },
-      "default": "all",
       "values": [
         "All IPs [all]",
         "Private Network [private]",
         "Public Network [public]"
       ]
     },
-    "no_ancient_blocks": {
-      "name": "Disable Ancient Blocks",
-      "description": "Disable downloading old blocks after snapshot restorating or warp sync.",
-      "default": false
-    },
     "no_serve_light": {
       "name": "Disable light server",
-      "description": "Disable serving light peers.",
-      "default": false
+      "description": "Disable serving light peers."
     }
   },
   "rpc": {
@@ -289,33 +315,31 @@
     "description": "Expose JSON-RPC APIs over HTTP.",
     "disable": {
       "name": "Disable JSON-RPC",
-      "description": "You won't be able to interact with Parity using JSON-RPC over HTTP.",
-      "default": false
+      "description": "You won't be able to interact with Parity using JSON-RPC over HTTP."
     },
     "port": {
       "name": "Port",
       "description": "JSON-RPC over HTTP will be accessible on port {}.",
-      "default": 8545
+      "simple": true
     },
     "interface": {
       "name": "Interface",
-      "description":" JSON-RPC will be listening for connections on IP {}.",
-      "default": "local"
+      "description": " JSON-RPC will be listening for connections on IP {}.",
+      "simple": true
     },
     "cors": {
       "name": "CORS",
       "description": "Allows Cross-Origin Requests from domain '{}'.",
-      "default": "null"
+      "default": [],
+      "simple": true
     },
     "hosts": {
       "name": "Allowed Hosts",
-      "description": "Allow connections only using specified addresses.",
-      "default": [""]
+      "description": "Allow connections only using specified addresses."
     },
     "apis": {
       "name": "Exposed APIs",
       "description": "Only selected APIs will be exposed over this interface.",
-      "default": ["web3", "eth", "net", "parity", "traces", "rpc", "secretstore"],
       "values": [
         "Web3 [web3]",
         "Eth [eth]",
@@ -323,12 +347,21 @@
         "Personal [personal]",
         "Parity [parity]",
         "Parity Accounts [parity_accounts]",
+        "PUB-SUB [pubsub]",
+        "Parity PUB-SUB [parity_pubsub]",
+        "Whisper [shh]",
+        "Whisper PUB-SUB [shh_pubsub]",
         "Traces [traces]",
         "Trusted Signer (unsafe) [signer]",
         "Parity Set* (unsafe) [parity_set]",
         "RPC [rpc]",
         "Secret Store [secretstore]"
       ]
+    },
+    "server_threads": {
+      "name": "Server threads",
+      "description": "Threads for handling incoming connections for HTTP JSON-RPC server.",
+      "default": 1
     }
   },
   "websockets": {
@@ -336,33 +369,30 @@
     "description": "Expose JSON-RPC APIs over WebSockets.",
     "disable": {
       "name": "Disable WebSockets",
-      "description": "UI won't work and WebSockets server will be not available.",
-      "default": false
+      "description": "UI won't work and WebSockets server will be not available."
     },
     "port": {
       "name": "Port",
       "description": "JSON-RPC over WebSockets will be accessible on port {}.",
-      "default": 8546
+      "simple": true
     },
     "interface": {
       "name": "Interface",
-      "description":" JSON-RPC will be listening for connections on IP {}.",
-      "default": "local"
+      "description": " JSON-RPC will be listening for connections on IP {}.",
+      "simple": true
     },
     "origins": {
       "name": "Origins",
       "description": "Allows connecting from Origin '{}'.",
-      "default": ["chrome-extension://*"]
+      "simple": true
     },
     "hosts": {
       "name": "Allowed Hosts",
-      "description": "Allow connections only using specified addresses.",
-      "default": [""]
+      "description": "Allow connections only using specified addresses."
     },
     "apis": {
       "name": "Exposed APIs",
       "description": "Only selected APIs will be exposed over this interface.",
-      "default": ["web3", "eth", "pubsub", "net", "parity", "parity_pubsub", "traces", "rpc", "secretstore"],
       "values": [
         "Web3 [web3]",
         "Eth [eth]",
@@ -376,7 +406,9 @@
         "Parity Set* (unsafe) [parity_set]",
         "RPC [rpc]",
         "Secret Store [secretstore]",
-        "Parity PUB-SUB [parity_pubsub]"
+        "Parity PUB-SUB [parity_pubsub]",
+        "Whiper [shh]",
+        "Whisper PUB-SUB [shh_pubsub]"
       ]
     }
   },
@@ -385,18 +417,17 @@
     "description": "Expose JSON-RPC APIs over IPC.",
     "disable": {
       "name": "Disable IPC",
-      "description": "You won't be able to use IPC to interact with Parity.",
-      "default": false
+      "description": "You won't be able to use IPC to interact with Parity."
     },
     "path": {
       "name": "Path",
       "description": "Parity will create an IPC socket at {}.",
-      "default": "$HOME/.local/share/io.parity.ethereum/jsonrpc.ipc"
+      "default": "$HOME/.local/share/io.parity.ethereum/jsonrpc.ipc",
+      "type": "path"
     },
     "apis": {
       "name": "Exposed APIs",
       "description": "Only selected APIs will be exposed over this interface.",
-      "default": ["web3", "eth", "pubsub", "net", "parity", "parity_accounts", "parity_pubsub", "traces", "rpc", "secretstore"],
       "values": [
         "Web3 [web3]",
         "Eth [eth]",
@@ -410,7 +441,9 @@
         "Parity Set* (unsafe) [parity_set]",
         "RPC [rpc]",
         "Secret Store [secretstore]",
-        "Parity PUB-SUB [parity_pubsub]"
+        "Parity PUB-SUB [parity_pubsub]",
+        "Whisper [shh]",
+        "Whisper PUB-SUB [shh_pubsub]"
       ]
     }
   },
@@ -419,111 +452,79 @@
     "description": "Secret Store. Requires a special build of Parity.",
     "disable": {
       "name": "Disable Secret Store",
-      "description": "You won't be able to encrypt and decrypt secrets.",
-      "default": false
-    },
-    "secret": {
-      "name": "Secret",
-      "description": "Hex-encoded secret of this node is '{}'.",
-      "default": ""
+      "description": "You won't be able to encrypt and decrypt secrets."
     },
     "nodes": {
       "name": "Nodes",
-      "description": "List of other secret store cluster nodes. Format: NODE_PUBLIC_KEY_IN_HEX@NODE_IP:NODE_PORT",
-      "default": [""]
+      "description": "List of other secret store cluster nodes. Format: NODE_PUBLIC_KEY_IN_HEX@NODE_IP:NODE_PORT"
     },
     "port": {
       "name": "Port",
-      "description": "Secret Store will be running on port {}.",
-      "default": 8083
+      "description": "Secret Store will be running on port {}."
     },
     "interface": {
       "name": "Interface",
-      "description":"Secret Store will listen for connections on IP {}.",
-      "default": "local"
+      "description": "Secret Store will listen for connections on IP {}."
     },
     "http_port": {
       "name": "HTTP Port",
-      "description": "Secret Store HTTP iface will be running on port {}.",
-      "default": 8082
+      "description": "Secret Store HTTP iface will be running on port {}."
     },
     "http_interface": {
       "name": "HTTP Interface",
-      "description":"Secret Store will listen for HTTP requests on IP {}.",
-      "default": "local"
+      "description": "Secret Store will listen for HTTP requests on IP {}."
     },
     "path": {
       "name": "Path",
       "description": "Encrypted secrets will be stored in {}.",
-      "default": "$BASE/secretstore"
+      "type": "path"
     }
   },
   "ipfs": {
     "section": "IPFS API (since 1.7)",
     "description": "IPFS-compatible API for blockchain data.",
-    "disable": {
-      "name": "Disable IPFS API",
-      "description": "You won't be able to hash-query blockchain data.",
-      "default": false
-    },
     "port": {
       "name": "Port",
-      "description": "Secret Store will be running on port {}.",
-      "default": 5001
+      "description": "Secret Store will be running on port {}."
     },
     "interface": {
       "name": "Interface",
-      "description":"Secret Store will listen for connections on IP {}.",
-      "default": "local"
+      "description": "Secret Store will listen for connections on IP {}."
     },
     "cors": {
       "name": "CORS",
       "description": "Allows Cross-Origin Requests from domain '{}'.",
-      "default": "null"
+      "default": []
     },
     "hosts": {
       "name": "Allowed Hosts",
-      "description": "Allow connections only using specified addresses.",
-      "default": [""]
+      "description": "Allow connections only using specified addresses."
     }
   },
   "dapps": {
     "section": "Dapps Server",
     "description": "Run and customize the web Dapps Server.",
-    "disable": {
-      "name": "Disable Dapps",
-      "description": "You won't be able to access any web Dapps.",
-      "default": false
+    "path": {
+      "name": "Dapps Path",
+      "type": "path"
     },
-    "port": {
-      "name": "Port (Deprecated since 1.7)",
-      "description": "Dapps Server will be running on port {}.",
-      "default": 8080
+    "cors": {
+      "deprecated": true
+    },
+    "pass": {
+      "deprecated": true
     },
     "interface": {
-      "name": "Interface (Deprecated since 1.7)",
-      "description":" Dapps Server will listen for connections on IP {}.",
-      "default": "local"
+      "deprecated": true
     },
     "hosts": {
-      "name": "Allowed Hosts (Deprectated since 1.7)",
-      "description": "Allow connections only using specified addresses.",
-      "default": [""]
-    },
-    "path": {
-      "name": "Path",
-      "description": "Local Dapps will be served from {}.",
-      "default": "$HOME/.local/share/io.parity.ethereum/dapps"
+      "deprecated": true
     },
     "user": {
-      "name": "Authentication User (Deprecated since 1.7)",
-      "description": "If specified, will require authorization to access dapps server.",
-      "default": ""
+      "deprecated": true
     },
-    "password": {
-      "name": "Authentication Password (Deprecated since 1.7)",
-      "description": "Password for specified Dapps User.",
-      "default": ""
+    "pass": {
+      "deprecated": true
     }
   },
   "mining": {
@@ -532,7 +533,8 @@
     "author": {
       "name": "Author (Coinbase)",
       "description": "Account address to receive reward when block is mined.",
-      "default": ""
+      "default": "",
+      "simple": true
     },
     "engine_signer": {
       "name": "Engine Signer",
@@ -541,8 +543,7 @@
     },
     "force_sealing": {
       "name": "Force Sealing",
-      "description": "Prepare a block to seal even when there are no miners connected.",
-      "default": false
+      "description": "Prepare a block to seal even when there are no miners connected."
     },
     "reseal_on_txs": {
       "name": "Reseal On Transactions",
@@ -552,7 +553,6 @@
         "ext": "New pending block will be created only on external transactions.",
         "all": "New pending block will be created for all transactions (both local and external)."
       },
-      "default": "own",
       "values": [
         "Never [none]",
         "Local [own]",
@@ -563,14 +563,12 @@
     "reseal_min_period": {
       "name": "Reseal Period",
       "description": "New pending block will be created only once per {} milliseconds.",
-      "default": 2000,
       "min": 1,
       "max": 30000
     },
     "work_queue_size": {
       "name": "Work Queue Size",
       "description": "Parity will produce at most {} distinct pending blocks for miners.",
-      "default": 20,
       "min": 1,
       "max": 100
     },
@@ -585,23 +583,21 @@
         "Cheap [cheap]",
         "Strict [strict]",
         "Lenient [lenient]"
-      ],
-      "default": "cheap"
+      ]
     },
     "usd_per_tx": {
       "name": "USD per Transaction",
       "description": "You will be paid ${} for a basic transaction - Minimum gas price will be set accordingly.",
-      "default": 0.0025
+      "default": 0.0001,
+      "simple": true
     },
     "usd_per_eth": {
       "name": "USD per Eth",
-      "description": "Specify source (URL) or current price of Eth.",
-      "default": "auto"
+      "description": "Specify source (URL) or current price of Eth."
     },
     "price_update_period": {
       "name": "Price Update Period",
-      "description": "Parity will update price per ETH every {}.",
-      "default": "1 hour"
+      "description": "Parity will update price per ETH every {}."
     },
     "gas_floor_target": {
       "name": "Gas Floor Target",
@@ -630,26 +626,18 @@
     "tx_queue_ban_count": {
       "name": "Ban After",
       "description": "Parity will start banning senders/code when execution exceeds limit {} time(s).",
-      "default": 1,
       "min": 0,
       "max": 1000
     },
     "tx_queue_ban_time": {
       "name": "Ban For",
       "description": "Parity will ban senders/code for {} seconds.",
-      "default": 180,
       "min": 0,
       "max": 10000
-    },
-    "no_persistent_txqueue": {
-      "name": "No Persistent Transaction Queue",
-      "description": "Parity will not save local transaction queue to disk.",
-      "default": false
     },
     "tx_queue_size": {
       "name": "Transaction Queue Size",
       "description": "Parity will keep/relay at most {} transactions in queue.",
-      "default": 1024,
       "min": 0,
       "max": 1000000
     },
@@ -660,7 +648,6 @@
         "gas": "Txs in the queue are ordered by gas (low gas = high priority)",
         "gas_factory": "Txs in the queue are ordered by gas/2^15 + gas_price (low gas or high gas+high fee = high priority)"
       },
-      "default": "gas_price",
       "values": [
         "Gas Price [gas_price]",
         "Gas Only [gas]",
@@ -674,75 +661,35 @@
     },
     "remove_solved": {
       "name": "Remove Solved Blocks",
-      "description": "Removes solved blocks - faster import speed, but extra solutions to the same work package will go unused.",
-
-      "default": false
+      "description": "Removes solved blocks - faster import speed, but extra solutions to the same work package will go unused."
     },
     "notify_work": {
       "name": "Notify Work",
       "description": "URLs to which work package notifications are pushed.",
-      "default": [""]
+      "default": [
+        ""
+      ]
     },
     "refuse_service_transactions": {
       "name": "Refuse Service Transactions",
-      "description": "Always refuse service ZGP transactions.",
-
-      "default": false
+      "description": "Always refuse service ZGP transactions."
     }
   },
   "stratum": {
     "section": "Stratum (since 1.6)",
     "description": "Stratum Server for miner push notifications.",
-    "enable": {
-      "name": "Enable Stratum",
-      "description": "Stratum server will be enabled",
-      "default": false
-    },
     "port": {
       "name": "Port",
-      "description": "Stratum Server will be running on port {}.",
-      "default": 8008
+      "description": "Stratum Server will be running on port {}."
     },
     "interface": {
       "name": "Interface",
-      "description":" Stratum Server will listen for connections on IP {}.",
-      "default": "local"
-    },
-    "secret" :{
-      "name": "Secret",
-      "description": "Stratum Secret to authorize peers.",
-      "default": ""
+      "description": " Stratum Server will listen for connections on IP {}."
     }
   },
   "footprint": {
     "section": "Footprint",
     "description": "Tune Parity CPU, Memory and Disk usage.",
-    "pruning": {
-      "name": "Pruning",
-      "description": {
-        "fast": "Prune old state data. Maintains journal overlay - fast but extra 50MB of memory used.",
-        "archive": "Keep all state trie data. No pruning.",
-        "auto": "Prune data unless pruning was disable previously for that DB."
-      },
-      "values": [
-        "fast", "archive", "auto"
-      ],
-      "default": "auto"
-    },
-    "pruning_history": {
-      "name": "Pruning History",
-      "description": "Will keep up to {} old state entries.",
-      "default": 64,
-      "min": 0,
-      "max": 32000
-    },
-    "pruning_memory": {
-      "name": "Pruning Memory",
-      "description": "Will keep up to {} MB old state entries.",
-      "default": 32,
-      "min": 0,
-      "max": 32000
-    },
     "tracing": {
       "name": "Tracing",
       "description": {
@@ -751,9 +698,54 @@
         "auto": "Disable tracing unless it was enable previously for that DB."
       },
       "values": [
-        "on", "off", "auto"
+        "on",
+        "off",
+        "auto"
       ],
-      "default": "auto"
+      "simple": true
+    },
+    "db_compaction": {
+      "name": "DB Compaction Profile",
+      "description": {
+        "hdd": "Increase performance on HDD.",
+        "ssd": "Increase performance on SSD.",
+        "auto": "Determine automatically."
+      },
+      "values": [
+        "HDD [hdd]",
+        "SSD [ssd]",
+        "Auto [auto]"
+      ],
+      "simple": true
+    },
+    "pruning": {
+      "name": "Pruning",
+      "description": {
+        "fast": "Prune old state data. Maintains journal overlay - fast but extra 50MB of memory used.",
+        "archive": "Keep all state trie data. No pruning.",
+        "auto": "Prune data unless pruning was disable previously for that DB."
+      },
+      "values": [
+        "fast",
+        "archive",
+        "auto"
+      ],
+      "simple": true
+    },
+    "pruning_history": {
+      "name": "Pruning History",
+      "description": "Will keep up to {} old state entries.",
+      "min": 0,
+      "max": 32000,
+      "condition": "settings.footprint.pruning !== 'archive'"
+    },
+    "pruning_memory": {
+      "name": "Pruning Memory",
+      "description": "Will keep up to {} MB old state entries.",
+      "min": 0,
+      "max": 32000,
+      "condition": "settings.footprint.pruning !== 'archive'",
+      "simple": true
     },
     "fat_db": {
       "name": "Fat DB",
@@ -763,68 +755,61 @@
         "auto": "Detect if Fat DB was enabled previously."
       },
       "values": [
-        "on", "off", "auto"
+        "on",
+        "off",
+        "auto"
       ],
-      "default": "auto"
+      "simple": true
     },
     "scale_verifiers": {
       "name": "Autoscale Verifiers Threads",
-      "description": "Number of threads will vary depending on the workload. Not guaranteed to be faster.",
-      "default": false
+      "description": "Number of threads will vary depending on the workload. Not guaranteed to be faster."
     },
     "num_verifiers": {
       "name": "Number of Verifiers Threads",
       "description": "Initial number of verifier threads",
-      "default": 6
-    },
-    "db_compaction": {
-      "name": "DB Compaction Profile",
-      "description": {
-        "hdd": "Increase performance on HDD.",
-        "ssd": "Increase performance on SSD."
-      },
-      "values": ["HDD [hdd]", "SSD [ssd]"],
-      "default": "ssd"
+      "default": 8,
+      "condition": "settings.footprint.scale_verifiers"
     },
     "cache_size_db": {
       "name": "Database Cache",
       "description": "Will keep up to {}MB data in Database cache.",
-      "default": 64,
       "min": 0,
-      "max": 32000
+      "max": 32000,
+      "condition": "!settings.footprint.cache_size"
     },
     "cache_size_blocks": {
       "name": "Blockchain Cache",
       "description": "Will keep up to {}MB data in Blockchain cache.",
-      "default": 8,
       "min": 0,
-      "max": 32000
+      "max": 32000,
+      "condition": "!settings.footprint.cache_size"
     },
     "cache_size_queue": {
       "name": "Import Queue Cache",
       "description": "Will keep up to {}MB of blocks in block import queue.",
-      "default": 50,
       "min": 0,
-      "max": 32000
+      "max": 32000,
+      "condition": "!settings.footprint.cache_size"
     },
     "cache_size_state": {
       "name": "State Cache",
       "description": "Will keep up to {}MB data in State cache.",
-      "default": 25,
       "min": 0,
-      "max": 32000
+      "max": 32000,
+      "condition": "!settings.footprint.cache_size"
     },
     "cache_size": {
-      "name": "Total Cache Size", 
+      "name": "Total Cache Size",
       "description": "If defined will never use more then {}MB for all caches. (Overrides other cache settings).",
       "default": 0,
       "min": 0,
-      "max": 32000
+      "max": 32000,
+      "simple": true
     },
     "fast_and_loose": {
-      "name": "Fast And Loose", 
-      "description": "Significant speed up but unclean exit is unrecoverable (disables DB WAL).",
-      "default": false
+      "name": "Fast And Loose",
+      "description": "Significant speed up but unclean exit is unrecoverable (disables DB WAL)."
     }
   },
   "snapshots": {
@@ -832,8 +817,7 @@
     "description": "Snapshoting (warp sync) settings.",
     "disable_periodic": {
       "name": "Disable Periodic",
-      "description": "Disables automatic periodic snapshots.",
-      "default": false
+      "description": "Disables automatic periodic snapshots."
     }
   },
   "vm": {
@@ -841,9 +825,12 @@
     "description": "EVM settings.",
     "jit": {
       "name": "Enable JIT",
-      "description": "Enables Just In Time compiler. Super-fast for CPU-intensive contracts.",
-      "default": false
+      "description": "Enables Just In Time compiler. Super-fast for CPU-intensive contracts."
     }
+  },
+  "whisper": {
+    "section": "Whisper",
+    "description": "Whisper"
   },
   "misc": {
     "section": "Miscellaneous",
@@ -851,17 +838,18 @@
     "logging": {
       "name": "Logging",
       "description": "Logging pattern (`<module>=<level>`, e.g. `own_tx=trace`).",
-      "default": ""
+      "default": "",
+      "simple": true
     },
     "log_file": {
       "name": "Log File",
       "description": "Logs will be stored at {}.",
-      "default": ""
+      "default": "",
+      "simple": true
     },
     "color": {
       "name": "Enable Colors",
-      "description": "Enables colors in logs.",
-      "default": true
+      "description": "Enables colors in logs."
     }
   }
 }

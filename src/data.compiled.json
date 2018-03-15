@@ -1,0 +1,1282 @@
+{
+  "__internal": {
+    "configMode": {
+      "name": "Mode",
+      "description": {
+        "simple": "Simplified config options",
+        "advanced": "All available options"
+      },
+      "default": "simple",
+      "values": [
+        "Quick Configuration [simple]",
+        "Advanced Configuration [advanced]"
+      ]
+    },
+    "platform": {
+      "name": "Platform",
+      "description": {
+        "Windows": "Config for Windows",
+        "Linux": "Config for Linux",
+        "Mac OS": "Config for Mac OS"
+      },
+      "default": null,
+      "values": [
+        "Windows",
+        "Linux",
+        "Mac OS"
+      ]
+    }
+  },
+  "parity": {
+    "chain": {
+      "name": "Chain",
+      "type": "string",
+      "description": {
+        "foundation": "Main Network",
+        "kovan": "Kovan Test Network",
+        "dev": "Local Development Chain",
+        "ropsten": "Ropsten Test Network",
+        "classic": "Ethereum Classic",
+        "classic-testnet": "Ethereum Classic Test Network",
+        "expanse": "Expanse Network",
+        "olympic": "Olympic Network",
+        "musicoin": "Musicoin Network",
+        "ellaism": "Ellaism Network"
+      },
+      "default": "foundation",
+      "values": [
+        "foundation",
+        "kovan",
+        "dev",
+        "ropsten",
+        "classic",
+        "classic-testnet",
+        "expanse",
+        "olympic",
+        "musicoin",
+        "ellaism"
+      ],
+      "simple": true
+    },
+    "mode": {
+      "name": "Operating Mode",
+      "type": "string",
+      "description": {
+        "last": "Uses the last-used mode, active if none",
+        "active": "Parity continously syncs the chain",
+        "passive": "Parity syncs initially, then sleeps and wakes regularly to resync",
+        "dark": "Parity syncs only when the RPC is active",
+        "offline": "Syncing is disabled (no network)"
+      },
+      "default": "last",
+      "values": [
+        "Last [last]",
+        "Active [active]",
+        "Passive [passive]",
+        "Dark Mode [dark]",
+        "Offline [offline]"
+      ],
+      "simple": true
+    },
+    "mode_timeout": {
+      "name": "Mode Timeout",
+      "type": "number",
+      "description": "Parity will move to inactive mode after {} seconds.",
+      "default": 300,
+      "min": 0,
+      "max": 10000,
+      "condition": "settings.parity.mode !== 'active' && !isOffline"
+    },
+    "mode_alarm": {
+      "name": "Mode Alarm",
+      "type": "number",
+      "description": "Parity will automatically wake-up every {} seconds.",
+      "default": 3600,
+      "min": 0,
+      "max": 600000,
+      "condition": "settings.parity.mode === 'passive'"
+    },
+    "auto_update": {
+      "name": "Auto Update",
+      "type": "string",
+      "description": {
+        "all": "Auto-updates to every release",
+        "critical": "Auto-updates only to consensus/security updates",
+        "none": "No updates will be auto-installed"
+      },
+      "default": "critical",
+      "values": [
+        "all",
+        "critical",
+        "none"
+      ],
+      "simple": true
+    },
+    "release_track": {
+      "name": "Auto Update Release Track",
+      "type": "string",
+      "description": {
+        "stable": "Stable",
+        "beta": "Beta",
+        "nightly": "Nightly (unstable)",
+        "testing": "Testing (do not use)",
+        "current": "Whatever track this executable was released on"
+      },
+      "default": "current",
+      "values": [
+        "stable",
+        "beta",
+        "nightly",
+        "testing",
+        "current"
+      ],
+      "condition": "settings.parity.auto_update !== 'none'",
+      "simple": true
+    },
+    "no_download": {
+      "name": "Don't Download Updates",
+      "type": "bool",
+      "description": "Disables auto downloading of new releases. Not recommended.",
+      "default": false
+    },
+    "no_consensus": {
+      "name": "No Consensus",
+      "type": "bool",
+      "description": "Forces Parity to run even if there are known issues regarding consensus. Not recommended.",
+      "default": false
+    },
+    "base_path": {
+      "name": "Base Path",
+      "type": "path",
+      "description": "Blockchain and settings will be stored in {}.",
+      "default": "$BASE",
+      "simple": true
+    },
+    "db_path": {
+      "name": "Database Path",
+      "type": "path",
+      "description": "Parity databases will be stored in {}.",
+      "default": "$LOCAL/chains"
+    },
+    "keys_path": {
+      "name": "Keys Path",
+      "type": "path",
+      "description": "Your encrypted private keys will be stored in {}.",
+      "default": "$BASE/keys"
+    },
+    "identity": {
+      "name": "Identity",
+      "type": "string",
+      "description": "You will be identified as '{}' amongst other nodes..",
+      "default": ""
+    },
+    "no_persistent_txqueue": {
+      "name": "No persistent txqueue",
+      "type": "bool",
+      "description": "Don't save pending local transactions to disk to be restored whenever the node restarts.",
+      "default": false,
+      "simple": true
+    },
+    "section": "Parity",
+    "public_node": {
+      "name": "Public node",
+      "type": "bool",
+      "description": "Start Parity as a public web server. Account storage and transaction signing will be delegated to the UI.",
+      "default": false
+    },
+    "light": {
+      "name": "Light",
+      "type": "bool",
+      "description": "Experimental: run in light client mode. Light clients synchronize a bare minimum of data and fetch necessary data on-demand from the network. Much lower in storage, potentially higher in bandwidth. Has no effect with subcommands.",
+      "default": false
+    },
+    "description": "Basic parameters regarding Parity operation."
+  },
+  "account": {
+    "unlock": {
+      "name": "Accounts to unlock",
+      "type": "string[]",
+      "description": "From: [{}] you'll be able to send tranasactions without password.",
+      "default": [
+        ""
+      ]
+    },
+    "password": {
+      "name": "Password File",
+      "type": "string",
+      "description": "File at {} should contain passwords to unlock your accounts. One password per line.",
+      "default": ""
+    },
+    "keys_iterations": {
+      "name": "Keys deriving iterations",
+      "type": "number",
+      "description": "Parity will do {} iterations to derive private keys from passphrase (higher=safer).",
+      "default": 10240,
+      "min": 1000,
+      "max": 1000000
+    },
+    "section": "Account",
+    "refresh_time": {
+      "name": "Refresh time",
+      "type": "number",
+      "description": "Specify the cache time of accounts read from disk. If you manage thousands of accounts set this to 0 to disable refresh.",
+      "default": 5
+    },
+    "disable_hardware": {
+      "name": "Disable hardware",
+      "type": "bool",
+      "description": "Disables hardware wallet support.",
+      "default": false
+    },
+    "fast_unlock": {
+      "name": "Fast unlock",
+      "type": "bool",
+      "description": "Use drasticly faster unlocking mode. This setting causes raw secrets to be stored unprotected in memory, so use with care.",
+      "default": false
+    },
+    "description": "Unlocking accounts and private keys security parameters."
+  },
+  "ui": {
+    "disable": {
+      "name": "Disable Wallet",
+      "type": "bool",
+      "description": "You will need to unlock accounts manually if Wallet is disabled.",
+      "default": false
+    },
+    "force": {
+      "name": "Force Enable Wallet",
+      "type": "bool",
+      "description": "Enable Signer even when it would be disabled by other options.",
+      "default": false
+    },
+    "port": {
+      "name": "Port",
+      "type": "number",
+      "description": "Wallet will be accessible on port {}.",
+      "default": 8180,
+      "simple": true
+    },
+    "interface": {
+      "name": "Interface",
+      "type": "string",
+      "description": " Wallet will listen for connections on IP {}.",
+      "default": "local",
+      "simple": true
+    },
+    "path": {
+      "name": "Path",
+      "type": "path",
+      "description": "Wallet configuration will be stored at {}.",
+      "default": "$BASE/signer"
+    },
+    "section": "Parity Wallet",
+    "hosts": {
+      "name": "Hosts",
+      "type": "string[]",
+      "description": "List of allowed Host header values. This option will validate the Host header sent by the browser, it is additional security against some attack vectors. Special options: \"all\", \"none\",.",
+      "default": [
+        "none"
+      ]
+    },
+    "description": "UI is used to manage your wallet, confirm and sign transactions."
+  },
+  "network": {
+    "warp": {
+      "name": "Warp Sync",
+      "type": "bool",
+      "default": true,
+      "description": "Parity will sync by downloading latest state first. Node will be operational in couple minutes."
+    },
+    "port": {
+      "name": "Port",
+      "type": "number",
+      "description": "Parity will listen for connections on port {}.",
+      "default": 30303
+    },
+    "min_peers": {
+      "name": "Min Peers",
+      "type": "number",
+      "description": "Parity will try to maintain connection to at least {} peers.",
+      "default": 25,
+      "min": 0,
+      "max": 100000,
+      "simple": true
+    },
+    "max_peers": {
+      "name": "Max Peers",
+      "type": "number",
+      "description": "Parity will maintain at most {} peers.",
+      "default": 50,
+      "min": 0,
+      "max": 100000,
+      "simple": true
+    },
+    "snapshot_peers": {
+      "name": "Snapshot Sync Peers",
+      "type": "number",
+      "description": "Parity will maintain additional {} peers for snapshot sync.",
+      "default": 0,
+      "min": 0,
+      "max": 100000
+    },
+    "max_pending_peers": {
+      "name": "Max Pending Peers",
+      "type": "number",
+      "description": "Parity will allow up to {} pending connections.",
+      "default": 64,
+      "min": 0,
+      "max": 100000
+    },
+    "nat": {
+      "name": "NAT settings",
+      "type": "string",
+      "description": {
+        "any": "Parity will use all possible methods to determine public IP address.",
+        "none": "Parity won't attempt detect you public IP address",
+        "upnp": "Parity will use UPNP to detect your public IP address.",
+        "extip:": "Fill up the config manually and provide your public IP address."
+      },
+      "default": "any",
+      "values": [
+        "Any [any]",
+        "None [none]",
+        "UPNP [upnp]",
+        "External IP [extip:]"
+      ],
+      "simple": true
+    },
+    "id": {
+      "name": "Network ID",
+      "type": "number",
+      "description": "Network ID of the chain will be overridden to: {}",
+      "default": 0
+    },
+    "bootnodes": {
+      "name": "Bootnodes",
+      "type": "string[]",
+      "description": "Override the bootnodes from selected chain file.",
+      "default": [
+        ""
+      ]
+    },
+    "discovery": {
+      "name": "Peers Discovery",
+      "type": "bool",
+      "default": true,
+      "description": "Enable or disable new peers discovery."
+    },
+    "node_key": {
+      "name": "Node Key",
+      "type": "string",
+      "description": "Specify node secret key (64-char hex or input to SHA3)",
+      "default": ""
+    },
+    "reserved_peers": {
+      "name": "Reserved Peers Path",
+      "type": "path",
+      "description": "Specify a path to a file with peers' enodes to be always connected to.",
+      "default": ""
+    },
+    "reserved_only": {
+      "name": "Reserved Only",
+      "type": "bool",
+      "description": "Connect only to reserved nodes.",
+      "default": false
+    },
+    "allow_ips": {
+      "name": "Allow Connections",
+      "type": "string",
+      "description": {
+        "all": "Parity will not filter outbound connections.",
+        "private": "Parity will connect only to private network IP addresses.",
+        "public": "Parity will connect only to public network IP addresses."
+      },
+      "default": "all",
+      "values": [
+        "All IPs [all]",
+        "Private Network [private]",
+        "Public Network [public]"
+      ]
+    },
+    "no_serve_light": {
+      "name": "Disable light server",
+      "type": "bool",
+      "description": "Disable serving light peers.",
+      "default": false
+    },
+    "section": "Networking",
+    "description": "Network and peer-related settings. Network is not available if Parity is in offline mode.",
+    "condition": "!isOffline"
+  },
+  "rpc": {
+    "disable": {
+      "name": "Disable JSON-RPC",
+      "type": "bool",
+      "description": "You won't be able to interact with Parity using JSON-RPC over HTTP.",
+      "default": false
+    },
+    "port": {
+      "name": "Port",
+      "type": "number",
+      "description": "JSON-RPC over HTTP will be accessible on port {}.",
+      "default": 8545,
+      "simple": true
+    },
+    "interface": {
+      "name": "Interface",
+      "type": "string",
+      "description": " JSON-RPC will be listening for connections on IP {}.",
+      "default": "local",
+      "simple": true
+    },
+    "cors": {
+      "name": "CORS",
+      "type": "string[]",
+      "description": "Allows Cross-Origin Requests from domain '{}'.",
+      "default": [],
+      "simple": true
+    },
+    "hosts": {
+      "name": "Allowed Hosts",
+      "type": "string[]",
+      "description": "Allow connections only using specified addresses.",
+      "default": [
+        "none"
+      ]
+    },
+    "apis": {
+      "name": "Exposed APIs",
+      "type": "string[]",
+      "description": "Only selected APIs will be exposed over this interface.",
+      "default": [
+        "web3",
+        "eth",
+        "pubsub",
+        "net",
+        "parity",
+        "parity_pubsub",
+        "traces",
+        "rpc",
+        "shh",
+        "shh_pubsub"
+      ],
+      "values": [
+        "Web3 [web3]",
+        "Eth [eth]",
+        "Net [net]",
+        "Personal [personal]",
+        "Parity [parity]",
+        "Parity Accounts [parity_accounts]",
+        "PUB-SUB [pubsub]",
+        "Parity PUB-SUB [parity_pubsub]",
+        "Whisper [shh]",
+        "Whisper PUB-SUB [shh_pubsub]",
+        "Traces [traces]",
+        "Trusted Signer (unsafe) [signer]",
+        "Parity Set* (unsafe) [parity_set]",
+        "RPC [rpc]",
+        "Secret Store [secretstore]"
+      ]
+    },
+    "server_threads": {
+      "name": "Server threads",
+      "type": "number",
+      "description": "Threads for handling incoming connections for HTTP JSON-RPC server.",
+      "default": 1
+    },
+    "section": "RPC",
+    "processing_threads": {
+      "name": "Processing threads",
+      "type": "number",
+      "description": "Turn on additional processing threads in all RPC servers. Setting this to non-zero value allows parallel cpu-heavy queries execution.",
+      "default": 4
+    },
+    "description": "Expose JSON-RPC APIs over HTTP."
+  },
+  "websockets": {
+    "disable": {
+      "name": "Disable WebSockets",
+      "type": "bool",
+      "description": "UI won't work and WebSockets server will be not available.",
+      "default": false
+    },
+    "port": {
+      "name": "Port",
+      "type": "number",
+      "description": "JSON-RPC over WebSockets will be accessible on port {}.",
+      "default": 8546,
+      "simple": true
+    },
+    "interface": {
+      "name": "Interface",
+      "type": "string",
+      "description": " JSON-RPC will be listening for connections on IP {}.",
+      "default": "local",
+      "simple": true
+    },
+    "origins": {
+      "name": "Origins",
+      "type": "string[]",
+      "description": "Allows connecting from Origin '{}'.",
+      "default": [
+        "parity://*",
+        "chrome-extension://*",
+        "moz-extension://*"
+      ],
+      "simple": true
+    },
+    "hosts": {
+      "name": "Allowed Hosts",
+      "type": "string[]",
+      "description": "Allow connections only using specified addresses.",
+      "default": [
+        "none"
+      ]
+    },
+    "apis": {
+      "name": "Exposed APIs",
+      "type": "string[]",
+      "description": "Only selected APIs will be exposed over this interface.",
+      "default": [
+        "web3",
+        "eth",
+        "pubsub",
+        "net",
+        "parity",
+        "parity_pubsub",
+        "traces",
+        "rpc",
+        "shh",
+        "shh_pubsub"
+      ],
+      "values": [
+        "Web3 [web3]",
+        "Eth [eth]",
+        "PUB-SUB [pubsub]",
+        "Net [net]",
+        "Personal [personal]",
+        "Parity [parity]",
+        "Parity Accounts [parity_accounts]",
+        "Traces [traces]",
+        "Trusted Signer (unsafe) [signer]",
+        "Parity Set* (unsafe) [parity_set]",
+        "RPC [rpc]",
+        "Secret Store [secretstore]",
+        "Parity PUB-SUB [parity_pubsub]",
+        "Whiper [shh]",
+        "Whisper PUB-SUB [shh_pubsub]"
+      ]
+    },
+    "section": "WebSockets (since 1.7)",
+    "description": "Expose JSON-RPC APIs over WebSockets."
+  },
+  "ipc": {
+    "disable": {
+      "name": "Disable IPC",
+      "type": "bool",
+      "description": "You won't be able to use IPC to interact with Parity.",
+      "default": false
+    },
+    "path": {
+      "name": "Path",
+      "type": "path",
+      "description": "Parity will create an IPC socket at {}.",
+      "default": "$HOME/.local/share/io.parity.ethereum/jsonrpc.ipc"
+    },
+    "apis": {
+      "name": "Exposed APIs",
+      "type": "string[]",
+      "description": "Only selected APIs will be exposed over this interface.",
+      "default": [
+        "web3",
+        "eth",
+        "pubsub",
+        "net",
+        "parity",
+        "parity_pubsub",
+        "parity_accounts",
+        "traces",
+        "rpc",
+        "shh",
+        "shh_pubsub"
+      ],
+      "values": [
+        "Web3 [web3]",
+        "Eth [eth]",
+        "PUB-SUB [pubsub]",
+        "Net [net]",
+        "Personal [personal]",
+        "Parity [parity]",
+        "Parity Accounts [parity_accounts]",
+        "Traces [traces]",
+        "Trusted Signer (unsafe) [signer]",
+        "Parity Set* (unsafe) [parity_set]",
+        "RPC [rpc]",
+        "Secret Store [secretstore]",
+        "Parity PUB-SUB [parity_pubsub]",
+        "Whisper [shh]",
+        "Whisper PUB-SUB [shh_pubsub]"
+      ]
+    },
+    "section": "IPC",
+    "description": "Expose JSON-RPC APIs over IPC."
+  },
+  "secretstore": {
+    "disable": {
+      "name": "Disable Secret Store",
+      "type": "bool",
+      "description": "You won't be able to encrypt and decrypt secrets.",
+      "default": false
+    },
+    "nodes": {
+      "name": "Nodes",
+      "type": "string[]",
+      "description": "List of other secret store cluster nodes. Format: NODE_PUBLIC_KEY_IN_HEX@NODE_IP:NODE_PORT",
+      "default": [
+        ""
+      ]
+    },
+    "port": {
+      "name": "Port",
+      "type": "number",
+      "description": "Secret Store will be running on port {}.",
+      "default": 8083
+    },
+    "interface": {
+      "name": "Interface",
+      "type": "string",
+      "description": "Secret Store will listen for connections on IP {}.",
+      "default": "local"
+    },
+    "http_port": {
+      "name": "HTTP Port",
+      "type": "number",
+      "description": "Secret Store HTTP iface will be running on port {}.",
+      "default": 8082
+    },
+    "http_interface": {
+      "name": "HTTP Interface",
+      "type": "string",
+      "description": "Secret Store will listen for HTTP requests on IP {}.",
+      "default": "local"
+    },
+    "path": {
+      "name": "Path",
+      "type": "path",
+      "description": "Encrypted secrets will be stored in {}.",
+      "default": "$BASE/secretstore"
+    },
+    "section": "Secret Store (since 1.7)",
+    "disable_http": {
+      "name": "Disable http",
+      "type": "bool",
+      "description": "Disable Secret Store HTTP API.",
+      "default": false
+    },
+    "disable_acl_check": {
+      "name": "Disable acl check",
+      "type": "bool",
+      "description": "Disable ACL check (useful for test environments).",
+      "default": false
+    },
+    "disable_auto_migrate": {
+      "name": "Disable auto migrate",
+      "type": "bool",
+      "description": "Do not run servers set change session automatically when servers set changes. This option has no effect when servers set is read from configuration file.",
+      "default": false
+    },
+    "service_contract": {
+      "name": "Service contract",
+      "type": "string",
+      "description": "Secret Store Service contract address source: none, registry (contract address is read from registry) or address.",
+      "default": "none"
+    },
+    "self_secret": {
+      "name": "Self secret",
+      "type": "string",
+      "description": "Hex-encoded secret key of this node.",
+      "default": null
+    },
+    "admin_public": {
+      "name": "Admin public",
+      "type": "string",
+      "description": "Hex-encoded public key of secret store administrator.",
+      "default": null
+    },
+    "description": "Secret Store. Requires a special build of Parity."
+  },
+  "ipfs": {
+    "port": {
+      "name": "Port",
+      "type": "number",
+      "description": "Secret Store will be running on port {}.",
+      "default": 5001
+    },
+    "interface": {
+      "name": "Interface",
+      "type": "string",
+      "description": "Secret Store will listen for connections on IP {}.",
+      "default": "local"
+    },
+    "cors": {
+      "name": "CORS",
+      "type": "string[]",
+      "description": "Allows Cross-Origin Requests from domain '{}'.",
+      "default": []
+    },
+    "hosts": {
+      "name": "Allowed Hosts",
+      "type": "string[]",
+      "description": "Allow connections only using specified addresses.",
+      "default": [
+        "none"
+      ]
+    },
+    "section": "IPFS API (since 1.7)",
+    "enable": {
+      "name": "Enable",
+      "type": "bool",
+      "description": "Enable IPFS-compatible HTTP API.",
+      "default": false
+    },
+    "description": "IPFS-compatible API for blockchain data."
+  },
+  "dapps": {
+    "path": {
+      "name": "Dapps Path",
+      "type": "path",
+      "description": "Specify directory where dapps should be installed.",
+      "default": "$BASE/dapps"
+    },
+    "cors": {
+      "name": "Cors",
+      "type": "string",
+      "description": "Dapps server is merged with RPC server. Use --jsonrpc-cors.",
+      "default": null,
+      "deprecated": true
+    },
+    "pass": {
+      "name": "Pass",
+      "type": "string",
+      "description": "Dapps server authentication has been removed.",
+      "default": null,
+      "deprecated": true
+    },
+    "interface": {
+      "name": "Interface",
+      "type": "string",
+      "description": "Dapps server is merged with RPC server. Use --jsonrpc-interface.",
+      "default": null,
+      "deprecated": true
+    },
+    "hosts": {
+      "name": "Hosts",
+      "type": "string[]",
+      "description": "Dapps server is merged with RPC server. Use --jsonrpc-hosts.",
+      "default": [],
+      "deprecated": true
+    },
+    "user": {
+      "name": "User",
+      "type": "string",
+      "description": "Dapps server authentication has been removed.",
+      "default": null,
+      "deprecated": true
+    },
+    "section": "Dapps Server",
+    "disable": {
+      "name": "Disable",
+      "type": "bool",
+      "description": "Disable the Dapps server (e.g. status page).",
+      "default": false
+    },
+    "port": {
+      "name": "Port",
+      "type": "number",
+      "description": "Dapps server is merged with RPC server. Use --jsonrpc-port.",
+      "default": null
+    },
+    "description": "Run and customize the web Dapps Server."
+  },
+  "mining": {
+    "author": {
+      "name": "Author (Coinbase)",
+      "type": "string",
+      "description": "Account address to receive reward when block is mined.",
+      "default": "",
+      "simple": true
+    },
+    "engine_signer": {
+      "name": "Engine Signer",
+      "type": "string",
+      "description": "Account to sign consensus messages and issue blocks for non-PoW chains.",
+      "default": ""
+    },
+    "force_sealing": {
+      "name": "Force Sealing",
+      "type": "bool",
+      "description": "Prepare a block to seal even when there are no miners connected.",
+      "default": false
+    },
+    "reseal_on_txs": {
+      "name": "Reseal On Transactions",
+      "type": "string",
+      "description": {
+        "none": "New transactions will not cause a new pending block to be created.",
+        "own": "New pending block will be created only on transactions sent using local RPC/IPC",
+        "ext": "New pending block will be created only on external transactions.",
+        "all": "New pending block will be created for all transactions (both local and external)."
+      },
+      "default": "own",
+      "values": [
+        "Never [none]",
+        "Local [own]",
+        "External [ext]",
+        "All [all]"
+      ]
+    },
+    "reseal_min_period": {
+      "name": "Reseal Period",
+      "type": "number",
+      "description": "New pending block will be created only once per {} milliseconds.",
+      "default": 2000,
+      "min": 1,
+      "max": 30000
+    },
+    "work_queue_size": {
+      "name": "Work Queue Size",
+      "type": "number",
+      "description": "Parity will produce at most {} distinct pending blocks for miners.",
+      "default": 20,
+      "min": 1,
+      "max": 100
+    },
+    "relay_set": {
+      "name": "Relay Set",
+      "type": "string",
+      "description": {
+        "cheap": "Relay any transaction in the queue (may include invalid transactions).",
+        "strict": "Relay only executed transactions (will relay nothing if not mining).",
+        "lenient": "Same as strict when mining, and cheap when not."
+      },
+      "default": "cheap",
+      "values": [
+        "Cheap [cheap]",
+        "Strict [strict]",
+        "Lenient [lenient]"
+      ]
+    },
+    "usd_per_tx": {
+      "name": "USD per Transaction",
+      "type": "string",
+      "description": "You will be paid ${} for a basic transaction - Minimum gas price will be set accordingly.",
+      "default": 0.0001,
+      "simple": true
+    },
+    "usd_per_eth": {
+      "name": "USD per Eth",
+      "type": "string",
+      "description": "Specify source (URL) or current price of Eth.",
+      "default": "auto"
+    },
+    "price_update_period": {
+      "name": "Price Update Period",
+      "type": "string",
+      "description": "Parity will update price per ETH every {}.",
+      "default": "hourly"
+    },
+    "gas_floor_target": {
+      "name": "Gas Floor Target",
+      "type": "string",
+      "description": "Targeting {} gas per block when sealing a new block.",
+      "default": 4700000
+    },
+    "gas_cap": {
+      "name": "Gas Cap",
+      "type": "string",
+      "description": "Gas limit will be raised at most by {} gas.",
+      "default": 6283184
+    },
+    "tx_gas_limit": {
+      "name": "Gas Limit per Transaction",
+      "type": "string",
+      "description": "Parity will reject transactions above {} gas.",
+      "default": 0,
+      "min": 0,
+      "max": 10000000
+    },
+    "tx_time_limit": {
+      "name": "Time Limit per Transaction [ms]",
+      "type": "number",
+      "description": "Parity will start banning senders/code when execution exceeds specified limit.",
+      "default": 0,
+      "min": 0,
+      "max": 100000
+    },
+    "tx_queue_ban_count": {
+      "name": "Ban After",
+      "type": "number",
+      "description": "Parity will start banning senders/code when execution exceeds limit {} time(s).",
+      "default": 1,
+      "min": 0,
+      "max": 1000
+    },
+    "tx_queue_ban_time": {
+      "name": "Ban For",
+      "type": "number",
+      "description": "Parity will ban senders/code for {} seconds.",
+      "default": 180,
+      "min": 0,
+      "max": 10000
+    },
+    "tx_queue_size": {
+      "name": "Transaction Queue Size",
+      "type": "number",
+      "description": "Parity will keep/relay at most {} transactions in queue.",
+      "default": 8192,
+      "min": 0,
+      "max": 1000000
+    },
+    "tx_queue_strategy": {
+      "name": "Transaction Queue Strategy",
+      "type": "string",
+      "description": {
+        "gas_price": "Txs in the queue are ordered by gas price (high gas price = high priority)",
+        "gas": "Txs in the queue are ordered by gas (low gas = high priority)",
+        "gas_factory": "Txs in the queue are ordered by gas/2^15 + gas_price (low gas or high gas+high fee = high priority)"
+      },
+      "default": "gas_price",
+      "values": [
+        "Gas Price [gas_price]",
+        "Gas Only [gas]",
+        "Gas & Gas Price [gas_factor]"
+      ]
+    },
+    "extra_data": {
+      "name": "Extra Data",
+      "type": "string",
+      "description": "Blocks that you mine will have '{}' in extra data field.",
+      "default": ""
+    },
+    "remove_solved": {
+      "name": "Remove Solved Blocks",
+      "type": "bool",
+      "description": "Removes solved blocks - faster import speed, but extra solutions to the same work package will go unused.",
+      "default": false
+    },
+    "notify_work": {
+      "name": "Notify Work",
+      "type": "string[]",
+      "description": "URLs to which work package notifications are pushed.",
+      "default": [
+        ""
+      ]
+    },
+    "refuse_service_transactions": {
+      "name": "Refuse Service Transactions",
+      "type": "bool",
+      "description": "Always refuse service ZGP transactions.",
+      "default": false
+    },
+    "section": "Mining",
+    "reseal_on_uncle": {
+      "name": "Reseal on uncle",
+      "type": "bool",
+      "description": "Force the node to author new blocks when a new uncle block is imported.",
+      "default": false
+    },
+    "reseal_max_period": {
+      "name": "Reseal max period",
+      "type": "number",
+      "description": "Specify the maximum time since last block to enable force-sealing. MS is time measured in milliseconds.",
+      "default": 120000
+    },
+    "min_gas_price": {
+      "name": "Min gas price",
+      "type": "number",
+      "description": "Minimum amount of Wei per GAS to be paid for a transaction to be accepted for mining. Overrides --usd-per-tx.",
+      "default": null
+    },
+    "gas_price_percentile": {
+      "name": "Gas price percentile",
+      "type": "number",
+      "description": "Set PCT percentile gas price value from last 100 blocks as default gas price when sending transactions.",
+      "default": 50
+    },
+    "tx_queue_mem_limit": {
+      "name": "Tx queue mem limit",
+      "type": "number",
+      "description": "Maximum amount of memory that can be used by the transaction queue. Setting this parameter to 0 disables limiting.",
+      "default": 2
+    },
+    "tx_queue_gas": {
+      "name": "Tx queue gas",
+      "type": "string",
+      "description": "Maximum amount of total gas for external transactions in the queue. LIMIT can be either an amount of gas or 'auto' or 'off'. 'auto' sets the limit to be 20x the current block gas limit.",
+      "default": "off"
+    },
+    "infinite_pending_block": {
+      "name": "Infinite pending block",
+      "type": "bool",
+      "description": "Pending block will be created with maximal possible gas limit and will execute all transactions in the queue. Note that such block is invalid and should never be attempted to be mined.",
+      "default": false
+    },
+    "description": "Options for mining nodes."
+  },
+  "stratum": {
+    "port": {
+      "name": "Port",
+      "type": "number",
+      "description": "Stratum Server will be running on port {}.",
+      "default": 8008
+    },
+    "interface": {
+      "name": "Interface",
+      "type": "string",
+      "description": " Stratum Server will listen for connections on IP {}.",
+      "default": "local"
+    },
+    "section": "Stratum (since 1.6)",
+    "secret": {
+      "name": "Secret",
+      "type": "string",
+      "description": "Secret for authorizing Stratum server for peers.",
+      "default": null
+    },
+    "description": "Stratum Server for miner push notifications."
+  },
+  "footprint": {
+    "tracing": {
+      "name": "Tracing",
+      "type": "string",
+      "description": {
+        "on": "Compute and Store tracing data. (Enables trace_* APIs).",
+        "off": "Disable tracing.",
+        "auto": "Disable tracing unless it was enable previously for that DB."
+      },
+      "default": "auto",
+      "values": [
+        "on",
+        "off",
+        "auto"
+      ],
+      "simple": true
+    },
+    "db_compaction": {
+      "name": "DB Compaction Profile",
+      "type": "string",
+      "description": {
+        "hdd": "Increase performance on HDD.",
+        "ssd": "Increase performance on SSD.",
+        "auto": "Determine automatically."
+      },
+      "default": "auto",
+      "values": [
+        "HDD [hdd]",
+        "SSD [ssd]",
+        "Auto [auto]"
+      ],
+      "simple": true
+    },
+    "pruning": {
+      "name": "Pruning",
+      "type": "string",
+      "description": {
+        "fast": "Prune old state data. Maintains journal overlay - fast but extra 50MB of memory used.",
+        "archive": "Keep all state trie data. No pruning.",
+        "auto": "Prune data unless pruning was disable previously for that DB."
+      },
+      "default": "auto",
+      "values": [
+        "fast",
+        "archive",
+        "auto"
+      ],
+      "simple": true
+    },
+    "pruning_history": {
+      "name": "Pruning History",
+      "type": "number",
+      "description": "Will keep up to {} old state entries.",
+      "default": 64,
+      "min": 0,
+      "max": 32000,
+      "condition": "settings.footprint.pruning !== 'archive'"
+    },
+    "pruning_memory": {
+      "name": "Pruning Memory",
+      "type": "number",
+      "description": "Will keep up to {} MB old state entries.",
+      "default": 32,
+      "min": 0,
+      "max": 32000,
+      "condition": "settings.footprint.pruning !== 'archive'",
+      "simple": true
+    },
+    "fat_db": {
+      "name": "Fat DB",
+      "type": "string",
+      "description": {
+        "on": "Enables Fat DB",
+        "off": "Disable Fat DB.",
+        "auto": "Detect if Fat DB was enabled previously."
+      },
+      "default": "auto",
+      "values": [
+        "on",
+        "off",
+        "auto"
+      ],
+      "simple": true
+    },
+    "scale_verifiers": {
+      "name": "Autoscale Verifiers Threads",
+      "type": "bool",
+      "description": "Number of threads will vary depending on the workload. Not guaranteed to be faster.",
+      "default": false
+    },
+    "num_verifiers": {
+      "name": "Number of Verifiers Threads",
+      "type": "number",
+      "description": "Initial number of verifier threads",
+      "default": 8,
+      "condition": "settings.footprint.scale_verifiers"
+    },
+    "cache_size_db": {
+      "name": "Database Cache",
+      "type": "number",
+      "description": "Will keep up to {}MB data in Database cache.",
+      "default": 128,
+      "min": 0,
+      "max": 32000,
+      "condition": "!settings.footprint.cache_size"
+    },
+    "cache_size_blocks": {
+      "name": "Blockchain Cache",
+      "type": "number",
+      "description": "Will keep up to {}MB data in Blockchain cache.",
+      "default": 8,
+      "min": 0,
+      "max": 32000,
+      "condition": "!settings.footprint.cache_size"
+    },
+    "cache_size_queue": {
+      "name": "Import Queue Cache",
+      "type": "number",
+      "description": "Will keep up to {}MB of blocks in block import queue.",
+      "default": 40,
+      "min": 0,
+      "max": 32000,
+      "condition": "!settings.footprint.cache_size"
+    },
+    "cache_size_state": {
+      "name": "State Cache",
+      "type": "number",
+      "description": "Will keep up to {}MB data in State cache.",
+      "default": 25,
+      "min": 0,
+      "max": 32000,
+      "condition": "!settings.footprint.cache_size"
+    },
+    "cache_size": {
+      "name": "Total Cache Size",
+      "type": "number",
+      "description": "If defined will never use more then {}MB for all caches. (Overrides other cache settings).",
+      "default": 0,
+      "min": 0,
+      "max": 32000,
+      "simple": true
+    },
+    "fast_and_loose": {
+      "name": "Fast And Loose",
+      "type": "bool",
+      "description": "Significant speed up but unclean exit is unrecoverable (disables DB WAL).",
+      "default": false
+    },
+    "section": "Footprint",
+    "description": "Tune Parity CPU, Memory and Disk usage."
+  },
+  "snapshots": {
+    "disable_periodic": {
+      "name": "Disable Periodic",
+      "type": "bool",
+      "description": "Disables automatic periodic snapshots.",
+      "default": false
+    },
+    "section": "Snapshots",
+    "description": "Snapshoting (warp sync) settings."
+  },
+  "vm": {
+    "jit": {
+      "name": "Enable JIT",
+      "type": "bool",
+      "description": "Enables Just In Time compiler. Super-fast for CPU-intensive contracts.",
+      "default": false
+    },
+    "section": "VM",
+    "description": "EVM settings."
+  },
+  "misc": {
+    "logging": {
+      "name": "Logging",
+      "type": "string",
+      "description": "Logging pattern (`<module>=<level>`, e.g. `own_tx=trace`).",
+      "default": "",
+      "simple": true
+    },
+    "log_file": {
+      "name": "Log File",
+      "type": "string",
+      "description": "Logs will be stored at {}.",
+      "default": "",
+      "simple": true
+    },
+    "color": {
+      "name": "Enable Colors",
+      "type": "bool",
+      "default": true,
+      "description": "Enables colors in logs."
+    },
+    "section": "Miscellaneous",
+    "ntp_servers": {
+      "name": "Ntp servers",
+      "type": "string[]",
+      "description": "Comma separated list of NTP servers to provide current time (host:port). Used to verify node health. Parity uses pool.ntp.org NTP servers; consider joining the pool: http://www.pool.ntp.org/join.html",
+      "default": [
+        "0.parity.pool.ntp.org:123",
+        "1.parity.pool.ntp.org:123",
+        "2.parity.pool.ntp.org:123",
+        "3.parity.pool.ntp.org:123"
+      ]
+    },
+    "ports_shift": {
+      "name": "Ports shift",
+      "type": "number",
+      "description": "Add SHIFT to all port numbers Parity is listening on. Includes network port and all servers (RPC, WebSockets, UI, IPFS, SecretStore).",
+      "default": 0
+    },
+    "unsafe_expose": {
+      "name": "Unsafe expose",
+      "type": "bool",
+      "description": "All servers will listen on external interfaces and will be remotely accessible. It's equivalent with setting the following: --{{ws,jsonrpc,ui,ipfs,secret_store,stratum}}-interface=all --*-hosts=all    This option is UNSAFE and should be used with great care!",
+      "default": false
+    },
+    "description": "Other uncategorized options."
+  },
+  "whisper": {
+    "section": "Whisper",
+    "enabled": {
+      "name": "Enabled",
+      "type": "bool",
+      "description": "Enable the Whisper network.",
+      "default": false
+    },
+    "pool_size": {
+      "name": "Pool size",
+      "type": "number",
+      "description": "Target size of the whisper message pool in megabytes.",
+      "default": 10
+    },
+    "description": "Whisper"
+  }
+}

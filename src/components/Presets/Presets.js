@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import './Presets.css';
@@ -32,7 +32,7 @@ const presets = {
   'Non-standard Ports': ports
 };
 
-class Presets extends Component {
+class Presets extends PureComponent {
 
   static propTypes = {
     preset: PropTypes.string,

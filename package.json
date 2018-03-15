@@ -10,6 +10,7 @@
     "snazzy": "^6.0.0"
   },
   "dependencies": {
+    "bl": "^1.2.1",
     "classnames": "^2.2.5",
     "dialog-polyfill": "^0.4.9",
     "getmdl-select": "^1.1.0",
@@ -24,7 +25,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "semistandard --verbose | snazzy"
+    "lint": "semistandard --verbose | snazzy",
+    "generate-data": "node scripts/generate-config-data.js"
   },
   "semistandard": {
     "parser": "babel-eslint"
