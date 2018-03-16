@@ -483,6 +483,8 @@
   "ipfs": {
     "section": "IPFS API (since 1.7)",
     "description": "IPFS-compatible API for blockchain data.",
+    "enable": {
+    },
     "port": {
       "name": "Port",
       "description": "Secret Store will be running on port {}."
@@ -504,6 +506,8 @@
   "dapps": {
     "section": "Dapps Server",
     "description": "Run and customize the web Dapps Server.",
+    "disable": {
+    },
     "path": {
       "name": "Dapps Path",
       "type": "path"

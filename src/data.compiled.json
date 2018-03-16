@@ -706,6 +706,12 @@
     "description": "Secret Store. Requires a special build of Parity."
   },
   "ipfs": {
+    "enable": {
+      "name": "Enable",
+      "type": "bool",
+      "description": "Enable IPFS-compatible HTTP API.",
+      "default": false
+    },
     "port": {
       "name": "Port",
       "type": "number",
@@ -733,15 +739,15 @@
       ]
     },
     "section": "IPFS API (since 1.7)",
-    "enable": {
-      "name": "Enable",
-      "type": "bool",
-      "description": "Enable IPFS-compatible HTTP API.",
-      "default": false
-    },
     "description": "IPFS-compatible API for blockchain data."
   },
   "dapps": {
+    "disable": {
+      "name": "Disable",
+      "type": "bool",
+      "description": "Disable the Dapps server (e.g. status page).",
+      "default": false
+    },
     "path": {
       "name": "Dapps Path",
       "type": "path",
@@ -784,12 +790,6 @@
       "deprecated": true
     },
     "section": "Dapps Server",
-    "disable": {
-      "name": "Disable",
-      "type": "bool",
-      "description": "Disable the Dapps server (e.g. status page).",
-      "default": false
-    },
     "port": {
       "name": "Port",
       "type": "number",
