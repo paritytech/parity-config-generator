@@ -104,6 +104,8 @@ class Editor extends Component {
                 } else {
                   item = this.select(sectionName, propName, condition);
                 }
+              } else if ('suggestions' in prop) {
+                item = this.datalist(sectionName, propName, condition);
               } else if (prop.type === 'path') {
                 item = this.path(sectionName, propName, base, platform, condition);
               } else if (prop.type === 'string[]') {
@@ -153,6 +155,38 @@ class Editor extends Component {
           values={data[section][prop].values.map(val)}
           id={`${configMode}_${prop}`}
           disabled={!isEnabled}
+          allowInput={false}
+        />
+      </Item>
+    );
+  }
+
+  datalist (section, prop, isEnabled = true) {
+    check(section, prop);
+
+    // TODO [ToDr] hacky
+    const {configMode} = this;
+
+    const {settings} = this.props;
+    const value = or(settings[section][prop], data[section][prop].default);
+    const suggestions = data[section][prop].suggestions.map(val);
+    const description = suggestions.some(val => val.value === value)
+      ? fillDescription(data[section][prop].description[value], value, `${section}.${prop}`)
+      : `Custom ${data[section][prop].name.toLowerCase()}`;
+
+    return (
+      <Item
+        title={data[section][prop].name}
+        description={description}
+        disabled={!isEnabled}
+        >
+        <Select
+          onChange={this.change(section, prop)}
+          value={value}
+          values={suggestions}
+          id={`${configMode}_${prop}`}
+          disabled={!isEnabled}
+          allowInput
         />
       </Item>
     );
