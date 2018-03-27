@@ -203,9 +203,11 @@
     },
     "password": {
       "name": "Password File",
-      "type": "string",
+      "type": "string[]",
       "description": "File at {} should contain passwords to unlock your accounts. One password per line.",
-      "default": ""
+      "default": [
+        ""
+      ]
     },
     "keys_iterations": {
       "name": "Keys deriving iterations",

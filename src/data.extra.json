@@ -170,8 +170,7 @@
     "password": {
       "name": "Password File",
       "description": "File at {} should contain passwords to unlock your accounts. One password per line.",
-      "default": "",
-      "type": "string"
+      "default": [""]
     },
     "keys_iterations": {
       "name": "Keys deriving iterations",

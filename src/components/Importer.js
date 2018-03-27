@@ -15,7 +15,7 @@ class Importer extends PureComponent {
     onError: PropTypes.func.isRequired
   };
 
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.handleFileChange = this.handleFileChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -54,8 +54,8 @@ class Importer extends PureComponent {
     }
   }
 
-  handleClick() {
-    this.refs.fileInput.click()
+  handleClick () {
+    this.refs.fileInput.click();
   }
 
   render () {
