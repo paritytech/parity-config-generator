@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import toml from 'toml';
 
+import './Importer.css';
+
 import {mix, clone} from '../util';
 
 class Importer extends PureComponent {
@@ -12,6 +14,12 @@ class Importer extends PureComponent {
     onChange: PropTypes.func.isRequired,
     onError: PropTypes.func.isRequired
   };
+
+  constructor(props) {
+    super(props);
+    this.handleFileChange = this.handleFileChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+  }
 
   handleFileChange (ev) {
     const file = ev.target.files[0];
@@ -46,17 +54,20 @@ class Importer extends PureComponent {
     }
   }
 
+  handleClick() {
+    this.refs.fileInput.click()
+  }
+
   render () {
     return (
       <button
-        className='mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-efect'
-        onClick={() => this.refs.fileInput.click()}>
+        className='mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-efect import'
+        onClick={this.handleClick}>
 
         <input
-          style={{display: 'none'}}
           type='file'
           ref='fileInput'
-          onChange={this.handleFileChange.bind(this)} />
+          onChange={this.handleFileChange} />
 
         <i className='material-icons' id='upload'>file_upload</i>
         <span className='mdl-tooltip' htmlFor='upload'>Load Config File</span>
