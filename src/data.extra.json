@@ -44,7 +44,7 @@
         "musicoin": "Musicoin Network",
         "ellaism": "Ellaism Network"
       },
-      "values": [
+      "suggestions": [
         "foundation",
         "kovan",
         "dev",

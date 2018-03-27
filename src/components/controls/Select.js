@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import './Select.css';
 
-function Select ({value, onChange, values, id, disabled}) {
-  const selected = values.find(val => val.value === value) || {};
+function Select ({value, onChange, values, id, disabled, allowInput}) {
+  const selected = values.find(val => val.value === value) ||
+    (allowInput && {name: value, value}) ||
+    {};
 
   // We cannot just remove options, since mdl is adding some additional dom nodes.
   const list = (
@@ -31,7 +34,8 @@ function Select ({value, onChange, values, id, disabled}) {
         value={selected.name}
         type='text'
         id={id}
-        readOnly
+        readOnly={!allowInput}
+        {... (allowInput ? {onChange: (ev) => onChange(ev.target.value)} : {})}
         data-val={selected.value}
         />
       {list}
@@ -50,11 +54,13 @@ Select.propTypes = {
   value: PropTypes.any.isRequired,
   onChange: PropTypes.func.isRequired,
   values: PropTypes.array.isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  allowInput: PropTypes.bool
 };
 
 Select.defaultPropTypes = {
-  disabled: false
+  disabled: false,
+  allowInput: false
 };
 
 export default Select;

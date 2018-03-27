@@ -120,6 +120,9 @@ function toComment (settings, section, key, value) {
   data[section][key] = data[section][key] || {};
 
   if (typeof data[section][key].description === 'object') {
+    if ('suggestions' in data[section][key] && !(value in data[section][key].description)) {
+      return `Custom ${key.toLowerCase()}`;
+    }
     return fillDescription(data[section][key].description[value], value);
   }
   return fillDescription(data[section][key].description, value);
