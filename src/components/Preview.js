@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './Preview.css';
 
+import Importer from './Importer';
+
 import { joinPath, basePath } from '../system';
 import data from '../data.compiled.json';
 // TODO [ToDr] move to some common?
@@ -11,7 +13,9 @@ import {fillDescription} from './Editor';
 class Preview extends Component {
   static propTypes = {
     settings: PropTypes.object.isRequired,
-    defaults: PropTypes.object.isRequired
+    defaults: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onError: PropTypes.func.isRequired
   };
 
   generateConfig = () => {
@@ -44,6 +48,7 @@ class Preview extends Component {
           <textarea className='preview-editor' readOnly value={toToml(settings, defaults)} />
         </div>
         <div className='mdl-card__menu'>
+          <Importer defaults={defaults} onChange={this.props.onChange} onError={this.props.onError} />
           <a
             className='mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-efect'
             target='_blank'
@@ -54,7 +59,7 @@ class Preview extends Component {
           <button
             className='mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-efect'
             onClick={this.generateConfig}>
-            <i className='material-icons' id='download'>cloud download</i>
+            <i className='material-icons' id='download'>cloud_download</i>
             <span className='mdl-tooltip' htmlFor='download'>Download Config File</span>
           </button>
         </div>

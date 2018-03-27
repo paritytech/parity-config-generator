@@ -9,20 +9,10 @@ import Item from '../Item';
 import mining from './mining.json';
 import ports from './ports.json';
 
+import {mix, clone} from '../../util';
+
 function toVal (val) {
   return { name: val, value: val };
-}
-
-function mix (a, b) {
-  if (typeof a !== 'object' || typeof b !== 'object') {
-    return b || a;
-  }
-
-  Object.keys(a).forEach(key => {
-    a[key] = mix(a[key], b[key]);
-  });
-
-  return a;
 }
 
 const presets = {
@@ -77,10 +67,6 @@ class Presets extends PureComponent {
       </div>
     );
   }
-}
-
-function clone (val) {
-  return JSON.parse(JSON.stringify(val));
 }
 
 export default Presets;

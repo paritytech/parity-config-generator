@@ -368,7 +368,7 @@ class Editor extends Component {
                 if (ev.target.value !== '') {
                   newValue[idx] = ev.target.value;
                 } else {
-                  delete newValue[idx];
+                  newValue.splice(idx, 1);
                 }
                 this.change(section, prop)(newValue);
               }}

@@ -153,6 +153,18 @@ class App extends Component {
     });
   };
 
+  handleError = (error) => {
+    this.setState({
+      modal: {
+        visible: true,
+        title: 'Error',
+        content: (
+          <p>{error}</p>
+        )
+      }
+    });
+  };
+
   render () {
     const {settings, defaults, preset, modal} = this.state;
 
@@ -166,7 +178,7 @@ class App extends Component {
             </div>
             <div className='mdl-cell mdl-cell--4-col mdl-cell--12-col-tablet'>
               <Presets preset={preset} defaults={defaults} onChange={this.handlePreset} />
-              <Preview settings={settings} defaults={defaults} />
+              <Preview settings={settings} defaults={defaults} onChange={this.handleChange} onError={this.handleError} />
             </div>
           </div>
         </main>
