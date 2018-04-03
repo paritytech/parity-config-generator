@@ -823,14 +823,6 @@
       "description": "Disables automatic periodic snapshots."
     }
   },
-  "vm": {
-    "section": "VM",
-    "description": "EVM settings.",
-    "jit": {
-      "name": "Enable JIT",
-      "description": "Enables Just In Time compiler. Super-fast for CPU-intensive contracts."
-    }
-  },
   "whisper": {
     "section": "Whisper",
     "description": "Whisper"
