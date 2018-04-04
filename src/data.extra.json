@@ -104,6 +104,8 @@
       ],
       "simple": true
     },
+    "auto_update_delay": {},
+    "auto_update_check_frequency": {},
     "release_track": {
       "name": "Auto Update Release Track",
       "description": {
@@ -155,6 +157,10 @@
     },
     "no_persistent_txqueue": {
       "simple": true
+    },
+    "light": {},
+    "no_hardcoded_sync": {
+      "condition": "settings.parity.light"
     }
   },
   "account": {
@@ -214,6 +220,9 @@
       "name": "Warp Sync",
       "description": "Parity will sync by downloading latest state first. Node will be operational in couple minutes."
     },
+    "warp_barrier": {
+      "condition": "settings.network.warp"
+    },
     "port": {
       "name": "Port",
       "description": "Parity will listen for connections on port {}."
@@ -221,6 +230,7 @@
     "min_peers": {
       "name": "Min Peers",
       "description": "Parity will try to maintain connection to at least {} peers.",
+      "default": 25,
       "min": 0,
       "max": 100000,
       "simple": true
@@ -228,6 +238,7 @@
     "max_peers": {
       "name": "Max Peers",
       "description": "Parity will maintain at most {} peers.",
+      "default": 50,
       "min": 0,
       "max": 100000,
       "simple": true
