@@ -1208,16 +1208,6 @@
     "section": "Snapshots",
     "description": "Snapshoting (warp sync) settings."
   },
-  "vm": {
-    "jit": {
-      "name": "Enable JIT",
-      "type": "bool",
-      "description": "Enables Just In Time compiler. Super-fast for CPU-intensive contracts.",
-      "default": false
-    },
-    "section": "VM",
-    "description": "EVM settings."
-  },
   "misc": {
     "logging": {
       "name": "Logging",
