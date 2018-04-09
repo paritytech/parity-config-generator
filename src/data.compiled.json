@@ -112,6 +112,18 @@
       ],
       "simple": true
     },
+    "auto_update_delay": {
+      "name": "Auto update delay",
+      "type": "number",
+      "description": "Specify the maximum number of blocks used for randomly delaying updates.",
+      "default": 100
+    },
+    "auto_update_check_frequency": {
+      "name": "Auto update check frequency",
+      "type": "number",
+      "description": "Specify the number of blocks between each auto-update check.",
+      "default": 20
+    },
     "release_track": {
       "name": "Auto Update Release Track",
       "type": "string",
@@ -177,17 +189,24 @@
       "default": false,
       "simple": true
     },
+    "light": {
+      "name": "Light",
+      "type": "bool",
+      "description": "Experimental: run in light client mode. Light clients synchronize a bare minimum of data and fetch necessary data on-demand from the network. Much lower in storage, potentially higher in bandwidth. Has no effect with subcommands.",
+      "default": false
+    },
+    "no_hardcoded_sync": {
+      "name": "No hardcoded sync",
+      "type": "bool",
+      "description": "By default, if there is no existing database the light client will automatically jump to a block hardcoded in the chain's specifications. This disables this feature.",
+      "default": false,
+      "condition": "settings.parity.light"
+    },
     "section": "Parity",
     "public_node": {
       "name": "Public node",
       "type": "bool",
       "description": "Start Parity as a public web server. Account storage and transaction signing will be delegated to the UI.",
-      "default": false
-    },
-    "light": {
-      "name": "Light",
-      "type": "bool",
-      "description": "Experimental: run in light client mode. Light clients synchronize a bare minimum of data and fetch necessary data on-demand from the network. Much lower in storage, potentially higher in bandwidth. Has no effect with subcommands.",
       "default": false
     },
     "description": "Basic parameters regarding Parity operation."
@@ -288,6 +307,13 @@
       "type": "bool",
       "default": true,
       "description": "Parity will sync by downloading latest state first. Node will be operational in couple minutes."
+    },
+    "warp_barrier": {
+      "name": "Warp barrier",
+      "type": "number",
+      "description": "When warp enabled never attempt regular sync before warping to block NUM.",
+      "default": null,
+      "condition": "settings.network.warp"
     },
     "port": {
       "name": "Port",
@@ -570,6 +596,12 @@
       ]
     },
     "section": "WebSockets (since 1.7)",
+    "max_connections": {
+      "name": "Max connections",
+      "type": "number",
+      "description": "Maximal number of allowed concurrent WS connections.",
+      "default": 100
+    },
     "description": "Expose JSON-RPC APIs over WebSockets."
   },
   "ipc": {
@@ -690,7 +722,31 @@
     "service_contract": {
       "name": "Service contract",
       "type": "string",
-      "description": "Secret Store Service contract address source: none, registry (contract address is read from registry) or address.",
+      "description": "Secret Store Service contract address source: none, registry (contract address is read from secretstore_service entry in registry) or address.",
+      "default": "none"
+    },
+    "service_contract_srv_gen": {
+      "name": "Service contract srv gen",
+      "type": "string",
+      "description": "Secret Store Service server key generation contract address source: none, registry (contract address is read from secretstore_service_srv_gen entry in registry) or address.",
+      "default": "none"
+    },
+    "service_contract_srv_retr": {
+      "name": "Service contract srv retr",
+      "type": "string",
+      "description": "Secret Store Service server key retrieval contract address source: none, registry (contract address is read from secretstore_service_srv_retr entry in registry) or address.",
+      "default": "none"
+    },
+    "service_contract_doc_store": {
+      "name": "Service contract doc store",
+      "type": "string",
+      "description": "Secret Store Service document key store contract address source: none, registry (contract address is read from secretstore_service_doc_store entry in registry) or address.",
+      "default": "none"
+    },
+    "service_contract_doc_sretr": {
+      "name": "Service contract doc sretr",
+      "type": "string",
+      "description": "Secret Store Service document key shadow retrieval contract address source: none, registry (contract address is read from secretstore_service_doc_sretr entry in registry) or address.",
       "default": "none"
     },
     "self_secret": {
