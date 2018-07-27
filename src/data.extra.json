@@ -187,25 +187,7 @@
   },
   "ui": {
     "section": "Parity Wallet",
-    "description": "UI is used to manage your wallet, confirm and sign transactions.",
-    "disable": {
-      "name": "Disable Wallet",
-      "description": "You will need to unlock accounts manually if Wallet is disabled."
-    },
-    "force": {
-      "name": "Force Enable Wallet",
-      "description": "Enable Signer even when it would be disabled by other options."
-    },
-    "port": {
-      "name": "Port",
-      "description": "Wallet will be accessible on port {}.",
-      "simple": true
-    },
-    "interface": {
-      "name": "Interface",
-      "description": " Wallet will listen for connections on IP {}.",
-      "simple": true
-    },
+    "description": "Manage your wallet, confirm and sign transactions.",
     "path": {
       "name": "Path",
       "description": "Wallet configuration will be stored at {}.",
@@ -513,34 +495,6 @@
       "description": "Allow connections only using specified addresses."
     }
   },
-  "dapps": {
-    "section": "Dapps Server",
-    "description": "Run and customize the web Dapps Server.",
-    "disable": {
-    },
-    "path": {
-      "name": "Dapps Path",
-      "type": "path"
-    },
-    "cors": {
-      "deprecated": true
-    },
-    "pass": {
-      "deprecated": true
-    },
-    "interface": {
-      "deprecated": true
-    },
-    "hosts": {
-      "deprecated": true
-    },
-    "user": {
-      "deprecated": true
-    },
-    "pass": {
-      "deprecated": true
-    }
-  },
   "mining": {
     "section": "Mining",
     "description": "Options for mining nodes.",
@@ -822,8 +776,8 @@
       "simple": true
     },
     "fast_and_loose": {
-      "name": "Fast And Loose",
-      "description": "Significant speed up but unclean exit is unrecoverable (disables DB WAL)."
+      "deprecated": true,
+      "default": false
     }
   },
   "snapshots": {

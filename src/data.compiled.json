@@ -203,12 +203,6 @@
       "condition": "settings.parity.light"
     },
     "section": "Parity",
-    "public_node": {
-      "name": "Public node",
-      "type": "bool",
-      "description": "Start Parity as a public web server. Account storage and transaction signing will be delegated to the UI.",
-      "default": false
-    },
     "description": "Basic parameters regarding Parity operation."
   },
   "account": {
@@ -252,38 +246,12 @@
     "fast_unlock": {
       "name": "Fast unlock",
       "type": "bool",
-      "description": "Use drasticly faster unlocking mode. This setting causes raw secrets to be stored unprotected in memory, so use with care.",
+      "description": "Use drastically faster unlocking mode. This setting causes raw secrets to be stored unprotected in memory, so use with care.",
       "default": false
     },
     "description": "Unlocking accounts and private keys security parameters."
   },
   "ui": {
-    "disable": {
-      "name": "Disable Wallet",
-      "type": "bool",
-      "description": "You will need to unlock accounts manually if Wallet is disabled.",
-      "default": false
-    },
-    "force": {
-      "name": "Force Enable Wallet",
-      "type": "bool",
-      "description": "Enable Signer even when it would be disabled by other options.",
-      "default": false
-    },
-    "port": {
-      "name": "Port",
-      "type": "number",
-      "description": "Wallet will be accessible on port {}.",
-      "default": 8180,
-      "simple": true
-    },
-    "interface": {
-      "name": "Interface",
-      "type": "string",
-      "description": " Wallet will listen for connections on IP {}.",
-      "default": "local",
-      "simple": true
-    },
     "path": {
       "name": "Path",
       "type": "path",
@@ -291,15 +259,7 @@
       "default": "$BASE/signer"
     },
     "section": "Parity Wallet",
-    "hosts": {
-      "name": "Hosts",
-      "type": "string[]",
-      "description": "List of allowed Host header values. This option will validate the Host header sent by the browser, it is additional security against some attack vectors. Special options: \"all\", \"none\",.",
-      "default": [
-        "none"
-      ]
-    },
-    "description": "UI is used to manage your wallet, confirm and sign transactions."
+    "description": "Manage your wallet, confirm and sign transactions."
   },
   "network": {
     "warp": {
@@ -433,6 +393,12 @@
       "default": false
     },
     "section": "Networking",
+    "interface": {
+      "name": "Interface",
+      "type": "string",
+      "description": "Network interfaces. Valid values are 'all', 'local' or the ip of the interface you want parity to listen to.",
+      "default": "all"
+    },
     "description": "Network and peer-related settings. Network is not available if Parity is in offline mode.",
     "condition": "!isOffline"
   },
@@ -482,6 +448,7 @@
         "pubsub",
         "net",
         "parity",
+        "private",
         "parity_pubsub",
         "traces",
         "rpc",
@@ -516,8 +483,14 @@
     "processing_threads": {
       "name": "Processing threads",
       "type": "number",
-      "description": "Turn on additional processing threads in all RPC servers. Setting this to non-zero value allows parallel cpu-heavy queries execution.",
+      "description": "Turn on additional processing threads in all HTTP JSON-RPC servers. Setting this to non-zero value allows parallel execution of cpu-heavy queries.",
       "default": 4
+    },
+    "max_payload": {
+      "name": "Max payload",
+      "type": "number",
+      "description": "Specify maximum size for HTTP JSON-RPC requests in megabytes.",
+      "default": null
     },
     "description": "Expose JSON-RPC APIs over HTTP."
   },
@@ -572,6 +545,7 @@
         "net",
         "parity",
         "parity_pubsub",
+        "private",
         "traces",
         "rpc",
         "shh",
@@ -599,7 +573,7 @@
     "max_connections": {
       "name": "Max connections",
       "type": "number",
-      "description": "Maximal number of allowed concurrent WS connections.",
+      "description": "Maximum number of allowed concurrent WebSockets JSON-RPC connections.",
       "default": 100
     },
     "description": "Expose JSON-RPC APIs over WebSockets."
@@ -629,6 +603,7 @@
         "parity",
         "parity_pubsub",
         "parity_accounts",
+        "private",
         "traces",
         "rpc",
         "shh",
@@ -707,47 +682,47 @@
       "description": "Disable Secret Store HTTP API.",
       "default": false
     },
-    "disable_acl_check": {
-      "name": "Disable acl check",
-      "type": "bool",
-      "description": "Disable ACL check (useful for test environments).",
-      "default": false
-    },
     "disable_auto_migrate": {
       "name": "Disable auto migrate",
       "type": "bool",
       "description": "Do not run servers set change session automatically when servers set changes. This option has no effect when servers set is read from configuration file.",
       "default": false
     },
+    "acl_contract": {
+      "name": "Acl contract",
+      "type": "string",
+      "description": "Secret Store permissioning contract address source: none, registry (contract address is read from 'secretstore_acl_checker' entry in registry) or address.",
+      "default": "registry"
+    },
     "service_contract": {
       "name": "Service contract",
       "type": "string",
-      "description": "Secret Store Service contract address source: none, registry (contract address is read from secretstore_service entry in registry) or address.",
-      "default": "none"
+      "description": "Secret Store Service contract address source: none, registry (contract address is read from 'secretstore_service' entry in registry) or address.",
+      "default": null
     },
     "service_contract_srv_gen": {
       "name": "Service contract srv gen",
       "type": "string",
-      "description": "Secret Store Service server key generation contract address source: none, registry (contract address is read from secretstore_service_srv_gen entry in registry) or address.",
-      "default": "none"
+      "description": "Secret Store Service server key generation contract address source: none, registry (contract address is read from 'secretstore_service_srv_gen' entry in registry) or address.",
+      "default": null
     },
     "service_contract_srv_retr": {
       "name": "Service contract srv retr",
       "type": "string",
-      "description": "Secret Store Service server key retrieval contract address source: none, registry (contract address is read from secretstore_service_srv_retr entry in registry) or address.",
-      "default": "none"
+      "description": "Secret Store Service server key retrieval contract address source: none, registry (contract address is read from 'secretstore_service_srv_retr' entry in registry) or address.",
+      "default": null
     },
     "service_contract_doc_store": {
       "name": "Service contract doc store",
       "type": "string",
-      "description": "Secret Store Service document key store contract address source: none, registry (contract address is read from secretstore_service_doc_store entry in registry) or address.",
-      "default": "none"
+      "description": "Secret Store Service document key store contract address source: none, registry (contract address is read from 'secretstore_service_doc_store' entry in registry) or address.",
+      "default": null
     },
     "service_contract_doc_sretr": {
       "name": "Service contract doc sretr",
       "type": "string",
-      "description": "Secret Store Service document key shadow retrieval contract address source: none, registry (contract address is read from secretstore_service_doc_sretr entry in registry) or address.",
-      "default": "none"
+      "description": "Secret Store Service document key shadow retrieval contract address source: none, registry (contract address is read from 'secretstore_service_doc_sretr' entry in registry) or address.",
+      "default": null
     },
     "self_secret": {
       "name": "Self secret",
@@ -760,6 +735,12 @@
       "type": "string",
       "description": "Hex-encoded public key of secret store administrator.",
       "default": null
+    },
+    "server_set_contract": {
+      "name": "Server set contract",
+      "type": "string",
+      "description": "Secret Store server set contract address source: none, registry (contract address is read from 'secretstore_server_set' entry in registry) or address.",
+      "default": "registry"
     },
     "description": "Secret Store. Requires a special build of Parity."
   },
@@ -798,63 +779,6 @@
     },
     "section": "IPFS API (since 1.7)",
     "description": "IPFS-compatible API for blockchain data."
-  },
-  "dapps": {
-    "disable": {
-      "name": "Disable",
-      "type": "bool",
-      "description": "Disable the Dapps server (e.g. status page).",
-      "default": false
-    },
-    "path": {
-      "name": "Dapps Path",
-      "type": "path",
-      "description": "Specify directory where dapps should be installed.",
-      "default": "$BASE/dapps"
-    },
-    "cors": {
-      "name": "Cors",
-      "type": "string",
-      "description": "Dapps server is merged with RPC server. Use --jsonrpc-cors.",
-      "default": null,
-      "deprecated": true
-    },
-    "pass": {
-      "name": "Pass",
-      "type": "string",
-      "description": "Dapps server authentication has been removed.",
-      "default": null,
-      "deprecated": true
-    },
-    "interface": {
-      "name": "Interface",
-      "type": "string",
-      "description": "Dapps server is merged with RPC server. Use --jsonrpc-interface.",
-      "default": null,
-      "deprecated": true
-    },
-    "hosts": {
-      "name": "Hosts",
-      "type": "string[]",
-      "description": "Dapps server is merged with RPC server. Use --jsonrpc-hosts.",
-      "default": [],
-      "deprecated": true
-    },
-    "user": {
-      "name": "User",
-      "type": "string",
-      "description": "Dapps server authentication has been removed.",
-      "default": null,
-      "deprecated": true
-    },
-    "section": "Dapps Server",
-    "port": {
-      "name": "Port",
-      "type": "number",
-      "description": "Dapps server is merged with RPC server. Use --jsonrpc-port.",
-      "default": null
-    },
-    "description": "Run and customize the web Dapps Server."
   },
   "mining": {
     "author": {
@@ -975,7 +899,7 @@
       "name": "Ban After",
       "type": "number",
       "description": "Parity will start banning senders/code when execution exceeds limit {} time(s).",
-      "default": 1,
+      "default": null,
       "min": 0,
       "max": 1000
     },
@@ -983,7 +907,7 @@
       "name": "Ban For",
       "type": "number",
       "description": "Parity will ban senders/code for {} seconds.",
-      "default": 180,
+      "default": null,
       "min": 0,
       "max": 10000
     },
@@ -1061,17 +985,35 @@
       "description": "Set PCT percentile gas price value from last 100 blocks as default gas price when sending transactions.",
       "default": 50
     },
+    "poll_lifetime": {
+      "name": "Poll lifetime",
+      "type": "number",
+      "description": "Set the lifetime of the internal index filter to S seconds.",
+      "default": 60
+    },
+    "tx_queue_per_sender": {
+      "name": "Tx queue per sender",
+      "type": "number",
+      "description": "Maximum number of transactions per sender in the queue. By default it's 1% of the entire queue, but not less than 16.",
+      "default": null
+    },
     "tx_queue_mem_limit": {
       "name": "Tx queue mem limit",
       "type": "number",
       "description": "Maximum amount of memory that can be used by the transaction queue. Setting this parameter to 0 disables limiting.",
-      "default": 2
+      "default": 4
     },
-    "tx_queue_gas": {
-      "name": "Tx queue gas",
-      "type": "string",
-      "description": "Maximum amount of total gas for external transactions in the queue. LIMIT can be either an amount of gas or 'auto' or 'off'. 'auto' sets the limit to be 20x the current block gas limit.",
-      "default": "off"
+    "tx_queue_no_unfamiliar_locals": {
+      "name": "Tx queue no unfamiliar locals",
+      "type": "bool",
+      "description": "Local transactions sent through JSON-RPC (HTTP, WebSockets, etc) will be treated as 'external' if the sending account is unknown.",
+      "default": false
+    },
+    "tx_queue_no_early_reject": {
+      "name": "Tx queue no early reject",
+      "type": "bool",
+      "description": "Disables transaction queue optimization to early reject transactions below minimal effective gas price. This allows local transactions to always enter the pool, despite it being full, but requires additional ecrecover on every transaction.",
+      "default": false
     },
     "infinite_pending_block": {
       "name": "Infinite pending block",
@@ -1246,9 +1188,9 @@
       "simple": true
     },
     "fast_and_loose": {
-      "name": "Fast And Loose",
+      "name": "Fast and loose",
       "type": "bool",
-      "description": "Significant speed up but unclean exit is unrecoverable (disables DB WAL).",
+      "deprecated": true,
       "default": false
     },
     "section": "Footprint",
@@ -1286,30 +1228,67 @@
       "description": "Enables colors in logs."
     },
     "section": "Miscellaneous",
-    "ntp_servers": {
-      "name": "Ntp servers",
-      "type": "string[]",
-      "description": "Comma separated list of NTP servers to provide current time (host:port). Used to verify node health. Parity uses pool.ntp.org NTP servers; consider joining the pool: http://www.pool.ntp.org/join.html",
-      "default": [
-        "0.parity.pool.ntp.org:123",
-        "1.parity.pool.ntp.org:123",
-        "2.parity.pool.ntp.org:123",
-        "3.parity.pool.ntp.org:123"
-      ]
-    },
     "ports_shift": {
       "name": "Ports shift",
       "type": "number",
-      "description": "Add SHIFT to all port numbers Parity is listening on. Includes network port and all servers (RPC, WebSockets, UI, IPFS, SecretStore).",
+      "description": "Add SHIFT to all port numbers Parity is listening on. Includes network port and all servers (HTTP JSON-RPC, WebSockets JSON-RPC, IPFS, SecretStore).",
       "default": 0
     },
     "unsafe_expose": {
       "name": "Unsafe expose",
       "type": "bool",
-      "description": "All servers will listen on external interfaces and will be remotely accessible. It's equivalent with setting the following: --{{ws,jsonrpc,ui,ipfs,secret_store,stratum}}-interface=all --*-hosts=all    This option is UNSAFE and should be used with great care!",
+      "description": "All servers will listen on external interfaces and will be remotely accessible. It's equivalent with setting the following: --[ws,jsonrpc,ui,ipfs-api,secretstore,stratum,dapps,secretstore-http]-interface=all --*-hosts=all    This option is UNSAFE and should be used with great care!",
       "default": false
     },
     "description": "Other uncategorized options."
+  },
+  "dapps": {
+    "section": "Dapps"
+  },
+  "private_tx": {
+    "section": "PrivateTransactions",
+    "enabled": {
+      "name": "Enabled",
+      "type": "bool",
+      "description": "Enable private transactions.",
+      "default": false
+    },
+    "signer": {
+      "name": "Signer",
+      "type": "string",
+      "description": "Specify the account for signing public transaction created upon verified private transaction.",
+      "default": null
+    },
+    "validators": {
+      "name": "Validators",
+      "type": "string[]",
+      "description": "Specify the accounts for validating private transactions. ACCOUNTS is a comma-delimited list of addresses.",
+      "default": []
+    },
+    "account": {
+      "name": "Account",
+      "type": "string",
+      "description": "Specify the account for signing requests to secret store.",
+      "default": null
+    },
+    "passwords": {
+      "name": "Passwords",
+      "type": "string",
+      "description": "Provide a file containing passwords for unlocking accounts (signer, private account, validators).",
+      "default": null
+    },
+    "sstore_url": {
+      "name": "Sstore url",
+      "type": "string",
+      "description": "Specify secret store URL used for encrypting private transactions.",
+      "default": null
+    },
+    "sstore_threshold": {
+      "name": "Sstore threshold",
+      "type": "number",
+      "description": "Specify secret store threshold used for encrypting private transactions.",
+      "default": null
+    }
   },
   "whisper": {
     "section": "Whisper",
