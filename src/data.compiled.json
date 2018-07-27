@@ -41,7 +41,10 @@
         "expanse": "Expanse Network",
         "olympic": "Olympic Network",
         "musicoin": "Musicoin Network",
-        "ellaism": "Ellaism Network"
+        "ellaism": "Ellaism Network",
+        "tobalaba": "Tobalaba Network",
+        "easthub": "Easthub Network",
+        "social": "Social Network"
       },
       "default": "foundation",
       "suggestions": [
@@ -54,7 +57,10 @@
         "expanse",
         "olympic",
         "musicoin",
-        "ellaism"
+        "ellaism",
+        "tobalaba",
+        "easthub",
+        "social"
       ],
       "simple": true
     },
@@ -209,7 +215,7 @@
     "unlock": {
       "name": "Accounts to unlock",
       "type": "string[]",
-      "description": "From: [{}] you'll be able to send tranasactions without password.",
+      "description": "From: [{}] you'll be able to send transactions without password.",
       "default": [
         ""
       ]
@@ -462,6 +468,7 @@
         "Personal [personal]",
         "Parity [parity]",
         "Parity Accounts [parity_accounts]",
+        "Private transactions [private]",
         "PUB-SUB [pubsub]",
         "Parity PUB-SUB [parity_pubsub]",
         "Whisper [shh]",
@@ -559,6 +566,7 @@
         "Personal [personal]",
         "Parity [parity]",
         "Parity Accounts [parity_accounts]",
+        "Private transactions [private]",
         "Traces [traces]",
         "Trusted Signer (unsafe) [signer]",
         "Parity Set* (unsafe) [parity_set]",
@@ -617,6 +625,7 @@
         "Personal [personal]",
         "Parity [parity]",
         "Parity Accounts [parity_accounts]",
+        "Private transactions [private]",
         "Traces [traces]",
         "Trusted Signer (unsafe) [signer]",
         "Parity Set* (unsafe) [parity_set]",
@@ -1242,11 +1251,8 @@
     },
     "description": "Other uncategorized options."
   },
-  "dapps": {
-    "section": "Dapps"
-  },
   "private_tx": {
-    "section": "PrivateTransactions",
+    "section": "Private Transactions",
     "enabled": {
       "name": "Enabled",
       "type": "bool",
@@ -1304,6 +1310,6 @@
       "description": "Target size of the whisper message pool in megabytes.",
       "default": 10
     },
-    "description": "Whisper"
+    "description": "Whisper network"
   }
 }

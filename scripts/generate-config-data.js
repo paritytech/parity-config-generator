@@ -255,7 +255,7 @@ function augment (data, extra) {
           return prop;
         })
       })
-  );
+  ).filter(({props}) => props.length);
 
   // Hydrate config structs with CLI options
 

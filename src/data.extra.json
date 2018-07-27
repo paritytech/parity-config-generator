@@ -42,7 +42,10 @@
         "expanse": "Expanse Network",
         "olympic": "Olympic Network",
         "musicoin": "Musicoin Network",
-        "ellaism": "Ellaism Network"
+        "ellaism": "Ellaism Network",
+        "tobalaba": "Tobalaba Network",
+        "easthub": "Easthub Network",
+        "social": "Social Network"
       },
       "suggestions": [
         "foundation",
@@ -54,7 +57,10 @@
         "expanse",
         "olympic",
         "musicoin",
-        "ellaism"
+        "ellaism",
+        "tobalaba",
+        "easthub",
+        "social"
       ],
       "simple": true
     },
@@ -168,7 +174,7 @@
     "description": "Unlocking accounts and private keys security parameters.",
     "unlock": {
       "name": "Accounts to unlock",
-      "description": "From: [{}] you'll be able to send tranasactions without password.",
+      "description": "From: [{}] you'll be able to send transactions without password.",
       "default": [
         ""
       ]
@@ -339,6 +345,7 @@
         "Personal [personal]",
         "Parity [parity]",
         "Parity Accounts [parity_accounts]",
+        "Private transactions [private]",
         "PUB-SUB [pubsub]",
         "Parity PUB-SUB [parity_pubsub]",
         "Whisper [shh]",
@@ -393,6 +400,7 @@
         "Personal [personal]",
         "Parity [parity]",
         "Parity Accounts [parity_accounts]",
+        "Private transactions [private]",
         "Traces [traces]",
         "Trusted Signer (unsafe) [signer]",
         "Parity Set* (unsafe) [parity_set]",
@@ -428,6 +436,7 @@
         "Personal [personal]",
         "Parity [parity]",
         "Parity Accounts [parity_accounts]",
+        "Private transactions [private]",
         "Traces [traces]",
         "Trusted Signer (unsafe) [signer]",
         "Parity Set* (unsafe) [parity_set]",
@@ -790,7 +799,7 @@
   },
   "whisper": {
     "section": "Whisper",
-    "description": "Whisper"
+    "description": "Whisper network"
   },
   "misc": {
     "section": "Miscellaneous",
@@ -811,5 +820,8 @@
       "name": "Enable Colors",
       "description": "Enables colors in logs."
     }
+  },
+  "private_tx": {
+    "section": "Private Transactions"
   }
 }
