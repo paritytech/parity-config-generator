@@ -67,7 +67,7 @@ function parseDefaultValue (defaultValue) {
     default:
       try {
         // Remove thousands separators if numeric value
-        if (defaultValue.match(/^[\d_]+$/)) {
+        if (/^\d[\d_]+\d$/.test(defaultValue)) {
           defaultValue = defaultValue.replace(/_/g,'');
         }
 
@@ -260,7 +260,7 @@ function augment (data, extra) {
   // Hydrate config structs with CLI options
 
   const data = hydrateConfigWithCli(configSections, configCliOptions);
-  
+
   // Augment with data.extra.json
 
   const extra = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../src/data.extra.json'), 'UTF-8'));
