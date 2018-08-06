@@ -34,6 +34,9 @@ function getCliOptions (source) {
 
   const cliOptions = [];
   for (const [, type, variableName, defaultValueString, configCallbackString, helpString] of execAll(regex, source)) {
+    if (configCallbackString.includes('_legacy')) {
+      continue;
+    }
     cliOptions.push({type, variableName, defaultValueString, configCallbackString, helpString});
   }
 
@@ -63,9 +66,16 @@ function parseDefaultValue (defaultValue) {
       return [];
     default:
       try {
+        // Remove thousands separators if numeric value
+        if (/^\d[\d_]+\d$/.test(defaultValue)) {
+          defaultValue = defaultValue.replace(/_/g, '');
+        }
+
+        defaultValue = defaultValue.replace(/^Some\((".+").into\(\)\)$/, '$1');
+
         return JSON.parse(defaultValue);
       } catch (e) {
-        console.warn('Warning: Failed to parse default value', defaultValue);
+        console.warn('Warning: Failed to parse default value', defaultValue, e.message);
       }
   }
 }
@@ -117,7 +127,7 @@ function makeCliConfigTree (parsedCliOptions) {
 function getStructFields (name, source) {
   const subsource = source.match(new RegExp(`^struct ${name} {[^]+?}`, 'm'))[0];
 
-  const fields = subsource.split('\n').slice(1, -1);
+  const fields = subsource.split('\n').slice(1, -1).filter(s => s.trim() && !s.trim().startsWith('#') && !s.trim().startsWith('_legacy'));
 
   const parsedFields = fields.map(line => {
     const matches = line.match(/^\s*(\w+): Option<([\w<>]+)>,$/);
@@ -245,7 +255,7 @@ function augment (data, extra) {
           return prop;
         })
       })
-  );
+  ).filter(({props}) => props.length);
 
   // Hydrate config structs with CLI options
 
