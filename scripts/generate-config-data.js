@@ -34,7 +34,7 @@ function getCliOptions (source) {
 
   const cliOptions = [];
   for (const [, type, variableName, defaultValueString, configCallbackString, helpString] of execAll(regex, source)) {
-    if (configCallbackString.includes("_legacy")) {
+    if (configCallbackString.includes('_legacy')) {
       continue;
     }
     cliOptions.push({type, variableName, defaultValueString, configCallbackString, helpString});
@@ -68,10 +68,10 @@ function parseDefaultValue (defaultValue) {
       try {
         // Remove thousands separators if numeric value
         if (/^\d[\d_]+\d$/.test(defaultValue)) {
-          defaultValue = defaultValue.replace(/_/g,'');
+          defaultValue = defaultValue.replace(/_/g, '');
         }
 
-        defaultValue = defaultValue.replace(/^Some\((".+").into\(\)\)$/,'$1');
+        defaultValue = defaultValue.replace(/^Some\((".+").into\(\)\)$/, '$1');
 
         return JSON.parse(defaultValue);
       } catch (e) {
