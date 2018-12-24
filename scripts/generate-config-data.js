@@ -289,3 +289,8 @@ function augment (data, extra) {
   console.error(e);
   process.exit(1);
 });
+
+module.exports = {
+ fetchSource:fetchSource,
+ getCliOptions:getCliOptions
+}
