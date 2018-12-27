@@ -12,25 +12,25 @@ const CONFIG_IS = {
 };
 
 function fetchSource () {
+  if (process.env.AUTOGENSCRIPT) {
+    return fs.readFile(path.resolve(__dirname, '../../parity/cli/mod.rs'), 'UTF-8');
+  }
   return new Promise((resolve, reject) => {
-    if (!process.env.AUTOGENSCRIPT) {
-      https.get('https://raw.githubusercontent.com/paritytech/parity/master/parity/cli/mod.rs', res => {
-        if (res.statusCode !== 200) {
-          reject(new Error(`Failed to load source code, status code: ${res.statusCode}`));
+    https.get('https://raw.githubusercontent.com/paritytech/parity/master/parity/cli/mod.rs', res => {
+      if (res.statusCode !== 200) {
+        reject(new Error(`Failed to load source code, status code: ${res.statusCode}`));
+      }
+
+      res.pipe(bl(function (err, data) {
+        if (err) {
+          reject(new Error(err));
         }
 
-        res.pipe(bl(function (err, data) {
-          if (err) {
-            reject(new Error(err));
-          }
-
-          resolve(data.toString());
-        }));
-      });
-    } else {
-      resolve(fs.readFileSync(path.resolve(__dirname, '../../parity/cli/mod.rs'), 'UTF-8'));
-    }
-  });
+        resolve(data.toString());
+      }));
+    });
+  }
+  );
 }
 
 function getCliOptions (source) {
