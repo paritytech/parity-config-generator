@@ -10,6 +10,9 @@ coverage
 # production
 build
 
+# documentation generation
+docs/config.md
+
 # misc
 .DS_Store
 npm-debug.log

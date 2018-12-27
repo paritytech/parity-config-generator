@@ -27,7 +27,9 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "semistandard --verbose | snazzy",
-    "generate-data": "node scripts/generate-config-data.js"
+    "lint-fix": "semistandard --fix --verbose | snazzy",
+    "generate-data": "node scripts/generate-config-data.js",
+    "generate-docs": "node scripts/generate-config-docs.js"
   },
   "semistandard": {
     "parser": "babel-eslint"

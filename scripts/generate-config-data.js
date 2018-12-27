@@ -12,6 +12,9 @@ const CONFIG_IS = {
 };
 
 function fetchSource () {
+  if (process.env.AUTOGENSCRIPT) {
+    return fs.readFile(path.resolve(__dirname, '../../parity/cli/mod.rs'), 'UTF-8');
+  }
   return new Promise((resolve, reject) => {
     https.get('https://raw.githubusercontent.com/paritytech/parity/master/parity/cli/mod.rs', res => {
       if (res.statusCode !== 200) {
@@ -26,7 +29,8 @@ function fetchSource () {
         resolve(data.toString());
       }));
     });
-  });
+  }
+  );
 }
 
 function getCliOptions (source) {
@@ -236,9 +240,7 @@ function augment (data, extra) {
   return dataAugmentedOrdered;
 }
 
-(async function () {
-  const source = await fetchSource();
-
+function generateAugmentedData (source) {
   // Parse CLI options
 
   const cliOptions = getCliOptions(source);
@@ -264,28 +266,40 @@ function augment (data, extra) {
   // Augment with data.extra.json
 
   const extra = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../src/data.extra.json'), 'UTF-8'));
-  const dataAugmented = augment(data, extra);
+  return augment(data, extra);
+}
 
+if (!module.parent) {
+  (async function () {
   // Make sure that config items with unrecognized default values
   // were set a default value in data.extra.json
 
-  Object.keys(dataAugmented).forEach(section => {
-    const undefinedDefaults = Object.keys(dataAugmented[section])
+    const dataAugmented = generateAugmentedData(await fetchSource());
+
+    Object.keys(dataAugmented).forEach(section => {
+      const undefinedDefaults = Object.keys(dataAugmented[section])
         .filter(prop => {
           const item = dataAugmented[section][prop];
           return typeof item === 'object' && typeof item.default === 'undefined';
         })
         .map(prop => `${section}.${prop}`);
 
-    if (undefinedDefaults.length) {
-      throw new Error(`Couldn't parse the default CLI value for the following config items: ${undefinedDefaults.join(', ')}. Please set a default value for them in data.extra.json.`);
-    }
-  });
+      if (undefinedDefaults.length) {
+        throw new Error(`Couldn't parse the default CLI value for the following config items: ${undefinedDefaults.join(', ')}. Please set a default value for them in data.extra.json.`);
+      }
+    });
 
   // Write to file
 
-  fs.writeFileSync(path.resolve(__dirname, '../src/data.compiled.json'), JSON.stringify(dataAugmented, null, 2));
-})().catch(e => {
-  console.error(e);
-  process.exit(1);
-});
+    fs.writeFileSync(path.resolve(__dirname, '../src/data.compiled.json'), JSON.stringify(dataAugmented, null, 2));
+  })().catch(e => {
+    console.error(e);
+    process.exit(1);
+  });
+} else {
+  module.exports = {
+    fetchSource: fetchSource,
+    getCliOptions: getCliOptions,
+    getData: generateAugmentedData
+  };
+}

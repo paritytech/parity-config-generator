@@ -490,7 +490,7 @@
     "processing_threads": {
       "name": "Processing threads",
       "type": "number",
-      "description": "Turn on additional processing threads in all HTTP JSON-RPC servers. Setting this to non-zero value allows parallel execution of cpu-heavy queries.",
+      "description": "Turn on additional processing threads for JSON-RPC servers (all transports). Setting this to a non-zero value allows parallel execution of cpu-heavy queries.",
       "default": 4
     },
     "max_payload": {
@@ -498,6 +498,30 @@
       "type": "number",
       "description": "Specify maximum size for HTTP JSON-RPC requests in megabytes.",
       "default": null
+    },
+    "keep_alive": {
+      "name": "Keep alive",
+      "type": "bool",
+      "description": "Disable HTTP/1.1 keep alive header. Disabling keep alive will prevent re-using the same TCP connection to fire multiple requests, recommended when using one request per connection.",
+      "default": false
+    },
+    "experimental_rpcs": {
+      "name": "Experimental rpcs",
+      "type": "bool",
+      "description": "Enable experimental RPCs. Enable to have access to methods from unfinalised EIPs in all namespaces",
+      "default": false
+    },
+    "poll_lifetime": {
+      "name": "Poll lifetime",
+      "type": "number",
+      "description": "Set the RPC filter lifetime to S seconds. The filter has to be polled at least every S seconds , otherwise it is removed.",
+      "default": 60
+    },
+    "allow_missing_blocks": {
+      "name": "Allow missing blocks",
+      "type": "bool",
+      "description": "RPC calls will return 'null' instead of an error if ancient block sync is still in progress and the block information requested could not be found",
+      "default": false
     },
     "description": "Expose JSON-RPC APIs over HTTP."
   },
@@ -994,12 +1018,6 @@
       "description": "Set PCT percentile gas price value from last 100 blocks as default gas price when sending transactions.",
       "default": 50
     },
-    "poll_lifetime": {
-      "name": "Poll lifetime",
-      "type": "number",
-      "description": "Set the lifetime of the internal index filter to S seconds.",
-      "default": 60
-    },
     "tx_queue_per_sender": {
       "name": "Tx queue per sender",
       "type": "number",
@@ -1029,6 +1047,12 @@
       "type": "bool",
       "description": "Pending block will be created with maximal possible gas limit and will execute all transactions in the queue. Note that such block is invalid and should never be attempted to be mined.",
       "default": false
+    },
+    "max_round_blocks_to_import": {
+      "name": "Max round blocks to import",
+      "type": "number",
+      "description": "Maximal number of blocks to import for each import round.",
+      "default": 12
     },
     "description": "Options for mining nodes."
   },
@@ -1213,6 +1237,12 @@
       "default": false
     },
     "section": "Snapshots",
+    "processing_threads": {
+      "name": "Processing threads",
+      "type": "number",
+      "description": "Enables multiple threads for snapshots creation.",
+      "default": null
+    },
     "description": "Snapshoting (warp sync) settings."
   },
   "misc": {
@@ -1311,5 +1341,38 @@
       "default": 10
     },
     "description": "Whisper network"
+  },
+  "light": {
+    "section": "Light",
+    "on_demand_response_time_window": {
+      "name": "On demand response time window",
+      "type": "number",
+      "description": "Specify the maximum time to wait for a successful response",
+      "default": null
+    },
+    "on_demand_request_backoff_start": {
+      "name": "On demand request backoff start",
+      "type": "number",
+      "description": "Specify light client initial backoff time for a request",
+      "default": null
+    },
+    "on_demand_request_backoff_max": {
+      "name": "On demand request backoff max",
+      "type": "number",
+      "description": "Specify light client maximum backoff time for a request",
+      "default": null
+    },
+    "on_demand_request_backoff_rounds_max": {
+      "name": "On demand request backoff rounds max",
+      "type": "number",
+      "description": "Specify light client maximum number of backoff iterations for a request",
+      "default": null
+    },
+    "on_demand_request_consecutive_failures": {
+      "name": "On demand request consecutive failures",
+      "type": "number",
+      "description": "Specify light client the number of failures for a request until it gets exponentially backed off",
+      "default": null
+    }
   }
 }
