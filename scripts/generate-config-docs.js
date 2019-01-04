@@ -91,6 +91,7 @@ function compiledMd (cliOptions) {
 async function buildPage () {
   var compiledBuffer = new BufferList();
   const source = await data.fetchSource();
+  const extra =  JSON.parse(fs.readFileSync(path.resolve(__dirname, '../src/data.extra.json'), 'UTF-8'));
   compiledBuffer.append(docTemplate.preExampleConfig);
   compiledBuffer.append(compiledToml(data.getData(source)));
   compiledBuffer.append(docTemplate.postExampleConfig);
