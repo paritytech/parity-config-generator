@@ -93,7 +93,7 @@ async function buildPage () {
   const source = await data.fetchSource();
   const extra =  JSON.parse(fs.readFileSync(path.resolve(__dirname, '../src/data.extra.json'), 'UTF-8'));
   compiledBuffer.append(docTemplate.preExampleConfig);
-  compiledBuffer.append(compiledToml(data.getData(source)));
+  compiledBuffer.append(compiledToml(data.getData(source, extra)));
   compiledBuffer.append(docTemplate.postExampleConfig);
   compiledBuffer.append(docTemplate.preConfigDoc);
   compiledBuffer.append(compiledMd(data.getCliOptions(source)));
