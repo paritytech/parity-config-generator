@@ -268,12 +268,15 @@ function generateAugmentedData (source, extra) {
   return augment(data, extra);
 }
 
+async function fetchExtraData(){
+  return JSON.parse(await fs.readFile(path.resolve(__dirname, '../src/data.extra.json'), 'UTF-8'));
+}
+
 if (!module.parent) {
   (async function () {
   // Make sure that config items with unrecognized default values
   // were set a default value in data.extra.json
-    const extra = JSON.parse(await fs.readFile(path.resolve(__dirname, '../src/data.extra.json'), 'UTF-8'));
-    const dataAugmented = generateAugmentedData(await fetchSource(), extra);
+    const dataAugmented = generateAugmentedData(await fetchSource(), await fetchExtraData());
   
 
     Object.keys(dataAugmented).forEach(section => {
@@ -299,6 +302,7 @@ if (!module.parent) {
 } else {
   module.exports = {
     fetchSource: fetchSource,
+    fetchExtra: fetchExtraData,
     getCliOptions: getCliOptions,
     getData: generateAugmentedData
   };
