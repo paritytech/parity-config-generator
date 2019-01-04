@@ -1,5 +1,5 @@
 const https = require('https');
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 const bl = require('bl');
 
@@ -240,7 +240,7 @@ function augment (data, extra) {
   return dataAugmentedOrdered;
 }
 
-function generateAugmentedData (source) {
+function generateAugmentedData (source, extra) {
   // Parse CLI options
 
   const cliOptions = getCliOptions(source);
@@ -265,7 +265,6 @@ function generateAugmentedData (source) {
 
   // Augment with data.extra.json
 
-  const extra = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../src/data.extra.json'), 'UTF-8'));
   return augment(data, extra);
 }
 
@@ -273,8 +272,9 @@ if (!module.parent) {
   (async function () {
   // Make sure that config items with unrecognized default values
   // were set a default value in data.extra.json
-
-    const dataAugmented = generateAugmentedData(await fetchSource());
+    const extra = JSON.parse(await fs.readFile(path.resolve(__dirname, '../src/data.extra.json'), 'UTF-8'));
+    const dataAugmented = generateAugmentedData(await fetchSource(), extra);
+  
 
     Object.keys(dataAugmented).forEach(section => {
       const undefinedDefaults = Object.keys(dataAugmented[section])
@@ -291,7 +291,7 @@ if (!module.parent) {
 
   // Write to file
 
-    fs.writeFileSync(path.resolve(__dirname, '../src/data.compiled.json'), JSON.stringify(dataAugmented, null, 2));
+    await fs.writeFile(path.resolve(__dirname, '../src/data.compiled.json'), JSON.stringify(dataAugmented, null, 2));
   })().catch(e => {
     console.error(e);
     process.exit(1);
