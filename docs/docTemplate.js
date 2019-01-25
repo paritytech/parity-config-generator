@@ -30,7 +30,7 @@ To use a custom path run \`$ parity --config path/to/config.toml\`.
 
 The following is a representation of a configuration file with all default values (*note: the \`[stratum]\` section is not present by default, and including it in your config currently enables stratum*).
 
-\`\`\`toml`),
+\`\`\`toml\n`),
   postExampleConfig: new BufferList('\n```\n'),
   preConfigDoc: new BufferList(`
 ## Presets

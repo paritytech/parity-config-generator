@@ -819,6 +819,9 @@
     "color": {
       "name": "Enable Colors",
       "description": "Enables colors in logs."
+    },
+    "unsafe_expose": {
+      "name": ""
     }
   },
   "private_tx": {

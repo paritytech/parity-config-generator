@@ -7,6 +7,10 @@ const data = require('./generate-config-data.js');
 const outputDir = '../docs/';
 const outputFile = 'config.md';
 
+function isNativeToml (item){
+  
+}
+
 function dirtySerialize (valueItem) {
   if (typeof valueItem !== 'undefined') {
     const rawDefaultValue = valueItem;
@@ -21,7 +25,17 @@ function dirtySerialize (valueItem) {
       if (rawDefaultValue === '') {
         defaultValue = '""';
       } else {
-        defaultValue = rawDefaultValue;
+        if (typeof rawDefaultValue == "number"){
+          defaultValue = rawDefaultValue;
+        } else {
+          if (typeof rawDefaultValue != "string"){
+            defaultValue = rawDefaultValue
+          } else {
+            const rawArray = rawDefaultValue.split(",");
+            const isArray = rawDefaultValue.includes(",");
+            defaultValue = isArray?rawArray:'"'+rawDefaultValue+'"';
+          }
+        }
       }
     }
     return defaultValue;
@@ -33,14 +47,23 @@ function compiledToml (compiledData) {
   for (const key in compiledData) {
     if (key[0] !== '_') {
       const sectionValues = compiledData[key];
-      compiledBuffer.append('[' + key + ']\n');
+      const sectionBuffer = new BufferList();
+      var sectionExists = false;
+      sectionBuffer.append('[' + key + ']\n');
       for (const value in sectionValues) {
         if (value.indexOf('section') < 0 && value.indexOf('description') < 0) {
           const valueItem = sectionValues[value]['default'];
-          compiledBuffer.append(value + ' = ' + dirtySerialize(valueItem) + '\n');
+          const valueSerialized = dirtySerialize(valueItem);
+          if (valueSerialized != 'null'){
+            sectionBuffer.append(value + ' = ' + dirtySerialize(valueItem) + '\n');
+            sectionExists = true;
+          }
         }
       }
-      compiledBuffer.append('\n');
+      if (sectionExists) {
+        compiledBuffer.append(sectionBuffer);
+        compiledBuffer.append('\n');
+      }
     }
   }
   return compiledBuffer;
@@ -64,11 +87,11 @@ function compiledMd (cliOptions) {
     const toAppend = BufferList('\n');
     toAppend.append('## ' + cliName.slice(2) + '\n');
     toAppend.append(helpText + '\n'); // description
-    toAppend.append('#### Command line option \n `' + cliName + '`\n'); // cli flag
+    toAppend.append('Command line option \n `' + cliName + '`\n'); // cli flag
     if (typeof configSection !== 'undefined') {
-      toAppend.append('#### Config file option \n```toml\n' + '[' + configSection + ']' + '\n' + configProp + ' = ' + defaultValue + '\n```\n'); // config item
+      toAppend.append('Config file option \n```toml\n' + '[' + configSection + ']' + '\n' + configProp + ' = ' + defaultValue + '\n```\n'); // config item
     }
-    toAppend.append('#### Default Value \n`' + defaultValue + '`\n');
+    toAppend.append('Default Value \n`' + defaultValue + '`\n');
     if (typeof builtTree[configSection] !== 'undefined') {
       builtTree[configSection].append(toAppend);
     } else {
@@ -102,7 +125,9 @@ async function buildPage () {
 }
 
 (async function () {
-  fs.writeFileSync(path.resolve(__dirname, outputDir + outputFile), (await buildPage()).toString());
+  const page = (await buildPage()).toString();
+  console.log(page);
+  fs.writeFileSync(path.resolve(__dirname, outputDir + outputFile), page);
 })().catch(e => {
   console.error(e);
   process.exit(1);
