@@ -606,6 +606,13 @@
       "min": 0,
       "max": 1000
     },
+    "tx_queue_locals": {
+      "name": "Local Accounts",
+      "description": "Specify local accounts for which transactions are prioritized in the queue. ACCOUNTS is a comma-delimited list of addresses.",
+      "default": [
+        ""
+      ]
+    },
     "tx_queue_ban_time": {
       "name": "Ban For",
       "description": "Parity will ban senders/code for {} seconds.",
@@ -662,6 +669,11 @@
     "interface": {
       "name": "Interface",
       "description": " Stratum Server will listen for connections on IP {}."
+    },
+    "disable": {
+      "name":"Disable Stratum",
+      "description":"For backwards compatibility; stratum is enabled if the config file contains a `[stratum]` section, and it is not explicitly disabled (disable = true)",
+      "default":"false"
     }
   },
   "footprint": {
