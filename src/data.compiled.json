@@ -935,7 +935,7 @@
     },
     "tx_queue_locals": {
       "name": "Local Accounts",
-      "type": "hashset<string>",
+      "type": "string[]",
       "description": "Specify local accounts for which transactions are prioritized in the queue. ACCOUNTS is a comma-delimited list of addresses.",
       "default": [
         ""

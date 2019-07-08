@@ -607,6 +607,7 @@
       "max": 1000
     },
     "tx_queue_locals": {
+      "type":"string[]",
       "name": "Local Accounts",
       "description": "Specify local accounts for which transactions are prioritized in the queue. ACCOUNTS is a comma-delimited list of addresses.",
       "default": [
