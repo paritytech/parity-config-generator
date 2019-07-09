@@ -135,7 +135,7 @@ function getStructFields (name, source) {
 
   const parsedFields = fields.reduce( function (out, line){
     const matches = line.match(/^\s*(\w+): Option<([\w<>]+)>,$/);
-    if (matches != null){
+    if (matches !== null) {
       const [, name, type] = matches;
       out.push({name, type});
     }
