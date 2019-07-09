@@ -243,12 +243,6 @@
       "description": "Specify the cache time of accounts read from disk. If you manage thousands of accounts set this to 0 to disable refresh.",
       "default": 5
     },
-    "disable_hardware": {
-      "name": "Disable hardware",
-      "type": "bool",
-      "description": "Disables hardware wallet support.",
-      "default": false
-    },
     "fast_unlock": {
       "name": "Fast unlock",
       "type": "bool",
@@ -459,7 +453,8 @@
         "traces",
         "rpc",
         "shh",
-        "shh_pubsub"
+        "shh_pubsub",
+        "parity_transactions_pool"
       ],
       "values": [
         "Web3 [web3]",
@@ -580,7 +575,8 @@
         "traces",
         "rpc",
         "shh",
-        "shh_pubsub"
+        "shh_pubsub",
+        "parity_transactions_pool"
       ],
       "values": [
         "Web3 [web3]",
@@ -639,7 +635,8 @@
         "traces",
         "rpc",
         "shh",
-        "shh_pubsub"
+        "shh_pubsub",
+        "parity_transactions_pool"
       ],
       "values": [
         "Web3 [web3]",
@@ -936,6 +933,14 @@
       "min": 0,
       "max": 1000
     },
+    "tx_queue_locals": {
+      "name": "Local Accounts",
+      "type": "string[]",
+      "description": "Specify local accounts for which transactions are prioritized in the queue.",
+      "default": [
+        ""
+      ]
+    },
     "tx_queue_ban_time": {
       "name": "Ban For",
       "type": "number",
@@ -1068,6 +1073,12 @@
       "type": "string",
       "description": " Stratum Server will listen for connections on IP {}.",
       "default": "local"
+    },
+    "disable": {
+      "name": "Disable Stratum",
+      "type": "bool",
+      "description": "For backwards compatibility; stratum is enabled if the config file contains a `[stratum]` section, and it is not explicitly disabled (disable = true)",
+      "default": "false"
     },
     "section": "Stratum (since 1.6)",
     "secret": {
@@ -1276,7 +1287,7 @@
     "unsafe_expose": {
       "name": "Unsafe expose",
       "type": "bool",
-      "description": "All servers will listen on external interfaces and will be remotely accessible. It's equivalent with setting the following: --[ws,jsonrpc,ui,ipfs-api,secretstore,stratum,dapps,secretstore-http]-interface=all --*-hosts=all    This option is UNSAFE and should be used with great care!",
+      "description": "All servers will listen on external interfaces and will be remotely accessible. It's equivalent with setting the following: --[ws,jsonrpc,ipfs-api,secretstore,stratum,dapps,secretstore-http]-interface=all --*-hosts=all    This option is UNSAFE and should be used with great care!",
       "default": false
     },
     "description": "Other uncategorized options."
