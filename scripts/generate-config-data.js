@@ -133,7 +133,7 @@ function getStructFields (name, source) {
 
   const fields = subsource.split('\n').slice(1, -1).filter(s => s.trim() && !s.trim().startsWith('#') && !s.trim().startsWith('_legacy'));
 
-  const parsedFields = fields.reduce( function (out, line){
+  const parsedFields = fields.reduce((out, line) => {
     const matches = line.match(/^\s*(\w+): Option<([\w<>]+)>,$/);
     if (matches !== null) {
       const [, name, type] = matches;
